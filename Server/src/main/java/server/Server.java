@@ -58,7 +58,7 @@ public class Server  {
                 logger.info("Assigning new thread for this client");
 
                 // create a new thread object
-                Thread t = new ClientHandler(s, dis, dos);
+                Thread t = new Thread();//ClientHandler(s, dis, dos);
                 // Invoking the start() method
                 t.start();
 

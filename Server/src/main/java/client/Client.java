@@ -1,15 +1,10 @@
 package client;
-import commands.CommandRequest;
-import commands.CommandResponse;
 import commands.CommandsEnum;
-import common.ConfigHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.*;
-import java.nio.ByteBuffer;
-import java.util.Scanner;
 
 // Client class
 public class Client
@@ -55,10 +50,10 @@ public class Client
         Client client = new Client(18080, "127.0.0.1");
         try {
             client.createConnection();
-            CommandRequest request = new CommandRequest(CommandsEnum.NEW_PHOTO, "Add photo", client.socket.toString());
-            client.sendMessage(request.toString());
-            String rec = client.getMessage();
-            CommandResponse res = CommandResponse.fromString(rec);
+//            CommandRequest request = new CommandRequest(CommandsEnum.NEW_PHOTO, "Add photo", client.socket.toString());
+//            client.sendMessage(request.toString());
+//            String rec = client.getMessage();
+//            CommandResponse res = CommandResponse.fromString(rec);
             client.closeConnection();
         } catch (Exception e){
             System.out.println("Exiting..");
