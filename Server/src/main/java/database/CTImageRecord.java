@@ -5,21 +5,50 @@ import java.io.ByteArrayInputStream;
 
 public class CTImageRecord {
     private String name;
-    private ByteArrayInputStream data;
+    private byte[] data;
     private String user_id;
     private String album;
-    int size;
+    private int dataSize;
+    private int length;
+    private int width;
 
-    public CTImageRecord(String name, byte[] data, String user_id, String album) {
 
-        this.name = name;
-        this.data = new ByteArrayInputStream(data);
-        this.user_id = user_id;
-        this.album = album;
-        int size = data.length;
-    }
 
     public CTImageRecord(){}
+
+    public CTImageRecord(String name, byte[] data, String user_id, String album, int dataSize, int length, int width) {
+        this.name = name;
+        this.data = data;
+        this.user_id = user_id;
+        this.album = album;
+        this.dataSize = dataSize;
+        this.length = length;
+        this.width = width;
+    }
+
+    public int getDataSize() {
+        return dataSize;
+    }
+
+    public void setDataSize(int dataSize) {
+        this.dataSize = dataSize;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
 
     // USER ID
     public String getUser_id() {
@@ -49,24 +78,16 @@ public class CTImageRecord {
     }
 
     //DATA
-    public ByteArrayInputStream getData() {
+    public byte[] getData() {
         return data;
     }
 
     public void setData(byte[] data) {
-        this.data = new ByteArrayInputStream(data);
-        this.size = data.length;
+        this.data = data;
+        this.dataSize = data.length;
 
     }
 
-    //SIZE
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
 
 
 }

@@ -46,17 +46,4 @@ public class Client
 
     }
 
-    public static void main(String args[]) {
-        Client client = new Client(18080, "127.0.0.1");
-        try {
-            client.createConnection();
-//            CommandRequest request = new CommandRequest(CommandsEnum.NEW_PHOTO, "Add photo", client.socket.toString());
-//            client.sendMessage(request.toString());
-//            String rec = client.getMessage();
-//            CommandResponse res = CommandResponse.fromString(rec);
-            client.closeConnection();
-        } catch (Exception e){
-            System.out.println("Exiting..");
-        }
-    }
 }
