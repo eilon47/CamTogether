@@ -18,7 +18,7 @@ public class Main {
     private static void init_tables()throws SQLException, ClassNotFoundException {
         DBClient client = new DBClient();
         client.createConnection();
-        for(String table : SqlStatements.INIT_TABLES){
+        for(String table : SqlStatements.INIT_BASIC_TABLES){
             client.createTableFromString(table);
         }
         client.closeConnection();

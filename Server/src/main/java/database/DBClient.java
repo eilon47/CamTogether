@@ -4,6 +4,8 @@ package database;
 
 import common.ResourcesHandler;
 import org.postgresql.largeobject.LargeObjectManager;
+import sun.jvm.hotspot.debugger.SymbolLookup;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
@@ -37,10 +39,11 @@ public class DBClient {
 
     //######################  Tables Creations ############################
 
-    public void createTableFromString(String sql) throws SQLException{
+    public ResultSet createTableFromString(String sql) throws SQLException{
         PreparedStatement statement = this.conn.prepareStatement(sql);
-        statement.executeQuery();
+        ResultSet set = statement.executeQuery();
         statement.close();
+        return set;
     }
 
 
@@ -118,16 +121,16 @@ public class DBClient {
 
     // ####################### GENERAL ################################
 
-    public ResultSet doStatement(String sql) throws SQLException{
+    public ResultSet doSqlStatement(String sql) throws SQLException{
         Statement statement = this.conn.createStatement();
         ResultSet set = statement.executeQuery(sql);
         statement.close();
         return set;
     }
 
-    public ResultSet prepareStatementAllStrings(String sql, String... values) throws SQLException{
+    public ResultSet prepareStatementAllStrings(String sql, String[] values) throws SQLException{
         if (values.length == 0)
-            return doStatement(sql);
+            return doSqlStatement(sql);
         PreparedStatement statement = this.conn.prepareStatement(sql);
         for(int i=0; i < values.length; i++){
             statement.setString(i, values[i]);
@@ -137,33 +140,27 @@ public class DBClient {
         return set;
     }
 
-
-    public static void main(String[] args) {
-        try {
-            String album = "album_test2";
-            String user_id = "eilon_test";
-            DBClient client = new DBClient();
-            client.createConnection();
-            File f = new File(ResourcesHandler.getResourceFilePath("test_image.jpg"));
-            CTImageRecord ir = client.selectQueryForImg(album, f.getName());
-            BufferedImage img = ImageIO.read(f);
-            ByteArrayInputStream bais = new ByteArrayInputStream(ir.getData());
-            BufferedImage img2 = ImageIO.read(ImageIO.createImageInputStream(bais));
-            ImageIcon icon=new ImageIcon(img2);
-            JFrame frame=new JFrame();
-            frame.setLayout(new FlowLayout());
-            frame.setSize(200,300);
-            JLabel lbl=new JLabel();
-            lbl.setIcon(icon);
-            frame.add(lbl);
-            frame.setVisible(true);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            client.closeConnection();
-
-        } catch (Exception e){
-            e.printStackTrace();
+    public ResultSet dynamicPrepareStatement(String sql, Object[] args) throws SQLException{
+        PreparedStatement statement = this.conn.prepareStatement(sql);
+        for(int i =1; i <= args.length; i++){
+            if (args[i] instanceof String)
+                statement.setString(i, (String) args[i]);
+            else if (args[i] instanceof Integer)
+                statement.setInt(i,(Integer) args[i]);
+            else if (args[i] instanceof Long)
+                statement.setLong(i,(Long) args[i]);
+            else if (args[i] instanceof Float)
+                statement.setFloat(i,(Float) args[i]);
+            else if (args[i] instanceof Boolean)
+                statement.setBoolean(i,(Boolean) args[i]);
+            else
+                throw new NotImplementedException();
         }
+        ResultSet set = statement.executeQuery(sql);
+        statement.close();
+        return set;
     }
+
 }
 
 //TODO

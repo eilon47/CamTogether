@@ -15,8 +15,7 @@ import java.sql.Time;
 )
 public class Rules implements Serializable {
     @XmlElement(
-            name = "longitude",
-            required = false
+            name = "longitude"
     )
     float longitude;
     @XmlElement(
