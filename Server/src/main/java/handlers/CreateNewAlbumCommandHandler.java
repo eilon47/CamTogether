@@ -3,37 +3,34 @@ package handlers;
 import common.IdGen;
 import database.DBClient;
 import database.SqlStatements;
-import xsd.Header;
-import xsd.Message;
-import xsd.Rules;
-import xsd.albums.NewAlbumRequestBody;
-import xsd.albums.NewAlbumResponseBody;
+import xmls.*;
 
-import javax.xml.bind.JAXBException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
+import java.util.Arrays;
 
 public class CreateNewAlbumCommandHandler extends CommandHandler{
 
-    DBClient dbclient = new DBClient();
+    private static DBClient dbclient = new DBClient();
 
+    private static boolean nullityCheck(Object o){
+        return o == null;
+    }
 
     @Override
-    public Message handle(Message request) {
-        Message retMessage = new Message();
-        Header header = new Header();
-        header.setCommand(request.getHeader().getCommand());
-        header.setFromUserId(request.getHeader().getFromUserId());
-        retMessage.setHeader(header);
+    public ResponseMessage handle(RequestMessage request) {
+        logger.info("Handling new album request");
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setHeader(createHeaderResponse(request.getHeader()));
         NewAlbumResponseBody responseBody = new NewAlbumResponseBody();
-
         try {
-        NewAlbumRequestBody newAlbumRequest = serializeFromXml(request.getBody().toString(), NewAlbumRequestBody.class);
-        String albumName = newAlbumRequest.getAlbumName();
-        responseBody.setAlbumName(albumName);
-        String userId = newAlbumRequest.getUserId();
-        Rules rules = newAlbumRequest.getRules();
+            NewAlbumRequestBody newAlbumRequest = fromXmlToClass(request.getBody(), NewAlbumRequestBody.class);
+            String albumName = newAlbumRequest.getAlbumName();
+            String userId = newAlbumRequest.getManager();
+            Rules rules = newAlbumRequest.getRules();
+            responseBody.setAlbumName(albumName);
+            responseMessage.setBody(fromClassToXml(responseBody));
+            logger.debug("Creating connection to db");
             dbclient.createConnection();
             String sql = SqlStatements.INSERT_NEW_ALBUM_TO_ALBUMS_TABLE;
             Object[] values = new Object[4];
@@ -41,29 +38,25 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
             values[1] = albumName;
             values[2] = userId;
             values[3] = "";
+            logger.info("inserting new album with values " + Arrays.toString(values));
             ResultSet resultSet = dbclient.dynamicPrepareStatement(sql,values);
             if (!resultSet.wasNull()){
-                resultSet = dbclient.createTableFromString(String.format(SqlStatements.NEW_ALBUM_CREATION, albumName));
-                boolean location = nullityCheck(rules.getRadius()) && nullityCheck(rules.getLatitude()) && nullityCheck(rules.getLongitude());
-                boolean time = nullityCheck(rules.getEnd_date()) && nullityCheck(rules.getStart_date()) &&
-                        nullityCheck(rules.getEnd_hour()) && nullityCheck(rules.getStart_hour());
+                logger.info("Creating new table for album " + albumName);
+                boolean res = dbclient.createTableFromString(String.format(SqlStatements.NEW_ALBUM_CREATION, albumName));
+                boolean location = nullityCheck(rules.getRadius()) || nullityCheck(rules.getLatitude()) || nullityCheck(rules.getLongitude());
+                boolean time = nullityCheck(rules.getEndTime()) || nullityCheck(rules.getStartTime());
                 Object[] rulesArr = {
                     values[0], location, rules.getLongitude(), rules.getLatitude(), rules.getRadius(),
-                        time, rules.getStart_date(), rules.getEnd_date(), rules.getStart_hour(), rules.getEnd_hour()
-                };
+                        time, rules.getStartTime(), rules.getEndTime() };
+                logger.info("Adding new rules record for album " + albumName);
                 resultSet = dbclient.dynamicPrepareStatement(SqlStatements.INSERT_NEW_RULES_TO_RULES_TABLE, rulesArr);
             }
-        }catch (SQLException | JAXBException | ClassNotFoundException ex) {
-            responseBody.setSucceeded(true);
-            retMessage.setBody(responseBody);
-            return retMessage;
+            logger.debug("closing connection with db");
+            dbclient.closeConnection();
+        }catch (SQLException | ClassNotFoundException ex) {
+            responseMessage.getHeader().setCommandSuccess(false);
         }
-        responseBody.setSucceeded(false);
-        retMessage.setBody(responseBody);
-        return retMessage;
-    }
 
-    private static boolean nullityCheck(Object o){
-        return o == null;
+        return responseMessage;
     }
 }

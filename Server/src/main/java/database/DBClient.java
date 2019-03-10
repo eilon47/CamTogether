@@ -1,28 +1,18 @@
 package database;
 
 
-
-import common.ResourcesHandler;
 import org.postgresql.largeobject.LargeObjectManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageInputStream;
-import javax.imageio.stream.ImageInputStreamImpl;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.Map;
 
 public class DBClient {
     private Connection conn;
-    private static final String username = "danielG";
+    private static final String username = "picturex";
     private static final String password = "1234";
     private static final String JDBC_DRIVER = "org.postgresql.Driver";
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/camTogether";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/basedb";
 
 
     //####################### Connections ################################
@@ -39,11 +29,12 @@ public class DBClient {
 
     //######################  Tables Creations ############################
 
-    public ResultSet createTableFromString(String sql) throws SQLException{
-        PreparedStatement statement = this.conn.prepareStatement(sql);
-        ResultSet set = statement.executeQuery();
+    public boolean createTableFromString(String sql) throws SQLException{
+        Statement statement = this.conn.createStatement();
+        boolean res = statement.execute(sql);
+
         statement.close();
-        return set;
+        return res;
     }
 
 
@@ -140,7 +131,7 @@ public class DBClient {
         return set;
     }
 
-    public ResultSet dynamicPrepareStatement(String sql, Object[] args) throws SQLException{
+    public ResultSet dynamicPrepareStatement(String sql, Object[] args) throws SQLException {
         PreparedStatement statement = this.conn.prepareStatement(sql);
         for(int i = 1; i <= args.length -1; i++){
             if (args[i] instanceof String)
@@ -156,7 +147,7 @@ public class DBClient {
             else if (args[i].getClass().equals( byte[].class) )
                 statement.setBytes(i,(byte[]) args[i]);
             else
-                throw new NotImplementedException();
+                throw new SQLException("Not implemented");
         }
         ResultSet set = statement.executeQuery(sql);
         statement.close();

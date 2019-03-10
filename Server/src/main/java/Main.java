@@ -19,7 +19,7 @@ public class Main {
         DBClient client = new DBClient();
         client.createConnection();
         for(String table : SqlStatements.INIT_BASIC_TABLES){
-            client.createTableFromString(table);
+           boolean res = client.createTableFromString(table);
         }
         client.closeConnection();
 

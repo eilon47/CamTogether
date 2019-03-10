@@ -24,9 +24,7 @@ public final class SqlStatements {
                     "radius  integer," +
                     "time   boolean NOT NULL, " +
                     "start_date   char(20), " +
-                    "end_date   char(20), " +
-                    "start_hour   char(20), " +
-                    "end_hour   char(20)" +
+                    "end_date   char(20) " +
                     ");",
 
             "CREATE TABLE users (" +

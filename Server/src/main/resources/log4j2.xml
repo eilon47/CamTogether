@@ -5,15 +5,24 @@
     </Properties>
 
     <Appenders>
-        <RollingFile name="fileLogger" fileName="${basePath}/app-info.log" filePattern="${basePath}/app-info-%d{yyyy-MM-dd}.log">
+        <RollingFile name="general" fileName="${basePath}/app-info.log" filePattern="${basePath}/app-info-%d{yyyy-MM-dd}.log">
             <PatternLayout>
-                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n</Pattern>
             </PatternLayout>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+                <SizeBasedTriggeringPolicy size="10 MB" />
             </Policies>
+            <DefaultRolloverStrategy max="5" />
         </RollingFile>
-
+        <RollingFile name="handler" fileName="${basePath}/handlers.log" filePattern="${basePath}/handlers-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout   pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
         </Console>
@@ -22,8 +31,12 @@
     <Loggers>
         <Root level="debug" additivity="false">
             <appender-ref ref="console" />
-            <appender-ref ref="fileLogger"/>
+            <appender-ref ref="general"/>
         </Root>
+
+        <Logger name="handlers" level="info" additivity="false">
+            <appender-ref ref="handler"/>
+        </Logger>
     </Loggers>
 
 </Configuration>

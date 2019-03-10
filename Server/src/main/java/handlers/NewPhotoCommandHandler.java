@@ -1,7 +1,6 @@
 package handlers;
 
 //import xsd.CommandRequest;
-import database.CTImageRecord;
 import database.DBClient;
 import database.SqlStatements;
 import xsd.AddNewImage.AddNewImageResponseBody;
