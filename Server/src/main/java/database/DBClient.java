@@ -142,7 +142,7 @@ public class DBClient {
 
     public ResultSet dynamicPrepareStatement(String sql, Object[] args) throws SQLException{
         PreparedStatement statement = this.conn.prepareStatement(sql);
-        for(int i =1; i <= args.length; i++){
+        for(int i = 1; i <= args.length -1; i++){
             if (args[i] instanceof String)
                 statement.setString(i, (String) args[i]);
             else if (args[i] instanceof Integer)
@@ -153,7 +153,7 @@ public class DBClient {
                 statement.setFloat(i,(Float) args[i]);
             else if (args[i] instanceof Boolean)
                 statement.setBoolean(i,(Boolean) args[i]);
-            else if (args[i] instanceof byte[])
+            else if (args[i].getClass().equals( byte[].class) )
                 statement.setBytes(i,(byte[]) args[i]);
             else
                 throw new NotImplementedException();
