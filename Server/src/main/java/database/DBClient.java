@@ -4,7 +4,6 @@ package database;
 
 import common.ResourcesHandler;
 import org.postgresql.largeobject.LargeObjectManager;
-import sun.jvm.hotspot.debugger.SymbolLookup;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.imageio.ImageIO;
@@ -31,6 +30,7 @@ public class DBClient {
     public void createConnection() throws ClassNotFoundException, SQLException{
         Class.forName(JDBC_DRIVER);
         this.conn = DriverManager.getConnection(DB_URL, username, password);
+        System.out.println("connected!");
     }
 
     public void closeConnection() throws SQLException{
@@ -153,6 +153,8 @@ public class DBClient {
                 statement.setFloat(i,(Float) args[i]);
             else if (args[i] instanceof Boolean)
                 statement.setBoolean(i,(Boolean) args[i]);
+            else if (args[i] instanceof byte[])
+                statement.setBytes(i,(byte[]) args[i]);
             else
                 throw new NotImplementedException();
         }
