@@ -19,10 +19,10 @@ import java.util.Map;
 
 public class DBClient {
     private Connection conn;
-    private static final String username = "picturex";
+    private static final String username = "danielG";
     private static final String password = "1234";
     private static final String JDBC_DRIVER = "org.postgresql.Driver";
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/basedb";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/camTogether";
 
 
     //####################### Connections ################################
