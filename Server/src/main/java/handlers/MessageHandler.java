@@ -54,15 +54,18 @@ public class MessageHandler {
 
     public static void main(String [] a){
         MessageHandler handler = new MessageHandler();
-
         RequestMessage requestMessage = new RequestMessage();
         HeaderRequest headerRequest = new HeaderRequest();
-        headerRequest.setUserId("eilon");
+        NewAlbumRequestBody requestBody = new NewAlbumRequestBody();
+
         headerRequest.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
-        NewAlbumRequestBody body = new NewAlbumRequestBody();
-        body.setAlbumName("my_first_album");
-        body.setManager("eilon");
-        String bodyString = handler.fromClassToXml(body);
+        headerRequest.setUserId("eilon47");
+        requestBody.setManager("eilon47");
+        requestBody.setAlbumName("eilon_album");
+        requestBody.setRules(new Rules());
+
+        requestMessage.setHeader(headerRequest);
+        String bodyString = handler.fromClassToXml(requestBody);
         requestMessage.setBody(bodyString);
         requestMessage.setHeader(headerRequest);
         String xml = handler.fromClassToXml(requestMessage);

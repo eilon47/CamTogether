@@ -10,14 +10,14 @@ public final class SqlStatements {
     //CREATE
     public static final String[] INIT_BASIC_TABLES = {
             "CREATE TABLE albums (" +
-                    "album_id   char(50)  NOT NULL, " +
-                    "album_name   char(50)  NOT NULL, " +
-                    "user_id    char(50)   NOT NULL, " +
+                    "album_id   char(64)  NOT NULL, " +
+                    "album_name   char(64)  NOT NULL, " +
+                    "user_id    char(64)   NOT NULL, " +
                     "participants text" +
                     ");",
 
             "CREATE TABLE rules (" +
-                    "album_id  char(50)  NOT NULL, " +
+                    "album_id  char(64)  NOT NULL, " +
                     "location   boolean NOT NULL, " +
                     "longitude float(24), " +
                     "latitude  float(24), " +
@@ -28,18 +28,18 @@ public final class SqlStatements {
                     ");",
 
             "CREATE TABLE users (" +
-                    "user_id    char(50) NOT NULL," +
-                    "user_name  char(50) NOT NULL," +
-                    "albums_manager   char(50)," +
-                    "album_part char(50)," +
-                    "info   char(50)" +
+                    "user_id    char(64) NOT NULL," +
+                    "user_name  char(64) NOT NULL," +
+                    "albums_manager   char(64)," +
+                    "album_part char(64)," +
+                    "info   char(64)" +
                     ");"
     };
     public static final String NEW_ALBUM_CREATION = "CREATE TABLE %s (" +
             "image_name text, " +
             "image_size integer, " +
             "image bytea, " +
-            "user_id char(50), " +
+            "user_id char(64), " +
             "length integer, " +
             "width integer" +
             ");";
@@ -47,7 +47,7 @@ public final class SqlStatements {
     //INSERT
     public static final String INSERT_NEW_ALBUM_TO_ALBUMS_TABLE = "INSERT INTO albums VALUES (?, ?, ?, ?);";
     public static final String INSERT_NEW_USER_TO_USERS_TABLE = "INSERT INTO users VALUES (?, ?, ?, ?, ?);";
-    public static final String INSERT_NEW_RULES_TO_RULES_TABLE = "INSERT INTO rules VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    public static final String INSERT_NEW_RULES_TO_RULES_TABLE = "INSERT INTO rules VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     public static final String INSERT_NEW_IMAGE_TO_ALBUM = "INSERT INTO %s VALUES (?, ?, ?, ?, ?, ?);";
 
     //SELECT

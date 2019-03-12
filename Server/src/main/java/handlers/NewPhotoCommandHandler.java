@@ -27,7 +27,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
         resbody.setImage(req_body.getImage().getImageName());
         try {
             CTImage CTimage = new CTImage();
-            CTimage.setUserID(header.getUserId());
+            CTimage.setUserName(header.getUserId());
             CTimage.setAlbumName(req_body.getAlbum());
             CTimage.setImageName(req_body.getImage().getImageName());
             CTimage.setImageData(req_body.getImage().getImageData());
@@ -41,7 +41,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
                 values[1] = req_body.getAlbum();
                 values[2] = req_body.getImage().getImageSize();
                 values[3] = req_body.getImage().getImageData();
-                values[4] = CTimage.getUserID();
+                values[4] = CTimage.getUserName();
                 values[5] = CTimage.getImageLength();
                 values[6] = CTimage.getImageWidth();
 
