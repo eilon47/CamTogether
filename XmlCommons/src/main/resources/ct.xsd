@@ -31,6 +31,7 @@
             <element name="ImageWidth" type="int"/>
             <element name="AlbumName" type="string"/>
             <element name="UserName" type="string"/>
+            <element name="UserID" type="string"/>
         </sequence>
     </complexType>
 
@@ -96,7 +97,6 @@
             </sequence>
         </complexType>
     </element>
-
     <element name="NewImageResponseBody">
         <complexType>
             <sequence>

@@ -3,17 +3,7 @@ package handlers;
 //import xsd.CommandRequest;
 import database.DBClient;
 import database.SqlStatements;
-import xsd.AddNewImage.AddNewImageResponseBody;
-import xsd.Header;
-import xsd.Message;
-import xsd.AddNewImage.AddNewImageRequestBody;
-import xsd.Rules;
-import xsd.albums.NewAlbumRequestBody;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import java.io.StringWriter;
+import xmls.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -22,47 +12,47 @@ public class NewPhotoCommandHandler extends CommandHandler {
     DBClient db_client = new DBClient();
 
     @Override
-    public Message handle(Message request) throws JAXBException {
-        Message returnMessage = new Message();
+    public ResponseMessage handle(RequestMessage request){
+        ResponseMessage returnMessage = new ResponseMessage();
         //create header of message
-        Header header = new Header();
+        HeaderResponse header = new HeaderResponse();
         header.setCommand(request.getHeader().getCommand());
-        header.setFromUserId(request.getHeader().getFromUserId());
+        header.setUserId(request.getHeader().getUserId());
         returnMessage.setHeader(header);
 
-        AddNewImageRequestBody req_body = (AddNewImageRequestBody) request.getBody();
+        NewImageRequestBody req_body = fromXmlToClass(request.getBody(), NewImageRequestBody.class);
 
-        AddNewImageResponseBody resbody = new AddNewImageResponseBody();
-        resbody.setUserId(request.getHeader().getFromUserId());
-        resbody.setSucceeded(false);
+        NewImageResponseBody resbody = new NewImageResponseBody();;
+        resbody.setAlbum(req_body.getAlbum());
+        resbody.setImage(req_body.getImage().getImageName());
         try {
-            CTImageRecord CTimage = new CTImageRecord();
-            CTimage.setUser_id(header.getFromUserId());
-            CTimage.setAlbum(req_body.getAlbum_name());
-            CTimage.setData(req_body.getData());
-            CTimage.setName(((AddNewImageRequestBody) request.getBody()).getImage_name());
-            if (!alreadyExist(CTimage.getAlbum(),CTimage.getName())) {
+            CTImage CTimage = new CTImage();
+            CTimage.setUserID(header.getUserId());
+            CTimage.setAlbumName(req_body.getAlbum());
+            CTimage.setImageName(req_body.getImage().getImageName());
+            CTimage.setImageData(req_body.getImage().getImageData());
+            CTimage.setImageSize(req_body.getImage().getImageSize());
+            if (!alreadyExist(CTimage.getAlbumName(),CTimage.getImageName())) {
 
                 db_client.createConnection();
-                String sql = SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM;
+                String sql = String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,CTimage.getAlbumName());
                 Object[] values = new Object[7];
                 values[0] = "";
-                values[1] = "dandan";
-                values[2] = "dandan";
-                values[3] = CTimage.getData();
-                values[4] = CTimage.getName();
-                values[5] = CTimage.getDataSize();
-                values[6] = CTimage.getUser_id();
+                values[1] = req_body.getAlbum();
+                values[2] = req_body.getImage().getImageSize();
+                values[3] = req_body.getImage().getImageData();
+                values[4] = CTimage.getUserID();
+                values[5] = CTimage.getImageLength();
+                values[6] = CTimage.getImageWidth();
 
-                ResultSet res = db_client.dynamicPrepareStatement(sql,values);
-                if (!res.wasNull())
-                    resbody.setSucceeded(true);
-                returnMessage.setBody(resbody);
+                boolean res = db_client.dynamicPrepareStatement(sql,values);
+                if (!res)
+
                 return returnMessage;
             }
         } catch (SQLException | ClassNotFoundException e){
-            resbody.setSucceeded(true);
-            returnMessage.setBody(resbody);
+            //resbody.setSucceeded(true);
+            //returnMessage.setBody(resbody);
             return returnMessage;
         }
 
@@ -74,40 +64,5 @@ public class NewPhotoCommandHandler extends CommandHandler {
         return false;
     }
 
-    private static class B {
-
-        public static void main(String args[]) {
-            try {
-                JAXBContext jaxbCtx = JAXBContext.newInstance(Message.class);
-                Marshaller marshaller = jaxbCtx.createMarshaller();
-                marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8"); //NOI18N
-                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-                NewPhotoCommandHandler handler = new NewPhotoCommandHandler();
-
-                Header header = new Header();
-                header.setFromUserId("danielG");
-                header.setCommand("fkdl");
-
-                AddNewImageRequestBody body = new AddNewImageRequestBody();
-                body.setAlbum_name("testingAlbum");
-                body.setImage_name("new_image");
-                body.setData(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
-
-                Message msg = new Message();
-                msg.setHeader(header);
-                msg.setBody(body);
-
-                StringWriter sw = new StringWriter();
-                marshaller.marshal(msg, sw);
-                System.out.println(sw.toString());
-
-                handler.handle(msg);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
 

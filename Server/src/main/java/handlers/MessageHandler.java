@@ -34,7 +34,7 @@ public class MessageHandler {
         return fromClassToXml(res);
     }
 
-    protected <T> T fromXmlToClass(String xml, Class<T> tClass){
+    public  <T> T fromXmlToClass(String xml, Class<T> tClass){
         try {
             return XsdUtils.serializeFromXml(xml, tClass);
         } catch (JAXBException ex){
@@ -43,7 +43,7 @@ public class MessageHandler {
         }
     }
 
-    protected <T> String fromClassToXml(T object){
+    public  <T> String fromClassToXml(T object){
         try {
             return XsdUtils.serializeToXML(object);
         } catch (JAXBException ex){

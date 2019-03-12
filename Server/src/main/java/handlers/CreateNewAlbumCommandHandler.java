@@ -39,8 +39,8 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
             values[2] = userId;
             values[3] = "";
             logger.info("inserting new album with values " + Arrays.toString(values));
-            ResultSet resultSet = dbclient.dynamicPrepareStatement(sql,values);
-            if (!resultSet.wasNull()){
+            boolean resultSet = dbclient.dynamicPrepareStatement(sql,values);
+            if (!resultSet){
                 logger.info("Creating new table for album " + albumName);
                 boolean res = dbclient.createTableFromString(String.format(SqlStatements.NEW_ALBUM_CREATION, albumName));
                 boolean location = nullityCheck(rules.getRadius()) || nullityCheck(rules.getLatitude()) || nullityCheck(rules.getLongitude());
