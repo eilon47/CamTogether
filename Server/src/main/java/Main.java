@@ -84,7 +84,7 @@ public class Main {
             img.setImageName(f.getName());
             img.setImageData(imageInByte);
             img.setAlbumName("testingAlbum");
-            img.setUserID(common.IdGen.generate(imgg.toString()));
+            img.setUserName(common.IdGen.generate(imgg.toString()));
             img.setImageLength(imgg.getHeight());
             img.setImageWidth(imgg.getWidth());
             img.setUserName("dandan");
