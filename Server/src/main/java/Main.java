@@ -1,5 +1,6 @@
 import database.DBClient;
 import database.SqlStatements;
+import handlers.GetAlbumHandler;
 import handlers.MessageHandler;
 import handlers.NewPhotoCommandHandler;
 import org.apache.logging.log4j.Logger;
