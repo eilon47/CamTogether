@@ -25,8 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="Header" type="{xsd}HeaderResponse"/&gt;
- *         &lt;element name="Body" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="AlbumName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -37,63 +36,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "header",
-    "body"
+    "albumName"
 })
-@XmlRootElement(name = "ResponseMessage")
-public class ResponseMessage {
+@XmlRootElement(name = "GetAlbumRequestBody")
+public class GetAlbumRequestBody {
 
-    @XmlElement(name = "Header", required = true)
-    protected HeaderResponse header;
-    @XmlElement(name = "Body", required = true)
-    protected String body;
+    @XmlElement(name = "AlbumName", required = true)
+    protected String albumName;
 
     /**
-     * Gets the value of the header property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link HeaderResponse }
-     *     
-     */
-    public HeaderResponse getHeader() {
-        return header;
-    }
-
-    /**
-     * Sets the value of the header property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link HeaderResponse }
-     *     
-     */
-    public void setHeader(HeaderResponse value) {
-        this.header = value;
-    }
-
-    /**
-     * Gets the value of the body property.
+     * Gets the value of the albumName property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getBody() {
-        return body;
+    public String getAlbumName() {
+        return albumName;
     }
 
     /**
-     * Sets the value of the body property.
+     * Sets the value of the albumName property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setBody(String value) {
-        this.body = value;
+    public void setAlbumName(String value) {
+        this.albumName = value;
     }
 
 }

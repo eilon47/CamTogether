@@ -8,6 +8,8 @@
 
 package xmls;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -25,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="AlbumName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="Images" type="{xsd}CTImage" maxOccurs="unbounded"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -36,36 +38,41 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "albumName"
+    "images"
 })
-@XmlRootElement(name = "NewAlbumResponseBody")
-public class NewAlbumResponseBody {
+@XmlRootElement(name = "GetAlbumResponseBody")
+public class GetAlbumResponseBody {
 
-    @XmlElement(name = "AlbumName", required = true)
-    protected String albumName;
-
-    /**
-     * Gets the value of the albumName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAlbumName() {
-        return albumName;
-    }
+    @XmlElement(name = "Images", required = true)
+    protected List<CTImage> images;
 
     /**
-     * Sets the value of the albumName property.
+     * Gets the value of the images property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the images property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getImages().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link CTImage }
+     * 
+     * 
      */
-    public void setAlbumName(String value) {
-        this.albumName = value;
+    public List<CTImage> getImages() {
+        if (images == null) {
+            images = new ArrayList<CTImage>();
+        }
+        return this.images;
     }
 
 }

@@ -38,7 +38,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
                 String sql = String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,CTimage.getAlbumName());
                 Object[] values = new Object[7];
                 values[0] = "";
-                values[1] = req_body.getAlbum();
+                values[1] = req_body.getImage().getImageName();
                 values[2] = req_body.getImage().getImageSize();
                 values[3] = req_body.getImage().getImageData();
                 values[4] = CTimage.getUserName();
