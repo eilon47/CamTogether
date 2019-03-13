@@ -8,6 +8,7 @@
             <enumeration value="ADD_NEW_PHOTO"/>
             <enumeration value="GET_PHOTOS_FROM_ALBUM"/>
             <enumeration value="ADD_USER_TO_ALBUM"/>
+            <enumeration value="GET_ALBUM"/>
         </restriction>
     </simpleType>
 
@@ -89,6 +90,20 @@
         </complexType>
     </element>
 
+    <element name="GetAlbumRequestBody">
+        <complexType>
+            <sequence>
+                <element name="AlbumName" type="string" />
+            </sequence>
+        </complexType>
+    </element>
+    <element name="GetAlbumResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Images" type="xsd:CTImage" maxOccurs="unbounded" minOccurs="1"/>
+            </sequence>
+        </complexType>
+    </element>
     <element name="NewImageRequestBody">
         <complexType>
             <sequence>

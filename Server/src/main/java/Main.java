@@ -1,5 +1,6 @@
 import database.DBClient;
 import database.SqlStatements;
+import handlers.GetAlbumHandler;
 import handlers.MessageHandler;
 import handlers.NewPhotoCommandHandler;
 import org.apache.logging.log4j.Logger;
@@ -22,14 +23,15 @@ public class Main {
 //        {
 //            ex.printStackTrace();
 //        }
+
         MessageHandler mh = new MessageHandler();
         HeaderRequest h_r = new HeaderRequest();
         NewImageRequestBody b_r = new NewImageRequestBody();
 
-        h_r.setUserId("danielG");
+        h_r.setUserId("dandan");
         h_r.setCommand(CommandsEnum.ADD_NEW_PHOTO);
 
-        b_r.setAlbum("testingAlbum");
+        b_r.setAlbum("ct");
         b_r.setImage(create_CTimage("/home/dandan/IdeaProjects/CamTogether/Server/src/main/resources/faces.jpeg"));
 
         RequestMessage rm = new RequestMessage();
@@ -38,6 +40,21 @@ public class Main {
 
         NewPhotoCommandHandler npc = new NewPhotoCommandHandler();
         npc.handle(rm);
+
+        HeaderRequest h_r_2 = new HeaderRequest();
+        GetAlbumRequestBody b_r_2 = new GetAlbumRequestBody();
+
+        h_r_2.setUserId("beni");
+        h_r_2.setCommand(CommandsEnum.GET_ALBUM);
+
+        b_r_2.setAlbumName("ct");
+
+        RequestMessage rm_2 = new RequestMessage();
+        rm_2.setHeader(h_r_2);
+        rm_2.setBody(mh.fromClassToXml(b_r_2));
+
+        GetAlbumHandler gah = new GetAlbumHandler();
+        gah.handle(rm_2);
 
     }
     private static void init_tables()throws SQLException, ClassNotFoundException {
@@ -64,7 +81,7 @@ public class Main {
             byte[] imageInByte = baos.toByteArray();
 
             img.setImageSize(imgg.getWidth()*imgg.getHeight());
-            img.setImageName(imgg.toString());
+            img.setImageName(f.getName());
             img.setImageData(imageInByte);
             img.setAlbumName("testingAlbum");
             img.setUserID(common.IdGen.generate(imgg.toString()));

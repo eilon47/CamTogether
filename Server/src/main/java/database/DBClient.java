@@ -115,7 +115,7 @@ public class DBClient {
     public ResultSet doSqlStatement(String sql) throws SQLException{
         Statement statement = this.conn.createStatement();
         ResultSet set = statement.executeQuery(sql);
-        statement.close();
+        //statement.close();
         return set;
     }
 
@@ -152,6 +152,30 @@ public class DBClient {
                 throw new SQLException("Not implemented");
         }
         statement.executeUpdate();
+        statement.close();
+        return true;
+    }
+    public boolean dynamicPrepareGETStatement(String sql, Object[] args) throws SQLException {
+        PreparedStatement statement = this.conn.prepareStatement(sql);
+        for(int i = 1; i <= args.length -1; i++){
+            if (args[i] instanceof String)
+                statement.setString(i, (String) args[i]);
+            else if (args[i] == null)
+                statement.setNull(i, Types.NULL);
+            else if (args[i] instanceof Integer)
+                statement.setInt(i,(Integer) args[i]);
+            else if (args[i] instanceof Long)
+                statement.setLong(i,(Long) args[i]);
+            else if (args[i] instanceof Float)
+                statement.setFloat(i,(Float) args[i]);
+            else if (args[i] instanceof Boolean)
+                statement.setBoolean(i,(Boolean) args[i]);
+            else if (args[i].getClass().equals( byte[].class) )
+                statement.setBytes(i,(byte[]) args[i]);
+            else
+                throw new SQLException("Not implemented");
+        }
+        statement.executeQuery();
         statement.close();
         return true;
     }
