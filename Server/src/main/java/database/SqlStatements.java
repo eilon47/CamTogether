@@ -10,14 +10,14 @@ public final class SqlStatements {
     //CREATE
     public static final String[] INIT_BASIC_TABLES = {
             "CREATE TABLE albums (" +
-                    "album_id   char(64)  NOT NULL, " +
+                    "album_id   char(64)  NOT NULL PRIMARY KEY, " +
                     "album_name   char(64)  NOT NULL, " +
                     "user_id    char(64)   NOT NULL, " +
                     "participants text" +
                     ");",
 
             "CREATE TABLE rules (" +
-                    "album_id  char(64)  NOT NULL, " +
+                    "album_id  char(64)  NOT NULL   PRIMARY KEY, " +
                     "location   boolean NOT NULL, " +
                     "longitude float(24), " +
                     "latitude  float(24), " +
@@ -28,7 +28,7 @@ public final class SqlStatements {
                     ");",
 
             "CREATE TABLE users (" +
-                    "user_id    char(64) NOT NULL," +
+                    "user_id    char(64) NOT NULL PRIMARY KEY," +
                     "user_name  char(64) NOT NULL," +
                     "albums_manager   char(64)," +
                     "album_part char(64)," +
@@ -50,12 +50,14 @@ public final class SqlStatements {
     public static final String INSERT_NEW_RULES_TO_RULES_TABLE = "INSERT INTO rules VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     public static final String INSERT_NEW_IMAGE_TO_ALBUM = "INSERT INTO %s VALUES (?, ?, ?, ?, ?, ?);";
 
+
     //SELECT
     public static final String SELECT_IMAGE_FROM_ALBUM = "SELECT * FROM %s WHERE image_name = ?;";
     public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM rules WHERE album_id = ?;";
     public static final String SELECT_USER_FROM_USERS = "SELECT * FROM users WHERE user_id = ?;";
 
-
+    //UPDATE
+    public static final String UPDATE_TABLE = "UPDATE %s SET %s = '%s' WHERE %s;";
 
 
 }

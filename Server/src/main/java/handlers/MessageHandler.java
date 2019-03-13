@@ -10,6 +10,8 @@ import javax.xml.bind.JAXBException;
 public class MessageHandler {
 
     private CreateNewAlbumCommandHandler createNewAlbumCommandHandler = new CreateNewAlbumCommandHandler();
+    private NewPhotoCommandHandler newPhotoCommandHandler = new NewPhotoCommandHandler();
+    private AddNewUserToAlbumHandler addNewUserToAlbumHandler = new AddNewUserToAlbumHandler();
     protected static Logger logger = LogManager.getLogger("handlers");
 
     public String messageReceived(String xmlMessage) throws Exception  {
@@ -23,8 +25,10 @@ public class MessageHandler {
                 res = createNewAlbumCommandHandler.handle(message);
                 break;
             case ADD_NEW_PHOTO:
+                res = newPhotoCommandHandler.handle(message);
                 break;
             case ADD_USER_TO_ALBUM:
+                res = addNewUserToAlbumHandler.handle(message);
                 break;
             case GET_PHOTOS_FROM_ALBUM:
                 break;

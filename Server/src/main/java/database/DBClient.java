@@ -1,8 +1,11 @@
 package database;
 
 
+import handlers.AddNewUserToAlbumHandler;
+import org.postgresql.jdbc.PgResultSet;
 import org.postgresql.largeobject.LargeObjectManager;
 import xmls.CTImage;
+import xmls.User;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -10,6 +13,7 @@ import java.sql.*;
 
 public class DBClient {
     private Connection conn;
+    private Statement statement;
     private static final String username = "picturex";
     private static final String password = "1234";
     private static final String JDBC_DRIVER = "org.postgresql.Driver";
@@ -25,17 +29,15 @@ public class DBClient {
     }
 
     public void closeConnection() throws SQLException{
+        this.statement.close();
         this.conn.close();
     }
 
     //######################  Tables Creations ############################
 
     public boolean createTableFromString(String sql) throws SQLException{
-        Statement statement = this.conn.createStatement();
-        boolean res = statement.execute(sql);
-
-        statement.close();
-        return res;
+         this.statement = this.conn.createStatement();
+         return this.statement.execute(sql);
     }
 
 
@@ -44,11 +46,11 @@ public class DBClient {
     public ResultSet selectQuery(String selection, String table, String cond)throws SQLException{
         String sql = "SELECT " + selection + " FROM " + table;
         if (cond != null){
-            sql += (" WHERE " + cond);
+            sql += (" WHERE " + cond + ";");
         }
 
-        Statement statement = this.conn.createStatement();
-        ResultSet rs = statement.executeQuery(sql);
+        this.statement = this.conn.createStatement();
+        ResultSet rs = this.statement.executeQuery(sql);
         return rs;
     }
 
@@ -62,11 +64,10 @@ public class DBClient {
         // Get the Large Object Manager to perform operations with
         LargeObjectManager lobj = ((org.postgresql.PGConnection)conn).getLargeObjectAPI();
         String sql = String.format(SqlStatements.SELECT_IMAGE_FROM_ALBUM, table);
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, imageName);
-        System.out.println(ps);
-        ResultSet rs = ps.executeQuery();
-
+        this.statement = conn.prepareStatement(sql);
+        ((PreparedStatement)this.statement).setString(1, imageName);
+        System.out.println(((PreparedStatement)this.statement));
+        ResultSet rs = ((PreparedStatement)this.statement).executeQuery();
         if (rs != null) {
             CTImage imageRecord = new CTImage();
             imageRecord.setAlbumName(table);
@@ -82,10 +83,8 @@ public class DBClient {
                 // Close the object
             }
             rs.close();
-            ps.close();
             return imageRecord;
         }
-        ps.close();
         return null;
     }
 
@@ -95,18 +94,18 @@ public class DBClient {
         conn.setAutoCommit(false);
 
         // Now insert the row into imageslo
-        PreparedStatement ps = conn.prepareStatement(String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,
+        this.statement = conn.prepareStatement(String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,
                 imageRecord.getAlbumName()));
-        ps.setString(1, imageRecord.getImageName());
-        ps.setInt(2, imageRecord.getImageSize());
+        ((PreparedStatement)this.statement).setString(1, imageRecord.getImageName());
+        ((PreparedStatement)this.statement).setInt(2, imageRecord.getImageSize());
         ByteArrayInputStream is = new ByteArrayInputStream(imageRecord.getImageData());
-        ps.setBinaryStream(3, is, imageRecord.getImageSize());
-        ps.setString(4, imageRecord.getUserName());
-        ps.setInt(5, imageRecord.getImageLength());
-        ps.setInt(6, imageRecord.getImageWidth());
-        System.out.println(ps);
-        ps.executeUpdate();
-        ps.close();
+        ((PreparedStatement)this.statement).setBinaryStream(3, is, imageRecord.getImageSize());
+        ((PreparedStatement)this.statement).setString(4, imageRecord.getUserName());
+        ((PreparedStatement)this.statement).setInt(5, imageRecord.getImageLength());
+        ((PreparedStatement)this.statement).setInt(6, imageRecord.getImageWidth());
+        System.out.println(((PreparedStatement)this.statement));
+        ((PreparedStatement)this.statement).executeUpdate();
+        this.conn.commit();
         return true;
 
     }
@@ -114,79 +113,105 @@ public class DBClient {
     // ####################### GENERAL ################################
 
     public ResultSet doSqlStatement(String sql) throws SQLException{
-        Statement statement = this.conn.createStatement();
-        ResultSet set = statement.executeQuery(sql);
-        statement.close();
-        return set;
+        this.statement = this.conn.createStatement();
+        return this.statement.executeQuery(sql);
     }
 
 
     public ResultSet prepareStatementAllStrings(String sql, String[] values) throws SQLException{
         if (values.length == 0)
             return doSqlStatement(sql);
-        PreparedStatement statement = this.conn.prepareStatement(sql);
+        statement = this.conn.prepareStatement(sql);
         for(int i=1; i < values.length; i++){
-            statement.setString(i, values[i]);
+            ((PreparedStatement)this.statement).setString(i, values[i]);
         }
-        ResultSet set = statement.executeQuery();
-        statement.close();
-        return set;
+        return ((PreparedStatement)this.statement).executeQuery();
     }
 
     public boolean insertNewRecord(String sql, Object[] args) throws SQLException{
         if (args.length == 0)
             return false;
-        PreparedStatement statement = this.conn.prepareStatement(sql);
+        statement = this.conn.prepareStatement(sql);
         for(int i=1; i < args.length; i++){
             if (args[i] == null)
-                statement.setNull(i, Types.NULL);
+                ((PreparedStatement)this.statement).setNull(i, Types.NULL);
             else if (args[i] instanceof String)
-                statement.setString(i, (String) args[i]);
+                ((PreparedStatement)this.statement).setString(i, (String) args[i]);
             else if (args[i] instanceof Integer)
-                statement.setInt(i,(Integer) args[i]);
+                ((PreparedStatement)this.statement).setInt(i,(Integer) args[i]);
             else if (args[i] instanceof Boolean)
-                statement.setBoolean(i,(Boolean) args[i]);
+                ((PreparedStatement)this.statement).setBoolean(i,(Boolean) args[i]);
             else if (args[i] instanceof Long)
-                statement.setLong(i,(Long) args[i]);
+                ((PreparedStatement)this.statement).setLong(i,(Long) args[i]);
             else if (args[i] instanceof Float)
-                statement.setFloat(i,(Float) args[i]);
+                ((PreparedStatement)this.statement).setFloat(i,(Float) args[i]);
             else if (args[i].getClass().equals( byte[].class) )
-                statement.setBytes(i,(byte[]) args[i]);
+                ((PreparedStatement)this.statement).setBytes(i,(byte[]) args[i]);
             else
                 throw new SQLException("Not implemented");
         }
-        statement.executeUpdate();
-        statement.close();
+        ((PreparedStatement)this.statement).executeUpdate();
         return true;
     }
 
 
     public boolean dynamicPrepareStatement(String sql, Object[] args) throws SQLException {
-        PreparedStatement statement = this.conn.prepareStatement(sql);
+        statement = this.conn.prepareStatement(sql);
         for(int i = 1; i <= args.length -1; i++){
             if (args[i] instanceof String)
-                statement.setString(i, (String) args[i]);
+                ((PreparedStatement)this.statement).setString(i, (String) args[i]);
             else if (args[i] == null)
-                statement.setNull(i, Types.NULL);
+                ((PreparedStatement)this.statement).setNull(i, Types.NULL);
             else if (args[i] instanceof Integer)
-                statement.setInt(i,(Integer) args[i]);
+                ((PreparedStatement)this.statement).setInt(i,(Integer) args[i]);
             else if (args[i] instanceof Long)
-                statement.setLong(i,(Long) args[i]);
+                ((PreparedStatement)this.statement).setLong(i,(Long) args[i]);
             else if (args[i] instanceof Float)
-                statement.setFloat(i,(Float) args[i]);
+                ((PreparedStatement)this.statement).setFloat(i,(Float) args[i]);
             else if (args[i] instanceof Boolean)
-                statement.setBoolean(i,(Boolean) args[i]);
+                ((PreparedStatement)this.statement).setBoolean(i,(Boolean) args[i]);
             else if (args[i].getClass().equals( byte[].class) )
-                statement.setBytes(i,(byte[]) args[i]);
+                ((PreparedStatement)this.statement).setBytes(i,(byte[]) args[i]);
             else
                 throw new SQLException("Not implemented");
         }
-        statement.executeUpdate();
-        statement.close();
+        ((PreparedStatement)this.statement).executeUpdate();
         return true;
     }
 
+    public boolean updateQuery(String update) throws SQLException{
+        this.statement = this.conn.createStatement();
+        //Execute method returns false if its doing update query
+        boolean res = this.statement.execute(update);
+        return !res;
+    }
+
+    public static void main(String [] a){
+        DBClient dbClient = new DBClient();
+        AddNewUserToAlbumHandler handler = new AddNewUserToAlbumHandler();
+//        PgResultSet set1, set2;
+        try {
+//            dbClient.createConnection();
+//            String[] values = {
+//                    "", "id", "eilon", "yes", "eilonalbum", "info"
+//            };
+//            dbClient.insertNewRecord(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, values);
+            User user = new User();
+            user.setUserID("id");
+            user.setUserName("eilon");
+            String new_val = handler.createNewParticipantsValue(user, "id-1");
+
+//            boolean res = handler.checkUserExistsAndUnique(user);
+//            System.out.println(res);
+//            dbClient.closeConnection();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
+
+
 
 //TODO
 //https://stackoverflow.com/questions/15127100/store-and-retrieve-images-in-postgresql-using-java

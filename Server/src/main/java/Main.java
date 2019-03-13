@@ -16,28 +16,28 @@ import java.sql.SQLException;
 public class Main {
     public static Logger logger = LogManager.getLogger();
     public static void main(String args[]) {
-//        try {
-//            init_tables();
-//        } catch (SQLException | ClassNotFoundException ex)
-//        {
-//            ex.printStackTrace();
-//        }
-        MessageHandler mh = new MessageHandler();
-        HeaderRequest h_r = new HeaderRequest();
-        NewImageRequestBody b_r = new NewImageRequestBody();
-
-        h_r.setUserId("danielG");
-        h_r.setCommand(CommandsEnum.ADD_NEW_PHOTO);
-
-        b_r.setAlbum("testingAlbum");
-        b_r.setImage(create_CTimage("/home/dandan/IdeaProjects/CamTogether/Server/src/main/resources/faces.jpeg"));
-
-        RequestMessage rm = new RequestMessage();
-        rm.setHeader(h_r);
-        rm.setBody(mh.fromClassToXml(b_r));
-
-        NewPhotoCommandHandler npc = new NewPhotoCommandHandler();
-        npc.handle(rm);
+        try {
+            init_tables();
+        } catch (SQLException | ClassNotFoundException ex)
+        {
+            ex.printStackTrace();
+        }
+//        MessageHandler mh = new MessageHandler();
+//        HeaderRequest h_r = new HeaderRequest();
+//        NewImageRequestBody b_r = new NewImageRequestBody();
+//
+//        h_r.setUserId("danielG");
+//        h_r.setCommand(CommandsEnum.ADD_NEW_PHOTO);
+//
+//        b_r.setAlbum("testingAlbum");
+//        b_r.setImage(create_CTimage("/home/dandan/IdeaProjects/CamTogether/Server/src/main/resources/faces.jpeg"));
+//
+//        RequestMessage rm = new RequestMessage();
+//        rm.setHeader(h_r);
+//        rm.setBody(mh.fromClassToXml(b_r));
+//
+//        NewPhotoCommandHandler npc = new NewPhotoCommandHandler();
+//        npc.handle(rm);
 
     }
     private static void init_tables()throws SQLException, ClassNotFoundException {

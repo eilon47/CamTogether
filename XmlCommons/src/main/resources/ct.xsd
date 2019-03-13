@@ -22,6 +22,13 @@
         </sequence>
     </complexType>
 
+    <complexType name="User">
+        <sequence>
+            <element name="UserID" type="string"/>
+            <element name="UserName" type="string"/>
+        </sequence>
+    </complexType>
+
     <complexType name="CTImage">
         <sequence>
             <element name="ImageName" type="string"/>
@@ -102,6 +109,23 @@
             <sequence>
                 <element name="Image" type="string"/>
                 <element name="Album" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="AddUserToAlbumRequestBody">
+        <complexType>
+            <sequence>
+                <element name="AddToAlbum" type="string"/>
+                <element name="UserToAdd" type="xsd:User"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="AddUserToAlbumResponseBody">
+        <complexType>
+            <sequence>
+                <element name="AddToAlbum" type="string"/>
+                <element name="UserToAdd" type="xsd:User"/>
             </sequence>
         </complexType>
     </element>
