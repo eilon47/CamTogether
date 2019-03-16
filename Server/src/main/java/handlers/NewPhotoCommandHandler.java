@@ -1,15 +1,10 @@
 package handlers;
 
-//import xsd.CommandRequest;
-import database.DBClient;
 import database.SqlStatements;
 import xmls.*;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class NewPhotoCommandHandler extends CommandHandler {
-
-    DBClient db_client = new DBClient();
 
     @Override
     public ResponseMessage handle(RequestMessage request){
@@ -34,7 +29,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
             CTimage.setImageSize(req_body.getImage().getImageSize());
             if (!alreadyExist(CTimage.getAlbumName(),CTimage.getImageName())) {
 
-                db_client.createConnection();
+                dbClient.createConnection();
                 String sql = String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,CTimage.getAlbumName());
                 Object[] values = new Object[7];
                 values[0] = "";
@@ -45,7 +40,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
                 values[5] = CTimage.getImageLength();
                 values[6] = CTimage.getImageWidth();
 
-                boolean res = db_client.dynamicPrepareStatement(sql,values);
+                boolean res = dbClient.dynamicPrepareStatement(sql,values);
                 if (!res)
 
                 return returnMessage;

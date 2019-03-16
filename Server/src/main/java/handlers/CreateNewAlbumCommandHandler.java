@@ -1,7 +1,6 @@
 package handlers;
 
 import common.IdGen;
-import database.DBClient;
 import database.SqlStatements;
 import xmls.*;
 
@@ -10,9 +9,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 public class CreateNewAlbumCommandHandler extends CommandHandler{
-
-    private static DBClient dbclient = new DBClient();
-
+    
     private static boolean nullityCheck(Object o){
         return o != null;
     }
@@ -31,7 +28,7 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
             responseBody.setAlbumName(albumName);
             responseMessage.setBody(fromClassToXml(responseBody));
             logger.debug("Creating connection to db");
-            dbclient.createConnection();
+            dbClient.createConnection();
             String[] values = new String[5];
             values[0] = "";
             values[1] = IdGen.generate(albumName);
@@ -39,19 +36,19 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
             values[3] = userId;
             values[4] = "";
             logger.info("inserting new album with values " + Arrays.toString(values));
-            boolean result = dbclient.insertNewRecord(SqlStatements.INSERT_NEW_ALBUM_TO_ALBUMS_TABLE, values);
+            boolean result = dbClient.insertNewRecord(SqlStatements.INSERT_NEW_ALBUM_TO_ALBUMS_TABLE, values);
             if (result){
                 logger.info("Creating new table for album " + albumName);
-                boolean res = dbclient.createTableFromString(String.format(SqlStatements.NEW_ALBUM_CREATION, albumName));
+                boolean res = dbClient.createTableFromString(String.format(SqlStatements.NEW_ALBUM_CREATION, albumName));
                 boolean location = nullityCheck(rules.getRadius()) && nullityCheck(rules.getLatitude()) && nullityCheck(rules.getLongitude());
                 boolean time = nullityCheck(rules.getEndTime()) && nullityCheck(rules.getStartTime());
                 Object[] rulesArr = {"", values[1], location, rules.getLongitude(), rules.getLatitude(), rules.getRadius(),
                         time, rules.getStartTime(), rules.getEndTime() };
                 logger.info("Adding new rules record for album " + albumName);
-                result = dbclient.insertNewRecord(SqlStatements.INSERT_NEW_RULES_TO_RULES_TABLE, rulesArr);
+                result = dbClient.insertNewRecord(SqlStatements.INSERT_NEW_RULES_TO_RULES_TABLE, rulesArr);
             }
             logger.debug("closing connection with db");
-            dbclient.closeConnection();
+            dbClient.closeConnection();
         }catch (SQLException | ClassNotFoundException ex) {
             responseMessage.getHeader().setCommandSuccess(false);
         }

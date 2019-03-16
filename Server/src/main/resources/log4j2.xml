@@ -23,6 +23,16 @@
             </Policies>
             <DefaultRolloverStrategy max="5" />
         </RollingFile>
+        <RollingFile name="server" fileName="${basePath}/server.log" filePattern="${basePath}/server-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
+
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout   pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
         </Console>
@@ -36,6 +46,9 @@
 
         <Logger name="handlers" level="info" additivity="false">
             <appender-ref ref="handler"/>
+        </Logger>
+        <Logger name="server" level="info" additivity="false">
+            <appender-ref ref="server"/>
         </Logger>
     </Loggers>
 

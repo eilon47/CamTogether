@@ -10,14 +10,14 @@ public final class SqlStatements {
     //CREATE
     public static final String[] INIT_BASIC_TABLES = {
             "CREATE TABLE albums (" +
-                    "album_id   char(64)  NOT NULL PRIMARY KEY, " +
-                    "album_name   char(64)  NOT NULL, " +
+                    //"album_id   char(64)  NOT NULL , " +
+                    "album_name   char(64)  NOT NULL PRIMARY KEY, " +
                     "user_id    char(64)   NOT NULL, " +
                     "participants text" +
                     ");",
 
             "CREATE TABLE rules (" +
-                    "album_id  char(64)  NOT NULL   PRIMARY KEY, " +
+                    "album_name  char(64)  NOT NULL   PRIMARY KEY, " +
                     "location   boolean NOT NULL, " +
                     "longitude float(24), " +
                     "latitude  float(24), " +
@@ -30,10 +30,18 @@ public final class SqlStatements {
             "CREATE TABLE users (" +
                     "user_id    char(64) NOT NULL PRIMARY KEY," +
                     "user_name  char(64) NOT NULL," +
-                    "albums_manager   char(64)," +
-                    "album_part char(64)," +
+                    "albums_manager   text," +
+                    "album_part text," +
+                    // TODO "email text NOT NULL, " +
+                    // TODO "score integer NOT NULL"
                     "info   char(64)" +
+                    ");",
+            "CREATE TABLE users_emails (" +
+                    "user_id char(64) NOT NULL," +
+                    "email char(128) NOT NULL PRIMARY KEY" +
                     ");"
+
+
     };
     public static final String NEW_ALBUM_CREATION = "CREATE TABLE %s (" +
             "image_name text, " +
@@ -41,7 +49,8 @@ public final class SqlStatements {
             "image bytea, " +
             "user_id char(64), " +
             "length integer, " +
-            "width integer" +
+            "width integer," +
+            // TODO add "thumbnail bytea" +
             ");";
 
     //INSERT

@@ -12,9 +12,11 @@ public class MessageHandler {
     private CreateNewAlbumCommandHandler createNewAlbumCommandHandler = new CreateNewAlbumCommandHandler();
     private NewPhotoCommandHandler newPhotoCommandHandler = new NewPhotoCommandHandler();
     private AddNewUserToAlbumHandler addNewUserToAlbumHandler = new AddNewUserToAlbumHandler();
+    private GetAlbumHandler getAlbumHandler = new GetAlbumHandler();
+
     protected static Logger logger = LogManager.getLogger("handlers");
 
-    public String messageReceived(String xmlMessage) throws Exception  {
+    public String messageReceived(String xmlMessage){
         logger.debug("message received " + xmlMessage);
         RequestMessage message = fromXmlToClass(xmlMessage, RequestMessage.class);
         logger.info("message received with command " + message.getHeader().getCommand().value());
@@ -31,7 +33,7 @@ public class MessageHandler {
                 res = addNewUserToAlbumHandler.handle(message);
                 break;
             case GET_PHOTOS_FROM_ALBUM:
-                break;
+                res = getAlbumHandler.handle(message);
             default:
                 break;
         }

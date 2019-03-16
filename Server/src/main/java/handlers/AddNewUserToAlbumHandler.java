@@ -1,6 +1,5 @@
 package handlers;
 
-import database.DBClient;
 import database.SqlStatements;
 import xmls.AddUserToAlbumRequestBody;
 import xmls.RequestMessage;
@@ -11,13 +10,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AddNewUserToAlbumHandler extends CommandHandler {
-    private DBClient dbClient = new DBClient();
     @Override
     public ResponseMessage handle(RequestMessage request) {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setHeader(createHeaderResponse(request.getHeader()));
         AddUserToAlbumRequestBody addUserToAlbumRequestBody = fromXmlToClass(request.getBody(), AddUserToAlbumRequestBody.class);
-        ResultSet resultSet;
         try {
             boolean user_exists = checkUserExistsAndUnique(addUserToAlbumRequestBody.getUserToAdd());
             if (!user_exists){
@@ -26,14 +23,20 @@ public class AddNewUserToAlbumHandler extends CommandHandler {
                 return responseMessage;
             }
             String new_participants_val = createNewParticipantsValue(addUserToAlbumRequestBody.getUserToAdd(), addUserToAlbumRequestBody.getAddToAlbum());
-            updateNewValue(new_participants_val, addUserToAlbumRequestBody.getAddToAlbum());
-
+            boolean res = updateNewValue(new_participants_val, addUserToAlbumRequestBody.getAddToAlbum());
+            if (!res){
+                responseMessage.getHeader().setCommandSuccess(false);
+                responseMessage.setBody("Failed updating user in album's participants");
+                return responseMessage;
+            }
         } catch (ClassNotFoundException | SQLException ex){
-            ex.printStackTrace();
+            responseMessage.getHeader().setCommandSuccess(false);
+            responseMessage.setBody(ex.getMessage());
+            return responseMessage;
         }
-        return null;
+        responseMessage.getHeader().setCommandSuccess(true);
+        return responseMessage;
     }
-
 
     private boolean checkUserExistsAndUnique(User user) throws SQLException, ClassNotFoundException{
         //Check the User exists in the users table
@@ -62,7 +65,7 @@ public class AddNewUserToAlbumHandler extends CommandHandler {
         return participants;
     }
 
-    public boolean updateNewValue(String newParticipantsStr, String album_id) throws SQLException, ClassNotFoundException{
+    private boolean updateNewValue(String newParticipantsStr, String album_id) throws SQLException, ClassNotFoundException{
         String sql = String.format(SqlStatements.UPDATE_TABLE, "albums", "participants", newParticipantsStr, "album_id='"+ album_id + "'" );
         dbClient.createConnection();
         boolean res = dbClient.updateQuery(sql);

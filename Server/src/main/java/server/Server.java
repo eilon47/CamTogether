@@ -10,7 +10,9 @@ import java.util.Properties;
 
 // Server class
 public class Server  {
-    private static Logger logger = LogManager.getLogger();
+
+    private static Logger logger = LogManager.getLogger("server");
+
     private ServerSocket ss;
     private String ip;
     private int port;
@@ -58,10 +60,8 @@ public class Server  {
                 logger.info("Assigning new thread for this client");
 
                 // create a new thread object
-                Thread t = new Thread();//ClientHandler(s, dis, dos);
-                // Invoking the start() method
+                Thread t = new Thread(new ClientHandler(s, dis, dos));
                 t.start();
-
             }
             catch (Exception e){
                 s.close();

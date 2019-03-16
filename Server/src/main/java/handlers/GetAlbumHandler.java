@@ -2,19 +2,15 @@ package handlers;
 
 
 //import xsd.CommandRequest;
-import database.DBClient;
+
 import database.SqlStatements;
 import xmls.*;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GetAlbumHandler extends  CommandHandler {
 
-    DBClient dbClient = new DBClient();
 
     @Override
     public ResponseMessage handle(RequestMessage request) {
