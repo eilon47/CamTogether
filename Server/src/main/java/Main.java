@@ -1,22 +1,28 @@
+import common.ResourcesHandler;
 import database.DBClient;
 import database.SqlStatements;
+import handlers.CreateNewAlbumCommandHandler;
 import handlers.GetAlbumHandler;
 import handlers.MessageHandler;
 import handlers.NewPhotoCommandHandler;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import xmls.*;
+import xsd.XsdUtils;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.xml.bind.JAXBException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Main {
     public static Logger logger = LogManager.getLogger();
-    public static void main(String args[]) {
+    public static void main(String args[]) throws JAXBException {
 //        try {
 //            init_tables();
 //        } catch (SQLException | ClassNotFoundException ex)
@@ -24,16 +30,30 @@ public class Main {
 //            ex.printStackTrace();
 //        }
 
+//        NewAlbumRequestBody r1 = new NewAlbumRequestBody();
+//        RequestMessage r2 = new RequestMessage();
+//        HeaderRequest r3 = new HeaderRequest();
+//        r3.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
+//        r3.setUserId("dandan");
+//        r1.setAlbumName("test1");
+//        r1.setManager("dandan");
+//        r2.setHeader(r3);
+//        r1.setRules(new Rules());
+//        r2.setBody(XsdUtils.serializeToXML(r1));
+//
+//        CreateNewAlbumCommandHandler handler=new CreateNewAlbumCommandHandler();
+//        handler.handle(r2);
+
         MessageHandler mh = new MessageHandler();
         HeaderRequest h_r = new HeaderRequest();
+
         NewImageRequestBody b_r = new NewImageRequestBody();
 
         h_r.setUserId("dandan");
         h_r.setCommand(CommandsEnum.ADD_NEW_PHOTO);
 
-        b_r.setAlbum("ct");
-        b_r.setImage(create_CTimage("/home/dandan/IdeaProjects/CamTogether/Server/src/main/resources/faces.jpeg"));
-
+        b_r.setAlbum("test1");
+        b_r.setImage(create_CTimage(ResourcesHandler.getResourceFilePath("faces2.jpg")));
         RequestMessage rm = new RequestMessage();
         rm.setHeader(h_r);
         rm.setBody(mh.fromClassToXml(b_r));
@@ -47,14 +67,17 @@ public class Main {
         h_r_2.setUserId("beni");
         h_r_2.setCommand(CommandsEnum.GET_ALBUM);
 
-        b_r_2.setAlbumName("ct");
+        b_r_2.setAlbumName("test1");
 
         RequestMessage rm_2 = new RequestMessage();
         rm_2.setHeader(h_r_2);
         rm_2.setBody(mh.fromClassToXml(b_r_2));
 
         GetAlbumHandler gah = new GetAlbumHandler();
-        gah.handle(rm_2);
+        ResponseMessage photos = gah.handle(rm_2);
+
+        GetAlbumResponseBody responseBody = XsdUtils.serializeFromXml(photos.getBody(),GetAlbumResponseBody.class);
+        List<CTImage> f = responseBody.getImages();
 
     }
     private static void init_tables()throws SQLException, ClassNotFoundException {
@@ -64,11 +87,8 @@ public class Main {
         for(String table : SqlStatements.INIT_BASIC_TABLES){
            boolean res = client.createTableFromString(table);
         }
-
         client.closeConnection();
-
     }
-
     private static CTImage create_CTimage(String path) {
         try {
             CTImage img = new CTImage();
@@ -83,7 +103,7 @@ public class Main {
             img.setImageSize(imgg.getWidth()*imgg.getHeight());
             img.setImageName(f.getName());
             img.setImageData(imageInByte);
-            img.setAlbumName("testingAlbum");
+            img.setAlbumName("test1");
             img.setUserName(common.IdGen.generate(imgg.toString()));
             img.setImageLength(imgg.getHeight());
             img.setImageWidth(imgg.getWidth());
@@ -94,9 +114,4 @@ public class Main {
             return null;
         }
     }
-
-
-
-
-
 }

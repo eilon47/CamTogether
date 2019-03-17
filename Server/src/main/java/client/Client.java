@@ -15,9 +15,9 @@ public class Client
     private Socket socket;
     private DataInputStream dis;
     private DataOutputStream dos;
-    public Client(int port, String ip) {
-        this.port = port;
-        this.ip = ip;
+    public Client() {
+        this.port = 5432;
+        this.ip = "192.168.1.7";
     }
 
     private void createConnection() throws IOException{
@@ -45,4 +45,8 @@ public class Client
 
     }
 
+    public  static void main(String[] a) throws IOException {
+        Client c = new Client();
+        c.createConnection();
+    }
 }
