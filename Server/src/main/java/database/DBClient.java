@@ -1,11 +1,10 @@
 package database;
 
 
-import handlers.AddNewUserToAlbumHandler;
-import org.postgresql.jdbc.PgResultSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.postgresql.largeobject.LargeObjectManager;
 import xmls.CTImage;
-import xmls.User;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,25 +17,27 @@ public class DBClient {
     private static final String password = "1234";
     private static final String JDBC_DRIVER = "org.postgresql.Driver";
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/basedb";
-
+    private static Logger logger = LogManager.getLogger("database");
 
     //####################### Connections ################################
 
     public void createConnection() throws ClassNotFoundException, SQLException{
         Class.forName(JDBC_DRIVER);
         this.conn = DriverManager.getConnection(DB_URL, username, password);
-        System.out.println("connected!");
+        logger.debug("connection created");
     }
 
     public void closeConnection() throws SQLException{
         this.statement.close();
         this.conn.close();
+        logger.debug("connection and statement are closed");
     }
 
     //######################  Tables Creations ############################
 
     public boolean createTableFromString(String sql) throws SQLException{
          this.statement = this.conn.createStatement();
+         logger.info("Executing Query " + sql);
          return this.statement.execute(sql);
     }
 
@@ -50,6 +51,7 @@ public class DBClient {
         }
 
         this.statement = this.conn.createStatement();
+        logger.info("Executing Query " + sql);
         ResultSet rs = this.statement.executeQuery(sql);
         return rs;
     }
@@ -64,9 +66,10 @@ public class DBClient {
         // Get the Large Object Manager to perform operations with
         LargeObjectManager lobj = ((org.postgresql.PGConnection)conn).getLargeObjectAPI();
         String sql = String.format(SqlStatements.SELECT_IMAGE_FROM_ALBUM, table);
+        logger.info("Executing Query " + sql);
         this.statement = conn.prepareStatement(sql);
         ((PreparedStatement)this.statement).setString(1, imageName);
-        System.out.println(((PreparedStatement)this.statement));
+        logger.debug(((PreparedStatement)this.statement));
         ResultSet rs = ((PreparedStatement)this.statement).executeQuery();
         if (rs != null) {
             CTImage imageRecord = new CTImage();
@@ -114,9 +117,9 @@ public class DBClient {
 
     public ResultSet doSqlStatement(String sql) throws SQLException{
         this.statement = this.conn.createStatement();
+        logger.info("Executing Query " + sql);
         return this.statement.executeQuery(sql);
     }
-
 
     public ResultSet prepareStatementAllStrings(String sql, String[] values) throws SQLException{
         if (values.length == 0)
@@ -125,6 +128,7 @@ public class DBClient {
         for(int i=1; i < values.length; i++){
             ((PreparedStatement)this.statement).setString(i, values[i]);
         }
+        logger.info("Executing Query " + sql);
         return ((PreparedStatement)this.statement).executeQuery();
     }
 
@@ -150,10 +154,11 @@ public class DBClient {
             else
                 throw new SQLException("Not implemented");
         }
+        logger.info("Executing Query " + sql);
         ((PreparedStatement)this.statement).executeUpdate();
+
         return true;
     }
-
 
     public boolean dynamicPrepareStatement(String sql, Object[] args) throws SQLException {
         statement = this.conn.prepareStatement(sql);
@@ -175,63 +180,17 @@ public class DBClient {
             else
                 throw new SQLException("Not implemented");
         }
+        logger.info("Executing Query " + sql);
         ((PreparedStatement)this.statement).executeUpdate();
-        return true;
-    }
-    public boolean dynamicPrepareGETStatement(String sql, Object[] args) throws SQLException {
-        PreparedStatement statement = this.conn.prepareStatement(sql);
-        for(int i = 1; i <= args.length -1; i++){
-            if (args[i] instanceof String)
-                statement.setString(i, (String) args[i]);
-            else if (args[i] == null)
-                statement.setNull(i, Types.NULL);
-            else if (args[i] instanceof Integer)
-                statement.setInt(i,(Integer) args[i]);
-            else if (args[i] instanceof Long)
-                statement.setLong(i,(Long) args[i]);
-            else if (args[i] instanceof Float)
-                statement.setFloat(i,(Float) args[i]);
-            else if (args[i] instanceof Boolean)
-                statement.setBoolean(i,(Boolean) args[i]);
-            else if (args[i].getClass().equals( byte[].class) )
-                statement.setBytes(i,(byte[]) args[i]);
-            else
-                throw new SQLException("Not implemented");
-        }
-        statement.executeQuery();
-        statement.close();
         return true;
     }
 
     public boolean updateQuery(String update) throws SQLException{
         this.statement = this.conn.createStatement();
         //Execute method returns false if its doing update query
+        logger.info("Executing Query " + update);
         boolean res = this.statement.execute(update);
         return !res;
-    }
-
-    public static void main(String [] a){
-        DBClient dbClient = new DBClient();
-        AddNewUserToAlbumHandler handler = new AddNewUserToAlbumHandler();
-//        PgResultSet set1, set2;
-        try {
-//            dbClient.createConnection();
-//            String[] values = {
-//                    "", "id", "eilon", "yes", "eilonalbum", "info"
-//            };
-//            dbClient.insertNewRecord(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, values);
-            User user = new User();
-            user.setUserID("id");
-            user.setUserName("eilon");
-            String new_val = handler.createNewParticipantsValue(user, "id-1");
-
-//            boolean res = handler.checkUserExistsAndUnique(user);
-//            System.out.println(res);
-//            dbClient.closeConnection();
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 }
 

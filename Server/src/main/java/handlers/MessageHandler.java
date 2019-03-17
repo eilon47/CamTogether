@@ -11,7 +11,7 @@ public class MessageHandler {
 
     private CreateNewAlbumCommandHandler createNewAlbumCommandHandler = new CreateNewAlbumCommandHandler();
     private NewPhotoCommandHandler newPhotoCommandHandler = new NewPhotoCommandHandler();
-    private AddNewUserToAlbumHandler addNewUserToAlbumHandler = new AddNewUserToAlbumHandler();
+    private AddUserToAlbumHandler addUserToAlbumHandler = new AddUserToAlbumHandler();
     private GetAlbumHandler getAlbumHandler = new GetAlbumHandler();
 
     protected static Logger logger = LogManager.getLogger("handlers");
@@ -30,7 +30,7 @@ public class MessageHandler {
                 res = newPhotoCommandHandler.handle(message);
                 break;
             case ADD_USER_TO_ALBUM:
-                res = addNewUserToAlbumHandler.handle(message);
+                res = addUserToAlbumHandler.handle(message);
                 break;
             case GET_PHOTOS_FROM_ALBUM:
                 res = getAlbumHandler.handle(message);

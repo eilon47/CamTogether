@@ -104,6 +104,7 @@
             </sequence>
         </complexType>
     </element>
+
     <element name="GetAlbumResponseBody">
         <complexType>
             <sequence>
@@ -111,6 +112,7 @@
             </sequence>
         </complexType>
     </element>
+
     <element name="NewImageRequestBody">
         <complexType>
             <sequence>
@@ -119,6 +121,7 @@
             </sequence>
         </complexType>
     </element>
+
     <element name="NewImageResponseBody">
         <complexType>
             <sequence>
@@ -136,6 +139,7 @@
             </sequence>
         </complexType>
     </element>
+
     <element name="AddUserToAlbumResponseBody">
         <complexType>
             <sequence>
@@ -144,6 +148,7 @@
             </sequence>
         </complexType>
     </element>
+
     <simpleType name="DummyTest" final="restriction">
         <restriction base="string">
             <enumeration value="Dummy2"/>

@@ -26,7 +26,7 @@ public abstract class CommandHandler {
         try {
             return XsdUtils.serializeFromXml(xml, tClass);
         } catch (JAXBException ex){
-            logger.warn("Failed creating class from xml", ex);
+            logger.warn("Failed creating class " + tClass.getName()+" from xml", ex);
             return null;
         }
     }
@@ -35,7 +35,7 @@ public abstract class CommandHandler {
         try {
             return XsdUtils.serializeToXML(object);
         } catch (JAXBException ex){
-            logger.warn("failed creating xml from class", ex);
+            logger.warn("failed creating xml from class " + object.getClass().getName(), ex);
             return null;
         }
     }

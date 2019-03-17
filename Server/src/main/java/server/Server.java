@@ -96,11 +96,4 @@ public class Server  {
         this.port = port;
     }
 
-
-    public static void main(String[] args) throws IOException
-    {
-        Server server = new Server("127.0.0.1", 18080);
-        server.connect();
-        server.startServer();
-    }
 }

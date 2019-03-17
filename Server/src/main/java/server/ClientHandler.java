@@ -14,7 +14,7 @@ import java.net.Socket;
 //import handlers.NewPhotoCommandHandler;
 
 // ClientHandler class
-class ClientHandler extends Thread {
+class ClientHandler implements Runnable {
     private DataInputStream dis;
     private DataOutputStream dos;
     private Socket s;
@@ -37,12 +37,12 @@ class ClientHandler extends Thread {
             try {
                 // receive the answer from client
                 received = dis.readUTF();
+                if (received.isEmpty())
+                    break;
                 logger.debug("Client handler received message: [\n" +received+"]\n");
                 String response = messageHandler.messageReceived(received);
                 dos.writeUTF(response);
                 logger.debug("Client handler sent response: [\n" +response+"]\n");
-                if (response.isEmpty())
-                    break;
             } catch (IOException e) {
                 logger.warn("Exception thrown", e);
             }

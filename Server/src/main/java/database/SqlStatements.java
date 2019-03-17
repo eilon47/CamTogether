@@ -10,7 +10,7 @@ public final class SqlStatements {
     //CREATE
     public static final String[] INIT_BASIC_TABLES = {
             "CREATE TABLE albums (" +
-                    //"album_id   char(64)  NOT NULL , " +
+                    "album_id   char(64)  NOT NULL , " +
                     "album_name   char(64)  NOT NULL PRIMARY KEY, " +
                     "user_id    char(64)   NOT NULL, " +
                     "participants text" +
@@ -49,7 +49,7 @@ public final class SqlStatements {
             "image bytea, " +
             "user_id char(64), " +
             "length integer, " +
-            "width integer," +
+            "width integer" +
             // TODO add "thumbnail bytea" +
             ");";
 
