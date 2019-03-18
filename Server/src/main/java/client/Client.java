@@ -9,18 +9,18 @@ import java.net.*;
 public class Client
 {
 
-    private static Logger logger = LogManager.getLogger();
-    private int port;
-    private String ip;
-    private Socket socket;
-    private DataInputStream dis;
-    private DataOutputStream dos;
-    public Client(int port, String ip) {
+    protected static Logger logger = LogManager.getLogger("client");
+    protected int port;
+    protected String ip;
+    protected Socket socket;
+    protected DataInputStream dis;
+    protected DataOutputStream dos;
+    protected Client(int port, String ip) {
         this.port = port;
         this.ip = ip;
     }
 
-    private void createConnection() throws IOException{
+    public void createConnection() throws IOException{
         InetAddress addr = InetAddress.getByName(this.ip);
         this.socket = new Socket(addr, port);
         this.dis = new DataInputStream(this.socket.getInputStream());
@@ -28,13 +28,24 @@ public class Client
     }
 
     public void sendMessage(String msg) throws IOException{
-        logger.info("Sending : " + msg);
+        logger.debug("Sending : " + msg);
         this.dos.writeUTF(msg);
+    }
+
+    public void sendMessage(byte[] msg) throws IOException{
+        logger.debug("Sending : " + msg.length + " bytes");
+        this.dos.write(msg);
+    }
+
+    public int getIntResult() throws IOException {
+        int received = this.dis.readInt();
+        logger.debug("Received : " + received);
+        return received;
     }
 
     public String getMessage() throws IOException {
         String received = this.dis.readUTF();
-        logger.info("Received : " + received);
+        logger.debug("Received : " + received);
         return received;
     }
 

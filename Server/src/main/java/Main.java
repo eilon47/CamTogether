@@ -5,6 +5,7 @@ import handlers.MessageHandler;
 import handlers.NewPhotoCommandHandler;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import server.Server;
 import xmls.*;
 
 import javax.imageio.ImageIO;
@@ -23,39 +24,45 @@ public class Main {
 //        {
 //            ex.printStackTrace();
 //        }
-
-        MessageHandler mh = new MessageHandler();
-        HeaderRequest h_r = new HeaderRequest();
-        NewImageRequestBody b_r = new NewImageRequestBody();
-
-        h_r.setUserId("dandan");
-        h_r.setCommand(CommandsEnum.ADD_NEW_PHOTO);
-
-        b_r.setAlbum("ct");
-        b_r.setImage(create_CTimage("/home/dandan/IdeaProjects/CamTogether/Server/src/main/resources/faces.jpeg"));
-
-        RequestMessage rm = new RequestMessage();
-        rm.setHeader(h_r);
-        rm.setBody(mh.fromClassToXml(b_r));
-
-        NewPhotoCommandHandler npc = new NewPhotoCommandHandler();
-        npc.handle(rm);
-
-        HeaderRequest h_r_2 = new HeaderRequest();
-        GetAlbumRequestBody b_r_2 = new GetAlbumRequestBody();
-
-        h_r_2.setUserId("beni");
-        h_r_2.setCommand(CommandsEnum.GET_ALBUM);
-
-        b_r_2.setAlbumName("ct");
-
-        RequestMessage rm_2 = new RequestMessage();
-        rm_2.setHeader(h_r_2);
-        rm_2.setBody(mh.fromClassToXml(b_r_2));
-
-        GetAlbumHandler gah = new GetAlbumHandler();
-        gah.handle(rm_2);
-
+//
+//        MessageHandler mh = new MessageHandler();
+//        HeaderRequest h_r = new HeaderRequest();
+//        NewImageRequestBody b_r = new NewImageRequestBody();
+//
+//        h_r.setUserId("dandan");
+//        h_r.setCommand(CommandsEnum.ADD_NEW_PHOTO);
+//
+//        b_r.setAlbum("ct");
+//        b_r.setImage(create_CTimage("/home/dandan/IdeaProjects/CamTogether/Server/src/main/resources/faces.jpeg"));
+//
+//        RequestMessage rm = new RequestMessage();
+//        rm.setHeader(h_r);
+//        rm.setBody(mh.fromClassToXml(b_r));
+//
+//        NewPhotoCommandHandler npc = new NewPhotoCommandHandler();
+//        npc.handle(rm);
+//
+//        HeaderRequest h_r_2 = new HeaderRequest();
+//        GetAlbumRequestBody b_r_2 = new GetAlbumRequestBody();
+//
+//        h_r_2.setUserId("beni");
+//        h_r_2.setCommand(CommandsEnum.GET_ALBUM);
+//
+//        b_r_2.setAlbumName("ct");
+//
+//        RequestMessage rm_2 = new RequestMessage();
+//        rm_2.setHeader(h_r_2);
+//        rm_2.setBody(mh.fromClassToXml(b_r_2));
+//
+//        GetAlbumHandler gah = new GetAlbumHandler();
+//        gah.handle(rm_2);
+        Server server = new Server("0.0.0.0", 23456);
+        try {
+            server.connect();
+            server.startServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     private static void init_tables()throws SQLException, ClassNotFoundException {
         DBClient client = new DBClient();

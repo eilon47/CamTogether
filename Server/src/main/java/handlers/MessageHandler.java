@@ -32,7 +32,7 @@ public class MessageHandler {
             case ADD_USER_TO_ALBUM:
                 res = addUserToAlbumHandler.handle(message);
                 break;
-            case GET_PHOTOS_FROM_ALBUM:
+            case GET_ALBUM:
                 res = getAlbumHandler.handle(message);
             default:
                 break;

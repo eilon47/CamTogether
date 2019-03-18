@@ -1,5 +1,6 @@
 package server;
 
+import client.Client;
 import common.ConfigHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,8 +61,10 @@ public class Server  {
                 logger.info("Assigning new thread for this client");
 
                 // create a new thread object
-                Thread t = new Thread(new ClientHandler(s, dis, dos));
-                t.start();
+                ClientHandler ch = new ClientHandler(s, dis, dos);
+                ch.run();
+//                Thread t = new Thread(new ClientHandler(s, dis, dos));
+//                t.start();
             }
             catch (Exception e){
                 s.close();

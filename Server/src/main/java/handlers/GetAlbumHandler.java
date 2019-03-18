@@ -18,6 +18,11 @@ public class GetAlbumHandler extends CommandHandler {
         try {
             logger.debug("Creating connection to db");
             dbClient.createConnection();
+            if(!this.isAuthorized(req_body.getAlbumName(), request.getHeader().getUserId())) {
+                responseMessage.getHeader().setCommandSuccess(false);
+                responseMessage.setBody(fromClassToXml(responseBody));
+                return responseMessage;
+            }
             String sql = String.format(SqlStatements.SELECT_ALL_RECORDS, req_body.getAlbumName());
             logger.info("Querying " + sql);
             resultSet = dbClient.doSqlStatement(sql);
@@ -44,5 +49,20 @@ public class GetAlbumHandler extends CommandHandler {
             return responseMessage;
         }
         return responseMessage;
+    }
+
+
+    private boolean isAuthorized(String album_id, String user) throws SQLException {
+        logger.debug("connection with db created - executing select query to receive participants list");
+        ResultSet resultSet = dbClient.selectQuery("participants", "albums", "album_id='" + album_id + "'");
+        String participants = null;
+        boolean res = false;
+        if (resultSet.next())
+            participants = resultSet.getString("participants");
+            if(participants!=null)
+                res = participants.contains(user);
+        resultSet.close();
+        dbClient.closeConnection();
+        return res;
     }
 }

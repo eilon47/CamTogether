@@ -45,6 +45,7 @@ class ClientHandler implements Runnable {
                 logger.debug("Client handler sent response: [\n" +response+"]\n");
             } catch (IOException e) {
                 logger.warn("Exception thrown", e);
+                break;
             }
         }
         try {
