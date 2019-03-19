@@ -10,7 +10,6 @@ package xmls;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -25,7 +24,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="AlbumName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -35,37 +33,9 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "albumName"
-})
-@XmlRootElement(name = "NewAlbumResponseBody")
-public class NewAlbumResponseBody {
+@XmlType(name = "")
+@XmlRootElement(name = "GetAlbumsListRequestBody")
+public class GetAlbumsListRequestBody {
 
-    @XmlElement(name = "AlbumName", required = true)
-    protected String albumName;
-
-    /**
-     * Gets the value of the albumName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAlbumName() {
-        return albumName;
-    }
-
-    /**
-     * Sets the value of the albumName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAlbumName(String value) {
-        this.albumName = value;
-    }
 
 }

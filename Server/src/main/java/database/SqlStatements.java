@@ -26,22 +26,20 @@ public final class SqlStatements {
                     "start_date   char(20), " +
                     "end_date   char(20) " +
                     ");",
-
+            // TODO "email text NOT NULL, " +
+            // TODO "score integer NOT NULL"
             "CREATE TABLE users (" +
                     "user_id    char(64) NOT NULL PRIMARY KEY," +
                     "user_name  char(64) NOT NULL," +
                     "albums_manager   text," +
                     "album_part text," +
-                    // TODO "email text NOT NULL, " +
-                    // TODO "score integer NOT NULL"
                     "info   char(64)" +
-                    ");",
-            "CREATE TABLE users_emails (" +
-                    "user_id char(64) NOT NULL," +
-                    "email char(128) NOT NULL PRIMARY KEY" +
                     ");"
-
-
+//            ,
+//            "CREATE TABLE users_emails (" +
+//                    "user_id char(64) NOT NULL," +
+//                    "email char(128) NOT NULL PRIMARY KEY" +
+//                    ");"
     };
     public static final String NEW_ALBUM_CREATION = "CREATE TABLE %s (" +
             "image_name text, " +

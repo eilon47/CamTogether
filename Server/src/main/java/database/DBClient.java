@@ -48,6 +48,8 @@ public class DBClient {
         String sql = "SELECT " + selection + " FROM " + table;
         if (cond != null){
             sql += (" WHERE " + cond + ";");
+        } else {
+            sql += ";";
         }
 
         this.statement = this.conn.createStatement();

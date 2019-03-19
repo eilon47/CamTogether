@@ -1,5 +1,6 @@
 package handlers;
 
+import client.CVClient;
 import database.SqlStatements;
 import xmls.*;
 
@@ -7,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class NewPhotoCommandHandler extends CommandHandler {
-
+    private CVClient cvClient = new CVClient();
     @Override
     public ResponseMessage handle(RequestMessage request){
         logger.info("Handling new photo");
@@ -20,6 +21,13 @@ public class NewPhotoCommandHandler extends CommandHandler {
         responseBody.setImage(req_body.getImage().getImageName());
         try {
             CTImage CTimage = req_body.getImage();
+            boolean cv_res = this.cvClient.queryCvServer(CTimage);
+            if(!cv_res){
+                logger.info("CV server returned false - not inserting image to db");
+                returnMessage.getHeader().setCommandSuccess(false);
+                returnMessage.setBody(fromClassToXml(responseBody));
+                return returnMessage;
+            }
             if (!alreadyExist(CTimage.getAlbumName(),CTimage.getImageName())) {
                 dbClient.createConnection();
                 String sql = String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,CTimage.getAlbumName());

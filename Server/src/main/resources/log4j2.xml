@@ -65,7 +65,7 @@
             <appender-ref ref="database"/>
         </Logger>
 
-        <Logger name="handlers" level="info" additivity="false">
+        <Logger name="handlers" level="debug" additivity="false">
             <appender-ref ref="handler"/>
         </Logger>
         <Logger name="client" level="info" additivity="false">

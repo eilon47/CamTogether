@@ -13,6 +13,7 @@ public class MessageHandler {
     private NewPhotoCommandHandler newPhotoCommandHandler = new NewPhotoCommandHandler();
     private AddUserToAlbumHandler addUserToAlbumHandler = new AddUserToAlbumHandler();
     private GetAlbumHandler getAlbumHandler = new GetAlbumHandler();
+    private GetAlbumsListHandler getAlbumsListHandler = new GetAlbumsListHandler();
 
     protected static Logger logger = LogManager.getLogger("handlers");
 
@@ -34,6 +35,8 @@ public class MessageHandler {
                 break;
             case GET_ALBUM:
                 res = getAlbumHandler.handle(message);
+            case GET_ALBUMS_LIST:
+                res = getAlbumsListHandler.handle(message);
             default:
                 break;
         }

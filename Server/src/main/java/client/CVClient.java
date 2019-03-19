@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class CVClient extends Client {
 
-    private CVClient() {
+    public CVClient() {
         super(19090, "0.0.0.0");
     }
 

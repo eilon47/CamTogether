@@ -6,7 +6,7 @@
         <restriction base="string">
             <enumeration value="CREATE_NEW_ALBUM"/>
             <enumeration value="ADD_NEW_PHOTO"/>
-            <enumeration value="GET_PHOTOS_FROM_ALBUM"/>
+            <enumeration value="GET_ALBUMS_LIST"/>
             <enumeration value="ADD_USER_TO_ALBUM"/>
             <enumeration value="GET_ALBUM"/>
         </restriction>
@@ -93,6 +93,20 @@
         <complexType>
             <sequence>
                 <element name="AlbumName" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="GetAlbumsListRequestBody">
+        <complexType>
+            <sequence>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="GetAlbumsListResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Albums" type="string" maxOccurs="unbounded" minOccurs="0"/>
             </sequence>
         </complexType>
     </element>

@@ -8,6 +8,8 @@
 
 package xmls;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -25,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="AlbumName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="Albums" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -36,36 +38,41 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "albumName"
+    "albums"
 })
-@XmlRootElement(name = "NewAlbumResponseBody")
-public class NewAlbumResponseBody {
+@XmlRootElement(name = "GetAlbumsListResponseBody")
+public class GetAlbumsListResponseBody {
 
-    @XmlElement(name = "AlbumName", required = true)
-    protected String albumName;
-
-    /**
-     * Gets the value of the albumName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAlbumName() {
-        return albumName;
-    }
+    @XmlElement(name = "Albums")
+    protected List<String> albums;
 
     /**
-     * Sets the value of the albumName property.
+     * Gets the value of the albums property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the albums property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getAlbums().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link String }
+     * 
+     * 
      */
-    public void setAlbumName(String value) {
-        this.albumName = value;
+    public List<String> getAlbums() {
+        if (albums == null) {
+            albums = new ArrayList<String>();
+        }
+        return this.albums;
     }
 
 }

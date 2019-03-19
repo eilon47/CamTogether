@@ -1,5 +1,6 @@
 import database.DBClient;
 import database.SqlStatements;
+import handlers.CreateNewAlbumCommandHandler;
 import handlers.GetAlbumHandler;
 import handlers.MessageHandler;
 import handlers.NewPhotoCommandHandler;
@@ -20,42 +21,11 @@ public class Main {
     public static void main(String args[]) {
 //        try {
 //            init_tables();
-//        } catch (SQLException | ClassNotFoundException ex)
-//        {
-//            ex.printStackTrace();
+//            initData();
+//        } catch (SQLException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//            return;
 //        }
-//
-//        MessageHandler mh = new MessageHandler();
-//        HeaderRequest h_r = new HeaderRequest();
-//        NewImageRequestBody b_r = new NewImageRequestBody();
-//
-//        h_r.setUserId("dandan");
-//        h_r.setCommand(CommandsEnum.ADD_NEW_PHOTO);
-//
-//        b_r.setAlbum("ct");
-//        b_r.setImage(create_CTimage("/home/dandan/IdeaProjects/CamTogether/Server/src/main/resources/faces.jpeg"));
-//
-//        RequestMessage rm = new RequestMessage();
-//        rm.setHeader(h_r);
-//        rm.setBody(mh.fromClassToXml(b_r));
-//
-//        NewPhotoCommandHandler npc = new NewPhotoCommandHandler();
-//        npc.handle(rm);
-//
-//        HeaderRequest h_r_2 = new HeaderRequest();
-//        GetAlbumRequestBody b_r_2 = new GetAlbumRequestBody();
-//
-//        h_r_2.setUserId("beni");
-//        h_r_2.setCommand(CommandsEnum.GET_ALBUM);
-//
-//        b_r_2.setAlbumName("ct");
-//
-//        RequestMessage rm_2 = new RequestMessage();
-//        rm_2.setHeader(h_r_2);
-//        rm_2.setBody(mh.fromClassToXml(b_r_2));
-//
-//        GetAlbumHandler gah = new GetAlbumHandler();
-//        gah.handle(rm_2);
         Server server = new Server("0.0.0.0", 23456);
         try {
             server.connect();
@@ -71,9 +41,23 @@ public class Main {
         for(String table : SqlStatements.INIT_BASIC_TABLES){
            boolean res = client.createTableFromString(table);
         }
-
         client.closeConnection();
+    }
 
+
+    private static void createAlbum(String name){
+        CreateNewAlbumCommandHandler handler = new CreateNewAlbumCommandHandler();
+
+    }
+
+    private static void initData() throws SQLException, ClassNotFoundException {
+        DBClient client = new DBClient();
+        client.createConnection();
+        String[] user1 = {"", "user1", "user1", "", "", ""};
+        String[] user2 = {"", "user2", "user2", "", "", ""};
+        client.insertNewRecord(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user1);
+        client.insertNewRecord(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user2);
+        client.closeConnection();
     }
 
     private static CTImage create_CTimage(String path) {

@@ -41,7 +41,10 @@ class ClientHandler implements Runnable {
                     break;
                 logger.debug("Client handler received message: [\n" +received+"]\n");
                 String response = messageHandler.messageReceived(received);
-                dos.writeUTF(response);
+                String[] splitted = split(response, 2048);
+                dos.writeInt(splitted.length);
+                for(String s: splitted)
+                    dos.writeUTF(s);
                 logger.debug("Client handler sent response: [\n" +response+"]\n");
             } catch (IOException e) {
                 logger.warn("Exception thrown", e);
@@ -58,6 +61,18 @@ class ClientHandler implements Runnable {
             e.printStackTrace();
             logger.warn("Exception thrown", e);
         }
+    }
+
+    public String[] split(String str, int blockSize){
+        int len = str.length();
+        int size = len/blockSize + 1;
+        String[] arr = new String[size];
+        int i=0;
+        for(i=0; i < size-1; i++){
+            arr[i] = str.substring(i*blockSize, i*blockSize+blockSize);
+        }
+        arr[size-1] = str.substring(i*blockSize, len);
+        return arr;
     }
 
 }
