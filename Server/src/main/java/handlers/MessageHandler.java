@@ -35,8 +35,10 @@ public class MessageHandler {
                 break;
             case GET_ALBUM:
                 res = getAlbumHandler.handle(message);
+                break;
             case GET_ALBUMS_LIST:
                 res = getAlbumsListHandler.handle(message);
+                break;
             default:
                 break;
         }

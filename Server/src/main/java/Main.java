@@ -86,7 +86,12 @@ public class Main {
         }
     }
 
-
+    private static void drop() throws SQLException, ClassNotFoundException {
+        DBClient client = new DBClient();
+        client.createConnection();
+        client.doSqlStatement("drop table albums, rules, users;");
+        client.closeConnection();
+    }
 
 
 
