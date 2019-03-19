@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="xsd" targetNamespace="xsd" elementFormDefault="qualified">
+
+    <!-- Enums -->
+    <simpleType name="CommandsEnum" final="restriction">
+        <restriction base="string">
+            <enumeration value="CREATE_NEW_ALBUM"/>
+            <enumeration value="ADD_NEW_PHOTO"/>
+            <enumeration value="GET_ALBUMS_LIST"/>
+            <enumeration value="ADD_USER_TO_ALBUM"/>
+            <enumeration value="GET_ALBUM"/>
+        </restriction>
+    </simpleType>
+
+    <!--Types-->
+    <complexType name="Rules">
+        <sequence>
+            <element name="Longitude" type="float" nillable="true"/>
+            <element name="Latitude" type="float" nillable="true"/>
+            <element name="Radius" type="int" nillable="true"/>
+            <element name="StartTime" type="string" nillable="true"/>
+            <element name="EndTime" type="string" nillable="true"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="User">
+        <sequence>
+            <element name="UserID" type="string"/>
+            <element name="UserName" type="string"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="CTImage">
+        <sequence>
+            <element name="ImageName" type="string"/>
+            <element name="ImageData" type="base64Binary"/>
+            <element name="ImageSize" type="int"/>
+            <element name="ImageLength" type="int"/>
+            <element name="ImageWidth" type="int"/>
+            <element name="AlbumName" type="string"/>
+            <element name="UserName" type="string"/>
+            <element name="UserID" type="string"/>
+        </sequence>
+    </complexType>
+
+    <!--Header-->
+    <complexType name="HeaderRequest">
+        <sequence>
+            <element name="UserId" type="string"/>
+            <element name="Command" type="xsd:CommandsEnum"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="HeaderResponse">
+        <sequence>
+            <element name="UserId" type="string"/>
+            <element name="Command" type="xsd:CommandsEnum"/>
+            <element name="CommandSuccess" type="boolean"/>
+        </sequence>
+    </complexType>
+
+    <!--Request-->
+    <element name="RequestMessage">
+        <complexType>
+            <sequence>
+                <element name="Header" type="xsd:HeaderRequest"/>
+                <element name="Body" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+    <!--Response-->
+    <element name="ResponseMessage">
+        <complexType>
+            <sequence>
+                <element name="Header" type="xsd:HeaderResponse"/>
+                <element name="Body" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <!--Body-->
+    <element name="NewAlbumRequestBody">
+        <complexType >
+            <sequence>
+                <element name="AlbumName" type="string"/>
+                <element name="Rules" type="xsd:Rules" nillable="true"/>
+                <element name="Manager" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="NewAlbumResponseBody">
+        <complexType>
+            <sequence>
+                <element name="AlbumName" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="GetAlbumsListRequestBody">
+        <complexType>
+            <sequence>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="GetAlbumsListResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Albums" type="string" maxOccurs="unbounded" minOccurs="0"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="GetAlbumRequestBody">
+        <complexType>
+            <sequence>
+                <element name="AlbumName" type="string" />
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="GetAlbumResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Images" type="xsd:CTImage" maxOccurs="unbounded" minOccurs="1"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="NewImageRequestBody">
+        <complexType>
+            <sequence>
+                <element name="Image" type="xsd:CTImage"/>
+                <element name="Album" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="NewImageResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Image" type="string"/>
+                <element name="Album" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="AddUserToAlbumRequestBody">
+        <complexType>
+            <sequence>
+                <element name="AddToAlbum" type="string"/>
+                <element name="UserToAdd" type="xsd:User"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="AddUserToAlbumResponseBody">
+        <complexType>
+            <sequence>
+                <element name="AddToAlbum" type="string"/>
+                <element name="UserToAdd" type="xsd:User"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <simpleType name="DummyTest" final="restriction">
+        <restriction base="string">
+            <enumeration value="Dummy2"/>
+        </restriction>
+    </simpleType>
+</schema>
+
