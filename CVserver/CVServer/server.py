@@ -1,71 +1,60 @@
-import select
 import socket
-import cv2
-import numpy
-import configurations.config as config
-import image_analysis as ia
 
-TCP_IP = config.IP_ADDRESS
-TCP_PORT = config.PORT
+import cv2 as cv2
+import numpy as np
 
-basename = "image%s.png"
-connected_clients_sockets = []
+import blur_detection as bd
+import config
+import face_recogize as fr
+
+
+def cv_size(img):
+    return tuple(img.shape[1::-1])
+
+
+def handle(client_sock, address):
+    request = client_sock.recv(100000)
+    print('Received {}'.format(len(request)) + " bytes")
+    res = analysis(request)
+    client_sock.send(res.to_bytes())
+    client_sock.close()
+
+
+def analysis(img):
+    nparr = np.fromstring(img, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_LOAD_GDAL)
+    is_blur, down_grade = bd.blur_detection(img, cv_size(img), 1000)
+    if is_blur:
+        return -1
+    locations, num_faces = fr.number_of_faces(img)
+    if num_faces == 1:
+        return -1
+    return 0
 
 
 class Server:
-    buffer_size = 4096
+    def __init__(self):
+        self._port = config.PORT
+        self._ip = config.IP_ADDRESS
+        self.server = None
 
-    @staticmethod
-    def start_server():
-        imgcounter = 1
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server_socket.bind((TCP_IP, TCP_PORT))
-        print('finished binding')
-        server_socket.listen(10)
-        connected_clients_sockets.append(server_socket)
+    def create_connection(self):
+        print("creating connection")
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.bind((self._ip, self._port))
+
+    def start(self):
         while True:
-            read_sockets, write_sockets, error_sockets = select.select(connected_clients_sockets, [], [])
-            print("New client connection")
+            print("listening")
+            self.server.listen(1)
+            client_sock, address = self.server.accept()
+            #print("connected : " + client_sock)
+            print(address)
+            print("handling")
+            handle(client_sock, address)
 
-            for sock in read_sockets:
 
-                if sock == server_socket:
-
-                    sockfd, client_address = server_socket.accept()
-                    connected_clients_sockets.append(sockfd)
-
-                else:
-                    try:
-                        print(' Buffer size is %s' % buffer_size)
-                        data = sock.recv(buffer_size)
-                        txt = str(data)
-
-                        if txt.startswith('SIZE'):
-                            tmp = txt.split()
-                            size = int(tmp[1])
-
-                            print('got size')
-                            print('size is %s' % size)
-
-                            sock.send("GOT SIZE")
-                            # Now set the buffer size for the image
-                            buffer_size = 40960000
-
-                        elif txt.startswith('BYE'):
-                            sock.shutdown()
-
-                        elif data:
-
-                            #myfile = open(basename % imgcounter, 'wb')
-                            grade = ia.main(data)
-                            # data = sock.recv(buffer_size)
-
-                            sock.send("GOT IMAGE - The grade is: " + str(grade))
-                            buffer_size = 4096
-                            sock.shutdown()
-                    except:
-                        sock.close()
-                        connected_clients_sockets.remove(sock)
-                        continue
-                imgcounter += 1
+if __name__ == '__main__':
+    server = Server()
+    server.create_connection()
+    server.start()
