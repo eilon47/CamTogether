@@ -3,12 +3,11 @@ package handlers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xmls.*;
-import xsd.XsdUtils;
-
+import converters.XmlConverter;
 import javax.xml.bind.JAXBException;
 
 public class MessageHandler {
-
+    private XmlConverter converter = new XmlConverter();
     private CreateNewAlbumCommandHandler createNewAlbumCommandHandler = new CreateNewAlbumCommandHandler();
     private NewPhotoCommandHandler newPhotoCommandHandler = new NewPhotoCommandHandler();
     private AddUserToAlbumHandler addUserToAlbumHandler = new AddUserToAlbumHandler();
@@ -45,20 +44,20 @@ public class MessageHandler {
         return fromClassToXml(res);
     }
 
-    public  <T> T fromXmlToClass(String xml, Class<T> tClass){
+    protected <T> T fromXmlToClass(String xml, Class<T> tClass){
         try {
-            return XsdUtils.serializeFromXml(xml, tClass);
+            return converter.serializeFromString(xml, tClass);
         } catch (JAXBException ex){
-            logger.warn("Failed creating class from xml", ex);
+            logger.warn("Failed creating class " + tClass.getName()+" from xml", ex);
             return null;
         }
     }
 
-    public  <T> String fromClassToXml(T object){
+    protected <T> String fromClassToXml(T object){
         try {
-            return XsdUtils.serializeToXML(object);
+            return converter.serializeToString(object);
         } catch (JAXBException ex){
-            logger.warn("failed creating xml from class", ex);
+            logger.warn("failed creating xml from class " + object.getClass().getName(), ex);
             return null;
         }
     }

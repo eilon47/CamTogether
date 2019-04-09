@@ -19,13 +19,13 @@ import java.sql.SQLException;
 public class Main {
     public static Logger logger = LogManager.getLogger();
     public static void main(String args[]) {
-//        try {
-//            init_tables();
-//            initData();
-//        } catch (SQLException | ClassNotFoundException e) {
-//            e.printStackTrace();
-//            return;
-//        }
+        try {
+            init_tables();
+            initData();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
         Server server = new Server("0.0.0.0", 23456);
         try {
             server.connect();

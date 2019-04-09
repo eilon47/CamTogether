@@ -43,6 +43,19 @@
         </sequence>
     </complexType>
 
+    <element name="Album">
+        <complexType>
+            <sequence>
+                <element name="Images" type="xsd:CTImage" maxOccurs="unbounded"/>
+                <element name="Manager" type="xsd:User"/>
+                <element name="AlbumName" type="string"/>
+                <element name="Participants" type="xsd:User" maxOccurs="50"/>
+                <element name="Description" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+
     <!--Header-->
     <complexType name="HeaderRequest">
         <sequence>
@@ -58,6 +71,7 @@
             <element name="CommandSuccess" type="boolean"/>
         </sequence>
     </complexType>
+
 
     <!--Request-->
     <element name="RequestMessage">
@@ -163,10 +177,13 @@
         </complexType>
     </element>
 
-    <simpleType name="DummyTest" final="restriction">
-        <restriction base="string">
-            <enumeration value="Dummy2"/>
-        </restriction>
-    </simpleType>
+    <element name="Dummy">
+        <complexType>
+            <sequence>
+                <element name="Name" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
 </schema>
 
