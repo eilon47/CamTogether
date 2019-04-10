@@ -34,6 +34,16 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>CamTogether</groupId>
+			<artifactId>XmlCommons</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>CamTogether</groupId>
+			<artifactId>Server</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 
 
