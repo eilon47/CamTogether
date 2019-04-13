@@ -1,9 +1,6 @@
 package converters;
 
-import xmls.Album;
 import xmls.ObjectFactory;
-import xmls.User;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -40,24 +37,4 @@ public class XmlConverter implements IConverter {
         }
         return context;
     }
-
-//
-//    public static void main(String args[]) throws JAXBException {
-//        User user = new User();
-//        user.setUserID("dvfd");
-//        user.setUserName("vfdvfd");
-//        Album album = new Album();
-//        album.setAlbumName("name");
-//        album.setDescription("cdvdvfd");
-//        album.setManager(user);
-//
-//        XmlConverter converter = new XmlConverter();
-//        String xml = converter.serializeToString(album);
-//        System.out.println(xml);
-//        Album album1 = converter.serializeFromString(xml);
-//
-//        User user1 = album1.getManager();
-//        System.out.println(user1.getUserID());
-//        }
-
 }

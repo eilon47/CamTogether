@@ -1,6 +1,9 @@
 xmls\NewImageResponseBody.class
 xmls\CTImage.class
+xmls\CTThumbnail.class
+xmls\CTAlbumSettings.class
 xmls\ObjectFactory.class
+xmls\CTAlbum.class
 xmls\GetAlbumRequestBody.class
 xmls\package-info.class
 xmls\NewImageRequestBody.class
@@ -9,7 +12,6 @@ converters\XmlConverter.class
 xmls\GetAlbumsListResponseBody.class
 xmls\ResponseMessage.class
 converters\JsonConverter.class
-xmls\Album.class
 xmls\AddUserToAlbumRequestBody.class
 xmls\GetAlbumResponseBody.class
 xmls\GetAlbumsListRequestBody.class

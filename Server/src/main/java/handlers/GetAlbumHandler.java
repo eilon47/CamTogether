@@ -36,6 +36,7 @@ public class GetAlbumHandler extends CommandHandler {
                 img.setImageWidth(resultSet.getInt("width"));
                 img.setImageSize(resultSet.getInt("image_size"));
                 img.setImageData(resultSet.getBytes("image"));
+                img.setThumbnail(resultSet.getBytes("thumbnail"));
                 logger.debug("Adding image " + img.getImageName() + "to list");
                 responseBody.getImages().add(img);
             }
@@ -52,9 +53,9 @@ public class GetAlbumHandler extends CommandHandler {
     }
 
 
-    private boolean isAuthorized(String album_id, String user) throws SQLException {
+    private boolean isAuthorized(String album_name, String user) throws SQLException {
         logger.debug("connection with db created - executing select query to receive participants list");
-        ResultSet resultSet = dbClient.selectQuery("participants", "albums", "album_id='" + album_id + "'");
+        ResultSet resultSet = dbClient.selectQuery("participants", "albums", "album_name='" + album_name + "'");
         String participants = null;
         boolean res = false;
         if (resultSet.next())

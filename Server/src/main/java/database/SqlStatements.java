@@ -10,10 +10,11 @@ public final class SqlStatements {
     //CREATE
     public static final String[] INIT_BASIC_TABLES = {
             "CREATE TABLE albums (" +
-                    "album_id   char(64)  NOT NULL , " +
-                    "album_name   char(64)  NOT NULL PRIMARY KEY, " +
-                    "user_id    char(64)   NOT NULL, " +
-                    "participants text" +
+                    "album_name   text  NOT NULL PRIMARY KEY, " +
+                    "owner    text   NOT NULL, " +
+                    "participants text, " +
+                    "creation date, " +
+                    "expiration date" +
                     ");",
 
             "CREATE TABLE rules (" +
@@ -26,45 +27,60 @@ public final class SqlStatements {
                     "start_date   char(20), " +
                     "end_date   char(20) " +
                     ");",
-            // TODO "email text NOT NULL, " +
-            // TODO "score integer NOT NULL"
+
             "CREATE TABLE users (" +
-                    "user_id    char(64) NOT NULL PRIMARY KEY," +
-                    "user_name  char(64) NOT NULL," +
-                    "albums_manager   text," +
-                    "album_part text," +
-                    "info   char(64)" +
+                    "username    char(64) NOT NULL PRIMARY KEY," +
+                    "birthday  date," +
+                    "joined date," +
+                    "profile_img  bytea," +
+                    "email text," +
+                    "friends text,"+
+                    "info   text" +
                     ");"
-//            ,
-//            "CREATE TABLE users_emails (" +
-//                    "user_id char(64) NOT NULL," +
-//                    "email char(128) NOT NULL PRIMARY KEY" +
-//                    ");"
     };
     public static final String NEW_ALBUM_CREATION = "CREATE TABLE %s (" +
             "image_name text, " +
             "image_size integer, " +
             "image bytea, " +
-            "user_id char(64), " +
+            "title  text, " +
             "length integer, " +
-            "width integer" +
-            // TODO add "thumbnail bytea" +
+            "width integer," +
+            "username  text," +
+            "date  date," +
+            "longitude  numeric," +
+            "latitude  numeric" +
+            ");";
+
+    public static final String NEW_ALBUM_THUMBNAIL_CREATION = "CREATE TABLE %s (" +
+            "thumb_name text, " +
+            "length integer, " +
+            "width integer, "+
+            "thumbnail bytea" +
             ");";
 
     //INSERT
-    public static final String INSERT_NEW_ALBUM_TO_ALBUMS_TABLE = "INSERT INTO albums VALUES (?, ?, ?, ?);";
-    public static final String INSERT_NEW_USER_TO_USERS_TABLE = "INSERT INTO users VALUES (?, ?, ?, ?, ?);";
+    public static final String INSERT_NEW_THUMBNAIL_TO_ALBUM = "INSERT INTO %s_thumbs VALUES (?, ?, ?, ?);";
+    public static final String INSERT_NEW_ALBUM_TO_ALBUMS_TABLE = "INSERT INTO albums VALUES (?, ?, ?, ?, ?);";
+    public static final String INSERT_NEW_USER_TO_USERS_TABLE = "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?);";
     public static final String INSERT_NEW_RULES_TO_RULES_TABLE = "INSERT INTO rules VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    public static final String INSERT_NEW_IMAGE_TO_ALBUM = "INSERT INTO %s VALUES (?, ?, ?, ?, ?, ?);";
+    public static final String INSERT_NEW_IMAGE_TO_ALBUM = "INSERT INTO %s_imgs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 
     //SELECT
-    public static final String SELECT_IMAGE_FROM_ALBUM = "SELECT * FROM %s WHERE image_name = ?;";
-    public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM rules WHERE album_id = ?;";
-    public static final String SELECT_USER_FROM_USERS = "SELECT * FROM users WHERE user_id = ?;";
+    public static final String SELECT_ALL_THUMBNAILS_FROM_ALBUM = "SELECT * FROM %s_thumbs;";
+    public static final String SELECT_IMAGE_FROM_ALBUM = "SELECT * FROM %s_imgs WHERE image_name = ?;";
+    public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM rules WHERE album_name = ?;";
+    public static final String SELECT_USER_FROM_USERS = "SELECT * FROM users WHERE username = ?;";
 
     //UPDATE
     public static final String UPDATE_TABLE = "UPDATE %s SET %s = '%s' WHERE %s;";
 
+
+    public static final String[] newAlbumCreationSQLs(String album){
+        String album_thumbnail = album + "_thumbs";
+        String album_reg = album + "_img";
+        return new String[]{String.format(NEW_ALBUM_CREATION, album_reg),
+                String.format(NEW_ALBUM_THUMBNAIL_CREATION, album_thumbnail)};
+    }
 
 }

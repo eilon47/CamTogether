@@ -4,11 +4,21 @@
     <!-- Enums -->
     <simpleType name="CommandsEnum" final="restriction">
         <restriction base="string">
-            <enumeration value="CREATE_NEW_ALBUM"/>
-            <enumeration value="ADD_NEW_PHOTO"/>
-            <enumeration value="GET_ALBUMS_LIST"/>
+
+            <!--Album Commands-->
             <enumeration value="ADD_USER_TO_ALBUM"/>
+            <enumeration value="CREATE_NEW_ALBUM"/>
+            <enumeration value="ADD_NEW_PHOTO_TO_ALBUM"/>
+            <enumeration value="UPDATE_ALBUM_RULES"/>
+
+            <!--User Requests-->
+            <enumeration value="GET_IMAGE"/>
+            <enumeration value="GET_ALBUMS_LIST"/>  <!--Get the albums that the user in -->
             <enumeration value="GET_ALBUM"/>
+
+            <!--User Authentication-->
+            <enumeration value="CREATE_NEW_USER"/>
+            <enumeration value="LOGIN_WITH_USER"/>
         </restriction>
     </simpleType>
 
@@ -27,34 +37,66 @@
         <sequence>
             <element name="UserID" type="string"/>
             <element name="UserName" type="string"/>
+            <element name="Description" type="string"/>
+            <element name="Birthday" type="date"/>
+            <element name="JoinDate" type="date"/>
+            <element name="ProfileImage" type="base64Binary"/>
+            <element name="Email" type="string"/>
+            <element name="Friends" type="xsd:User"/>
         </sequence>
     </complexType>
 
+    <complexType name="CTThumbnail">
+        <sequence>
+            <element name="ThumbnailData" type="base64Binary"/>
+            <element name="ThumbnailLength" type="int"/>
+            <element name="ThumbnailWidth" type="int"/>
+            <element name="ThumbnailName" type="string"/>
+        </sequence>
+    </complexType>
+
+
     <complexType name="CTImage">
         <sequence>
-            <element name="ImageName" type="string"/>
+            <!--DATA-->
             <element name="ImageData" type="base64Binary"/>
+            <!--Metadata-->
             <element name="ImageSize" type="int"/>
             <element name="ImageLength" type="int"/>
             <element name="ImageWidth" type="int"/>
-            <element name="AlbumName" type="string"/>
+            <element name="ImageName" type="string"/>
+            <!--Rules Data-->
+            <element name="Latitude" type="float"/>
+            <element name="Longitude" type="float"/>
+            <element name="Date" type="date"/>
+            <!--CT Data-->
+            <element name="Title" type="string"/>
             <element name="UserName" type="string"/>
             <element name="UserID" type="string"/>
         </sequence>
     </complexType>
 
-    <element name="Album">
+    <element name="CTAlbum">
         <complexType>
             <sequence>
-                <element name="Images" type="xsd:CTImage" maxOccurs="unbounded"/>
-                <element name="Manager" type="xsd:User"/>
-                <element name="AlbumName" type="string"/>
+                <element name="Images" type="xsd:CTThumbnail" maxOccurs="unbounded"/>
+                <element name="Creator" type="xsd:User"/>
+                <element name="Name" type="string"/>
                 <element name="Participants" type="xsd:User" maxOccurs="50"/>
                 <element name="Description" type="string"/>
             </sequence>
         </complexType>
     </element>
 
+    <element name="CTAlbumSettings">
+        <complexType>
+            <sequence>
+                <element name="Rules" type="xsd:Rules"/>
+                <element name="Name" type="string"/>
+                <element name="Managers" type="xsd:User" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
 
     <!--Header-->
     <complexType name="HeaderRequest">

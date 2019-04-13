@@ -5,10 +5,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.postgresql.largeobject.LargeObjectManager;
 import xmls.CTImage;
+import xmls.CTThumbnail;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.sql.*;
+import java.util.GregorianCalendar;
 
 public class DBClient {
     private Connection conn;
@@ -75,16 +82,27 @@ public class DBClient {
         ResultSet rs = ((PreparedStatement)this.statement).executeQuery();
         if (rs != null) {
             CTImage imageRecord = new CTImage();
-            imageRecord.setAlbumName(table);
-
             //Gets only the first image.
             while (rs.next()) {
                 // Open the large object for reading
-                int oid = rs.getInt("image_size");
                 byte buf[] = rs.getBytes("image");
                 imageRecord.setImageName(rs.getString("image_name"));
-                imageRecord.setUserName(rs.getString("user_id"));
                 imageRecord.setImageData(buf);
+                imageRecord.setImageSize(rs.getInt("image_size"));
+                imageRecord.setTitle(rs.getString("title"));
+                imageRecord.setImageLength(rs.getInt("length"));
+                imageRecord.setImageWidth(rs.getInt("width"));
+                imageRecord.setUserName(rs.getString("username"));
+                imageRecord.setUserID(rs.getString("user_id"));
+                GregorianCalendar calendar = new GregorianCalendar();
+                calendar.setTime(rs.getDate("date"));
+                try {
+                    imageRecord.setDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
+                } catch (DatatypeConfigurationException e) {
+                    imageRecord.setDate(null);
+                }
+                imageRecord.setLongitude(rs.getFloat("longitude"));
+                imageRecord.setLatitude(rs.getFloat("latitude"));
                 // Close the object
             }
             rs.close();
@@ -94,26 +112,65 @@ public class DBClient {
     }
 
 
-    public boolean insertImageRecord(CTImage imageRecord) throws SQLException, IOException {
+    public boolean insertImageRecord(CTImage imageRecord, String album) throws SQLException, IOException {
         // All LargeObject API calls must be within a transaction block
         conn.setAutoCommit(false);
-
-        // Now insert the row into imageslo
-        this.statement = conn.prepareStatement(String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,
-                imageRecord.getAlbumName()));
+        CTThumbnail thumbnail = createThumbnail(imageRecord);
+        // Now insert the row
+        this.statement = conn.prepareStatement(String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM, album));
         ((PreparedStatement)this.statement).setString(1, imageRecord.getImageName());
         ((PreparedStatement)this.statement).setInt(2, imageRecord.getImageSize());
         ByteArrayInputStream is = new ByteArrayInputStream(imageRecord.getImageData());
         ((PreparedStatement)this.statement).setBinaryStream(3, is, imageRecord.getImageSize());
-        ((PreparedStatement)this.statement).setString(4, imageRecord.getUserName());
+        ((PreparedStatement)this.statement).setString(4, imageRecord.getTitle());
         ((PreparedStatement)this.statement).setInt(5, imageRecord.getImageLength());
         ((PreparedStatement)this.statement).setInt(6, imageRecord.getImageWidth());
+        ((PreparedStatement)this.statement).setString(7, imageRecord.getUserName());
+        ((PreparedStatement)this.statement).setDate(8, new Date(imageRecord.getDate().toGregorianCalendar().getTime().getTime()));
+        ((PreparedStatement)this.statement).setFloat(9, imageRecord.getLongitude());
+        ((PreparedStatement)this.statement).setFloat(10, imageRecord.getLatitude());
+
+        System.out.println(((PreparedStatement)this.statement));
+        ((PreparedStatement)this.statement).executeUpdate();
+        this.conn.commit();
+        boolean thumbnail_insert =  insertThumbnail(thumbnail, album);
+        return thumbnail_insert;
+
+    }
+
+    private boolean insertThumbnail(CTThumbnail thumbnail, String album) throws SQLException {
+        this.statement = conn.prepareStatement(String.format(SqlStatements.INSERT_NEW_THUMBNAIL_TO_ALBUM, album));
+        ((PreparedStatement)this.statement).setString(1, thumbnail.getThumbnailName());
+        ((PreparedStatement)this.statement).setInt(2, thumbnail.getThumbnailLength());
+        ((PreparedStatement)this.statement).setInt(3, thumbnail.getThumbnailWidth());
+        ByteArrayInputStream is = new ByteArrayInputStream(thumbnail.getThumbnailData());
+        ((PreparedStatement)this.statement).setBinaryStream(4, is);
         System.out.println(((PreparedStatement)this.statement));
         ((PreparedStatement)this.statement).executeUpdate();
         this.conn.commit();
         return true;
-
     }
+    private CTThumbnail createThumbnail(CTImage image ) throws IOException {
+        CTThumbnail thumbnail = new CTThumbnail();
+        InputStream in = new ByteArrayInputStream(image.getImageData());
+        BufferedImage buf_img = ImageIO.read(in);
+        Image thumb = buf_img.getScaledInstance(100, 100, BufferedImage.SCALE_SMOOTH);
+        BufferedImage buf_thumb = new BufferedImage(thumb.getWidth(null), thumb.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D bgr = buf_thumb.createGraphics();
+        bgr.drawImage(thumb, 0, 0,null);
+        bgr.dispose();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(buf_thumb, "jpg", baos );
+        baos.flush();
+        thumbnail.setThumbnailData(baos.toByteArray());
+        baos.close();
+        thumbnail.setThumbnailLength(100);
+        thumbnail.setThumbnailWidth(100);
+        thumbnail.setThumbnailName(image.getImageName());
+        return thumbnail;
+    }
+
 
     // ####################### GENERAL ################################
 
@@ -153,37 +210,16 @@ public class DBClient {
                 ((PreparedStatement)this.statement).setFloat(i,(Float) args[i]);
             else if (args[i].getClass().equals( byte[].class) )
                 ((PreparedStatement)this.statement).setBytes(i,(byte[]) args[i]);
+            else if (args[i].getClass().equals(XMLGregorianCalendar.class)){
+                Date date = new Date(((XMLGregorianCalendar)args[i]).toGregorianCalendar().getTimeInMillis());
+                ((PreparedStatement)this.statement).setDate(i, date);
+            }
             else
                 throw new SQLException("Not implemented");
         }
         logger.info("Executing Query " + sql);
         ((PreparedStatement)this.statement).executeUpdate();
 
-        return true;
-    }
-
-    public boolean dynamicPrepareStatement(String sql, Object[] args) throws SQLException {
-        statement = this.conn.prepareStatement(sql);
-        for(int i = 1; i <= args.length -1; i++){
-            if (args[i] instanceof String)
-                ((PreparedStatement)this.statement).setString(i, (String) args[i]);
-            else if (args[i] == null)
-                ((PreparedStatement)this.statement).setNull(i, Types.NULL);
-            else if (args[i] instanceof Integer)
-                ((PreparedStatement)this.statement).setInt(i,(Integer) args[i]);
-            else if (args[i] instanceof Long)
-                ((PreparedStatement)this.statement).setLong(i,(Long) args[i]);
-            else if (args[i] instanceof Float)
-                ((PreparedStatement)this.statement).setFloat(i,(Float) args[i]);
-            else if (args[i] instanceof Boolean)
-                ((PreparedStatement)this.statement).setBoolean(i,(Boolean) args[i]);
-            else if (args[i].getClass().equals( byte[].class) )
-                ((PreparedStatement)this.statement).setBytes(i,(byte[]) args[i]);
-            else
-                throw new SQLException("Not implemented");
-        }
-        logger.info("Executing Query " + sql);
-        ((PreparedStatement)this.statement).executeUpdate();
         return true;
     }
 

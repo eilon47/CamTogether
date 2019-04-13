@@ -4,8 +4,10 @@ import common.IdGen;
 import database.SqlStatements;
 import xmls.*;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Calendar;
 
 public class CreateNewAlbumCommandHandler extends CommandHandler{
     @Override
@@ -17,7 +19,12 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
         try {
             NewAlbumRequestBody newAlbumRequest = fromXmlToClass(request.getBody(), NewAlbumRequestBody.class);
             String albumName = newAlbumRequest.getAlbumName();
-            String userId = newAlbumRequest.getManager();
+            String owner = newAlbumRequest.getManager();
+            String participants = "";
+            Calendar calendar = Calendar.getInstance();
+            Date creation = new Date(calendar.getTime().getTime());
+            calendar.add(Calendar.DATE, 10);
+            Date expiration = new Date(calendar.getTime().getTime());
             Rules rules = newAlbumRequest.getRules();
             responseBody.setAlbumName(albumName);
             responseMessage.setBody(fromClassToXml(responseBody));

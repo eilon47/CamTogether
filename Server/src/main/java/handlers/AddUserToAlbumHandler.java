@@ -49,17 +49,20 @@ public class AddUserToAlbumHandler extends CommandHandler {
         logger.debug("Connection to db was created");
         String[] is_user_exist_values = {"", user.getUserID()};
         ResultSet resultSet = dbClient.prepareStatementAllStrings(SqlStatements.SELECT_USER_FROM_USERS, is_user_exist_values);
-        boolean has_user = resultSet.next() && !resultSet.next(); //Checks we have only 1 user
+        boolean has_user = resultSet.next();
+        boolean has_more_users = resultSet.next(); //Checks we have only 1 user
+        if (has_more_users)
+            throw new SQLException("Expected to get only one user! many us");
         logger.info("User " + user.getUserName() + " " + user.getUserID() + " exists result=" + has_user);
         resultSet.close();
         dbClient.closeConnection();
         return has_user;
     }
 
-    public String createNewParticipantsValue(User user, String album_id) throws SQLException, ClassNotFoundException {
+    public String createNewParticipantsValue(User user, String album_name) throws SQLException, ClassNotFoundException {
         dbClient.createConnection();
         logger.debug("connection with db created - executing select query to receive participants list");
-        ResultSet resultSet = dbClient.selectQuery("participants", "albums", "album_id='" + album_id + "'");
+        ResultSet resultSet = dbClient.selectQuery("participants", "albums", "album_name='" + album_name + "'");
         String participants;
         if (resultSet.next())
             participants = resultSet.getString("participants");
@@ -82,14 +85,14 @@ public class AddUserToAlbumHandler extends CommandHandler {
         return participants;
     }
 
-    private boolean updateNewValue(String newParticipantsStr, String album_id) throws SQLException, ClassNotFoundException {
-        String sql = String.format(SqlStatements.UPDATE_TABLE, "albums", "participants", newParticipantsStr, "album_id='" + album_id + "'");
+    private boolean updateNewValue(String newParticipantsStr, String album_name) throws SQLException, ClassNotFoundException {
+        String sql = String.format(SqlStatements.UPDATE_TABLE, "albums", "participants", newParticipantsStr, "album_name='" + album_name + "'");
         logger.debug("Updating album's participants value: [" + sql + "]");
         dbClient.createConnection();
         logger.debug("connection with db created - executing query");
         boolean res = dbClient.updateQuery(sql);
         dbClient.closeConnection();
-        logger.info("Updated " + album_id + " participants list");
+        logger.info("Updated " + album_name + " participants list");
         return res;
     }
 

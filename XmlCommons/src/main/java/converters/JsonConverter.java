@@ -9,9 +9,7 @@ import javax.xml.bind.Unmarshaller;
 import org.eclipse.persistence.jaxb.JAXBContextProperties;
 import org.eclipse.persistence.jaxb.MarshallerProperties;
 import org.eclipse.persistence.jaxb.UnmarshallerProperties;
-import xmls.Album;
 import xmls.ObjectFactory;
-import xmls.User;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -57,21 +55,5 @@ public class JsonConverter implements IConverter {
             return null;
         }
     }
-//    public static void main(String args[]) throws JAXBException {
-//        User user = new User();
-//        user.setUserID("dvfd");
-//        user.setUserName("vfdvfd");
-//        Album album = new Album();
-//        album.setAlbumName("name");
-//        album.setDescription("cdvdvfd");
-//        album.setManager(user);
-//
-//        IConverter converter = new JsonConverter();
-//        String xml = converter.serializeToString(album);
-//        System.out.println(xml);
-//        Album album1 = converter.serializeFromString(xml);
-//
-//        User user1 = album1.getManager();
-//        System.out.println(user1.getUserID());
-//    }
+
 }
