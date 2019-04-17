@@ -93,7 +93,7 @@ public class DBClient {
                 imageRecord.setImageLength(rs.getInt("length"));
                 imageRecord.setImageWidth(rs.getInt("width"));
                 imageRecord.setUserName(rs.getString("username"));
-                imageRecord.setUserID(rs.getString("user_id"));
+                imageRecord.setUserName(rs.getString("user_id"));
                 GregorianCalendar calendar = new GregorianCalendar();
                 calendar.setTime(rs.getDate("date"));
                 try {

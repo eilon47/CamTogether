@@ -15,6 +15,12 @@ public class AlbumController {
     @Autowired
     IAlbumService albumService;
 
+
+    @GetMapping("/album")
+    String getAlbum(){
+        return albumService.getAlbums();
+    }
+
     @GetMapping("/album/{albumName}")
     String getAlbum(@PathVariable String albumName){
         return albumService.getAlbum(albumName);

@@ -30,7 +30,7 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
             responseMessage.setBody(fromClassToXml(responseBody));
             logger.debug("Creating connection to db");
             dbClient.createConnection();
-            String[] values = {"", albumName, albumName, userId, userId};
+            String[] values = {"", albumName, albumName };
             logger.info("inserting new album with values " + Arrays.toString(values));
             boolean result = dbClient.insertNewRecord(SqlStatements.INSERT_NEW_ALBUM_TO_ALBUMS_TABLE, values);
             if (result){

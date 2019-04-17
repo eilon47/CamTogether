@@ -28,15 +28,13 @@ public class GetAlbumHandler extends CommandHandler {
             resultSet = dbClient.doSqlStatement(sql);
             while (resultSet.next()) {
                 CTImage img = new CTImage();
-                img.setAlbumName(req_body.getAlbumName());
                 //img.setUserName(resultSet.getString("user_name"));
                 img.setImageName(resultSet.getString("image_name"));
-                img.setUserID(resultSet.getString("user_id"));
+                img.setUserName(resultSet.getString("user_id"));
                 img.setImageLength(resultSet.getInt("length"));
                 img.setImageWidth(resultSet.getInt("width"));
                 img.setImageSize(resultSet.getInt("image_size"));
                 img.setImageData(resultSet.getBytes("image"));
-                img.setThumbnail(resultSet.getBytes("thumbnail"));
                 logger.debug("Adding image " + img.getImageName() + "to list");
                 responseBody.getImages().add(img);
             }

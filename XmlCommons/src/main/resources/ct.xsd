@@ -64,6 +64,7 @@
             <element name="ImageLength" type="int"/>
             <element name="ImageWidth" type="int"/>
             <element name="ImageName" type="string"/>
+            <element name="AlbumName" type="string"/>
             <!--Rules Data-->
             <element name="Latitude" type="float"/>
             <element name="Longitude" type="float"/>

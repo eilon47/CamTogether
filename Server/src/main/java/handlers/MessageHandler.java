@@ -26,7 +26,7 @@ public class MessageHandler {
             case CREATE_NEW_ALBUM:
                 res = createNewAlbumCommandHandler.handle(message);
                 break;
-            case ADD_NEW_PHOTO:
+            case ADD_NEW_PHOTO_TO_ALBUM:
                 res = newPhotoCommandHandler.handle(message);
                 break;
             case ADD_USER_TO_ALBUM:

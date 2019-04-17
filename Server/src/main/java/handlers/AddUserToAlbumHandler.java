@@ -47,13 +47,13 @@ public class AddUserToAlbumHandler extends CommandHandler {
         logger.debug("Checking if user " + user.getUserName() + " exists");
         dbClient.createConnection();
         logger.debug("Connection to db was created");
-        String[] is_user_exist_values = {"", user.getUserID()};
+        String[] is_user_exist_values = {"", user.getUserName()};
         ResultSet resultSet = dbClient.prepareStatementAllStrings(SqlStatements.SELECT_USER_FROM_USERS, is_user_exist_values);
         boolean has_user = resultSet.next();
         boolean has_more_users = resultSet.next(); //Checks we have only 1 user
         if (has_more_users)
             throw new SQLException("Expected to get only one user! many us");
-        logger.info("User " + user.getUserName() + " " + user.getUserID() + " exists result=" + has_user);
+        logger.info("User " + user.getUserName() + " " + user.getUserName() + " exists result=" + has_user);
         resultSet.close();
         dbClient.closeConnection();
         return has_user;
