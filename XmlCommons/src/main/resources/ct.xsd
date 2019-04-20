@@ -48,12 +48,11 @@
     <complexType name="CTThumbnail">
         <sequence>
             <element name="ThumbnailData" type="base64Binary"/>
-            <element name="ThumbnailLength" type="int"/>
+            <element name="ThumbnailHeight" type="int"/>
             <element name="ThumbnailWidth" type="int"/>
             <element name="ThumbnailName" type="string"/>
         </sequence>
     </complexType>
-
 
     <complexType name="CTImage">
         <sequence>
@@ -61,7 +60,7 @@
             <element name="ImageData" type="base64Binary"/>
             <!--Metadata-->
             <element name="ImageSize" type="int"/>
-            <element name="ImageLength" type="int"/>
+            <element name="ImageHeight" type="int"/>
             <element name="ImageWidth" type="int"/>
             <element name="ImageName" type="string"/>
             <element name="AlbumName" type="string"/>
@@ -75,27 +74,18 @@
         </sequence>
     </complexType>
 
-    <element name="CTAlbum">
-        <complexType>
-            <sequence>
-                <element name="Images" type="xsd:CTThumbnail" maxOccurs="unbounded"/>
-                <element name="Creator" type="xsd:User"/>
-                <element name="Name" type="string"/>
-                <element name="Participants" type="xsd:User" maxOccurs="50"/>
-                <element name="Description" type="string"/>
-            </sequence>
-        </complexType>
-    </element>
-
-    <element name="CTAlbumSettings">
-        <complexType>
-            <sequence>
-                <element name="Rules" type="xsd:Rules"/>
-                <element name="Name" type="string"/>
-                <element name="Managers" type="xsd:User" maxOccurs="unbounded"/>
-            </sequence>
-        </complexType>
-    </element>
+    <complexType name="CTAlbum">
+        <sequence>
+            <element name="Images" type="xsd:CTThumbnail" maxOccurs="unbounded"/>
+            <element name="Creator" type="string"/>
+            <element name="Name" type="string"/>
+            <element name="Participants" type="string" maxOccurs="50"/>
+            <element name="Description" type="string"/>
+            <element name="Rules" type="xsd:Rules"/>
+            <element name="CreationDate" type="date"/>
+            <element name="ExpirationDate" type="date"/>
+        </sequence>
+    </complexType>
 
     <!--Header-->
     <complexType name="HeaderRequest">
@@ -137,9 +127,7 @@
     <element name="NewAlbumRequestBody">
         <complexType >
             <sequence>
-                <element name="AlbumName" type="string"/>
-                <element name="Rules" type="xsd:Rules" nillable="true"/>
-                <element name="Manager" type="string"/>
+                <element name="Album" type="xsd:CTAlbum"/>
             </sequence>
         </complexType>
     </element>
@@ -155,13 +143,15 @@
     <element name="GetAlbumsListRequestBody">
         <complexType>
             <sequence>
+                <element name="User" type="xsd:User"/>
             </sequence>
         </complexType>
     </element>
+
     <element name="GetAlbumsListResponseBody">
         <complexType>
             <sequence>
-                <element name="Albums" type="string" maxOccurs="unbounded" minOccurs="0"/>
+                <element name="Albums" type="xsd:CTAlbum" maxOccurs="unbounded" minOccurs="0"/>
             </sequence>
         </complexType>
     </element>
@@ -170,6 +160,7 @@
         <complexType>
             <sequence>
                 <element name="AlbumName" type="string" />
+                <element name="User" type="xsd:User"/>
             </sequence>
         </complexType>
     </element>
@@ -177,7 +168,7 @@
     <element name="GetAlbumResponseBody">
         <complexType>
             <sequence>
-                <element name="Images" type="xsd:CTImage" maxOccurs="unbounded" minOccurs="1"/>
+                <element name="Album" type="xsd:CTAlbum"/>
             </sequence>
         </complexType>
     </element>
@@ -214,14 +205,6 @@
             <sequence>
                 <element name="AddToAlbum" type="string"/>
                 <element name="UserToAdd" type="xsd:User"/>
-            </sequence>
-        </complexType>
-    </element>
-
-    <element name="Dummy">
-        <complexType>
-            <sequence>
-                <element name="Name" type="string"/>
             </sequence>
         </complexType>
     </element>

@@ -1,9 +1,11 @@
 package handlers;
 
 import common.IdGen;
+import converters.XmlConverter;
 import database.SqlStatements;
 import xmls.*;
 
+import javax.xml.bind.JAXBException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -18,28 +20,34 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
         NewAlbumResponseBody responseBody = new NewAlbumResponseBody();
         try {
             NewAlbumRequestBody newAlbumRequest = fromXmlToClass(request.getBody(), NewAlbumRequestBody.class);
-            String albumName = newAlbumRequest.getAlbumName();
-            String owner = newAlbumRequest.getManager();
-            String participants = "";
+            CTAlbum album = newAlbumRequest.getAlbum();
             Calendar calendar = Calendar.getInstance();
+
+            String albumName = album.getName();
+            String creator = album.getCreator();
+            String participants = "";
+            String description = album.getDescription();
             Date creation = new Date(calendar.getTime().getTime());
             calendar.add(Calendar.DATE, 10);
             Date expiration = new Date(calendar.getTime().getTime());
-            Rules rules = newAlbumRequest.getRules();
+
+            Rules rules = album.getRules();
             responseBody.setAlbumName(albumName);
             responseMessage.setBody(fromClassToXml(responseBody));
             logger.debug("Creating connection to db");
             dbClient.createConnection();
-            String[] values = {"", albumName, albumName };
-            logger.info("inserting new album with values " + Arrays.toString(values));
-            boolean result = dbClient.insertNewRecord(SqlStatements.INSERT_NEW_ALBUM_TO_ALBUMS_TABLE, values);
+            Object[] values_for_album_table = {"", albumName, creator, participants, description,creation, expiration};
+            logger.info("inserting new album with values " + Arrays.toString(values_for_album_table));
+            boolean result = dbClient.insertNewRecord(SqlStatements.INSERT_NEW_ALBUM_TO_ALBUMS_TABLE, values_for_album_table);
             if (result){
                 logger.info("Creating new table for album " + albumName);
-                result = dbClient.createTableFromString(String.format(SqlStatements.NEW_ALBUM_CREATION, albumName));
+                String [] tables = SqlStatements.newAlbumCreationSQLs(albumName);
+                for (String t : tables)
+                    result = dbClient.createTableFromString(t);
                 logger.debug("creating album " +albumName+ " result " + result);
                 boolean location = nullityCheck(rules.getRadius()) && nullityCheck(rules.getLatitude()) && nullityCheck(rules.getLongitude());
                 boolean time = nullityCheck(rules.getEndTime()) && nullityCheck(rules.getStartTime());
-                Object[] rulesArr = {"", values[1], location, rules.getLongitude(), rules.getLatitude(), rules.getRadius(),
+                Object[] rulesArr = {"", albumName, location, rules.getLongitude(), rules.getLatitude(), rules.getRadius(),
                         time, rules.getStartTime(), rules.getEndTime() };
                 logger.info("Adding new rules record for album " + albumName);
                 result = dbClient.insertNewRecord(SqlStatements.INSERT_NEW_RULES_TO_RULES_TABLE, rulesArr);
@@ -57,4 +65,28 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
         return o != null;
     }
 
+    public static void main(String[] args) throws JAXBException {
+        XmlConverter converter = new XmlConverter();
+        String user = "username";
+        String album = "album";
+        RequestMessage requestMessage = new RequestMessage();
+        HeaderRequest headerRequest = new HeaderRequest();
+        NewAlbumRequestBody requestBody = new NewAlbumRequestBody();
+
+        headerRequest.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
+        headerRequest.setUserId(user);
+
+        CTAlbum ctAlbum = new CTAlbum();
+        ctAlbum.setName(album);
+        ctAlbum.setDescription("Des");
+        ctAlbum.setCreator(user);
+        ctAlbum.setRules(new Rules());
+        requestBody.setAlbum(ctAlbum);
+
+        requestMessage.setHeader(headerRequest);
+        requestMessage.setBody(converter.serializeToString(requestBody));
+        CreateNewAlbumCommandHandler createNewAlbumCommandHandler = new CreateNewAlbumCommandHandler();
+        ResponseMessage responseMessage = createNewAlbumCommandHandler.handle(requestMessage);
+        System.out.println(responseMessage);
+    }
 }

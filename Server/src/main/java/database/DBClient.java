@@ -4,6 +4,7 @@ package database;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.postgresql.largeobject.LargeObjectManager;
+import xmls.CTAlbum;
 import xmls.CTImage;
 import xmls.CTThumbnail;
 
@@ -15,6 +16,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 
 public class DBClient {
@@ -90,7 +92,7 @@ public class DBClient {
                 imageRecord.setImageData(buf);
                 imageRecord.setImageSize(rs.getInt("image_size"));
                 imageRecord.setTitle(rs.getString("title"));
-                imageRecord.setImageLength(rs.getInt("length"));
+                imageRecord.setImageHeight(rs.getInt("height"));
                 imageRecord.setImageWidth(rs.getInt("width"));
                 imageRecord.setUserName(rs.getString("username"));
                 imageRecord.setUserName(rs.getString("user_id"));
@@ -123,13 +125,13 @@ public class DBClient {
         ByteArrayInputStream is = new ByteArrayInputStream(imageRecord.getImageData());
         ((PreparedStatement)this.statement).setBinaryStream(3, is, imageRecord.getImageSize());
         ((PreparedStatement)this.statement).setString(4, imageRecord.getTitle());
-        ((PreparedStatement)this.statement).setInt(5, imageRecord.getImageLength());
+        ((PreparedStatement)this.statement).setInt(5, imageRecord.getImageHeight());
         ((PreparedStatement)this.statement).setInt(6, imageRecord.getImageWidth());
         ((PreparedStatement)this.statement).setString(7, imageRecord.getUserName());
         ((PreparedStatement)this.statement).setDate(8, new Date(imageRecord.getDate().toGregorianCalendar().getTime().getTime()));
         ((PreparedStatement)this.statement).setFloat(9, imageRecord.getLongitude());
         ((PreparedStatement)this.statement).setFloat(10, imageRecord.getLatitude());
-
+        ((PreparedStatement)this.statement).setString(11, imageRecord.getAlbumName());
         System.out.println(((PreparedStatement)this.statement));
         ((PreparedStatement)this.statement).executeUpdate();
         this.conn.commit();
@@ -141,7 +143,7 @@ public class DBClient {
     private boolean insertThumbnail(CTThumbnail thumbnail, String album) throws SQLException {
         this.statement = conn.prepareStatement(String.format(SqlStatements.INSERT_NEW_THUMBNAIL_TO_ALBUM, album));
         ((PreparedStatement)this.statement).setString(1, thumbnail.getThumbnailName());
-        ((PreparedStatement)this.statement).setInt(2, thumbnail.getThumbnailLength());
+        ((PreparedStatement)this.statement).setInt(2, thumbnail.getThumbnailHeight());
         ((PreparedStatement)this.statement).setInt(3, thumbnail.getThumbnailWidth());
         ByteArrayInputStream is = new ByteArrayInputStream(thumbnail.getThumbnailData());
         ((PreparedStatement)this.statement).setBinaryStream(4, is);
@@ -165,12 +167,39 @@ public class DBClient {
         baos.flush();
         thumbnail.setThumbnailData(baos.toByteArray());
         baos.close();
-        thumbnail.setThumbnailLength(100);
+        thumbnail.setThumbnailHeight(100);
         thumbnail.setThumbnailWidth(100);
         thumbnail.setThumbnailName(image.getImageName());
         return thumbnail;
     }
 
+
+    public CTAlbum getAlbum(String albumName) throws SQLException {
+        CTAlbum album = new CTAlbum();
+        ResultSet album_req_rs = doSqlStatement(String.format(SqlStatements.SELECT_ALBUM_FROM_ALBUMS, albumName));
+        album_req_rs.next();
+        album.setCreationDate(fromDateTODateXml(album_req_rs.getDate("creation")));
+        album.setExpirationDate(fromDateTODateXml(album_req_rs.getDate("expiration")));
+        album.setDescription(album_req_rs.getString("description"));
+        album.setCreator(album_req_rs.getString("creator"));
+        album.setName(albumName);
+        album.getParticipants().addAll(Arrays.asList(album_req_rs.getString("participants").split(",")));
+        album_req_rs.close();
+
+        ResultSet thumbs_rs = doSqlStatement(String.format(SqlStatements.SELECT_ALL_THUMBNAILS_FROM_ALBUM, albumName));
+        while(thumbs_rs.next()){
+            CTThumbnail thumbnail = new CTThumbnail();
+            thumbnail.setThumbnailName(thumbs_rs.getString("thumb_name"));
+            thumbnail.setThumbnailWidth(thumbs_rs.getInt("width"));
+            thumbnail.setThumbnailHeight(thumbs_rs.getInt("height"));
+            thumbnail.setThumbnailData(thumbs_rs.getBytes("thumbnail"));
+            album.getImages().add(thumbnail);
+        }
+        thumbs_rs.close();
+
+
+        return album;
+    }
 
     // ####################### GENERAL ################################
 
@@ -211,7 +240,13 @@ public class DBClient {
             else if (args[i].getClass().equals( byte[].class) )
                 ((PreparedStatement)this.statement).setBytes(i,(byte[]) args[i]);
             else if (args[i].getClass().equals(XMLGregorianCalendar.class)){
-                Date date = new Date(((XMLGregorianCalendar)args[i]).toGregorianCalendar().getTimeInMillis());
+                ((PreparedStatement)this.statement).setDate(i, fromXMLDateToDate((XMLGregorianCalendar) args[i]));
+            }
+            else if (args[i].getClass().equals(Date.class)){
+                ((PreparedStatement)this.statement).setDate(i,(Date) args[i]);
+            }
+            else if (args[i].getClass().equals(java.util.Date.class)){
+                Date date = new Date(((java.util.Date)args[i]).getTime());
                 ((PreparedStatement)this.statement).setDate(i, date);
             }
             else
@@ -229,6 +264,20 @@ public class DBClient {
         logger.info("Executing Query " + update);
         boolean res = this.statement.execute(update);
         return !res;
+    }
+
+    public XMLGregorianCalendar fromDateTODateXml(Date date) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        try {
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+        } catch (DatatypeConfigurationException e) {
+            return null;
+        }
+    }
+
+    public Date fromXMLDateToDate(XMLGregorianCalendar date) {
+        return new Date( date.toGregorianCalendar().getTimeInMillis());
     }
 }
 

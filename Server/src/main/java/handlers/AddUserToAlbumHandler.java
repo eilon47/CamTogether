@@ -1,11 +1,10 @@
 package handlers;
 
+import converters.XmlConverter;
 import database.SqlStatements;
-import xmls.AddUserToAlbumRequestBody;
-import xmls.RequestMessage;
-import xmls.ResponseMessage;
-import xmls.User;
+import xmls.*;
 
+import javax.xml.bind.JAXBException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -94,6 +93,26 @@ public class AddUserToAlbumHandler extends CommandHandler {
         dbClient.closeConnection();
         logger.info("Updated " + album_name + " participants list");
         return res;
+    }
+
+    public static void main(String[] args) throws JAXBException {
+        RequestMessage requestMessage = new RequestMessage();
+        HeaderRequest headerRequest = new HeaderRequest();
+        headerRequest.setUserId("username");
+        headerRequest.setCommand(CommandsEnum.ADD_USER_TO_ALBUM);
+        AddUserToAlbumRequestBody requestBody = new AddUserToAlbumRequestBody();
+        requestBody.setAddToAlbum("album");
+        User usrname1 = new User();
+        usrname1.setUserName("username1");
+        requestBody.setUserToAdd(usrname1);
+        XmlConverter converter = new XmlConverter();
+        AddUserToAlbumHandler handler = new AddUserToAlbumHandler();
+        requestMessage.setHeader(headerRequest);
+        requestMessage.setBody(converter.serializeToString(requestBody));
+
+        ResponseMessage responseMessage = handler.handle(requestMessage);
+        AddUserToAlbumResponseBody body = converter.serializeFromString(responseMessage.getBody(), AddUserToAlbumResponseBody.class);
+        System.out.println(body.getUserToAdd().getUserName());
     }
 
 }

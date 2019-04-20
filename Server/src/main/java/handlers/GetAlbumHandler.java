@@ -18,26 +18,13 @@ public class GetAlbumHandler extends CommandHandler {
         try {
             logger.debug("Creating connection to db");
             dbClient.createConnection();
-//            if(!this.isAuthorized(req_body.getAlbumName(), request.getHeader().getUserId())) {
-//                responseMessage.getHeader().setCommandSuccess(false);
-//                responseMessage.setBody(fromClassToXml(responseBody));
-//                return responseMessage;
-//            }
-            String sql = String.format(SqlStatements.SELECT_ALL_RECORDS, req_body.getAlbumName());
-            logger.info("Querying " + sql);
-            resultSet = dbClient.doSqlStatement(sql);
-            while (resultSet.next()) {
-                CTImage img = new CTImage();
-                //img.setUserName(resultSet.getString("user_name"));
-                img.setImageName(resultSet.getString("image_name"));
-                img.setUserName(resultSet.getString("user_id"));
-                img.setImageLength(resultSet.getInt("length"));
-                img.setImageWidth(resultSet.getInt("width"));
-                img.setImageSize(resultSet.getInt("image_size"));
-                img.setImageData(resultSet.getBytes("image"));
-                logger.debug("Adding image " + img.getImageName() + "to list");
-                responseBody.getImages().add(img);
+            if(!this.isAuthorized(req_body.getAlbumName(), request.getHeader().getUserId())) {
+                responseMessage.getHeader().setCommandSuccess(false);
+                responseMessage.setBody(fromClassToXml(responseBody));
+                return responseMessage;
             }
+            CTAlbum album = dbClient.getAlbum(req_body.getAlbumName());
+            responseBody.setAlbum(album);
             responseMessage.setBody(fromClassToXml(responseBody));
             logger.debug("closing connection with db");
             resultSet.close();

@@ -4,6 +4,12 @@ import client.CVClient;
 import database.SqlStatements;
 import xmls.*;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -20,20 +26,21 @@ public class NewPhotoCommandHandler extends CommandHandler {
         responseBody.setAlbum(req_body.getAlbum());
         responseBody.setImage(req_body.getImage().getImageName());
         try {
-            CTImage CTimage = req_body.getImage();
-            boolean cv_res = this.cvClient.queryCvServer(CTimage);
+            CTImage img = req_body.getImage();
+            boolean cv_res = this.cvClient.queryCvServer(img);
             if(!cv_res){
                 logger.info("CV server returned false - not inserting image to db");
                 returnMessage.getHeader().setCommandSuccess(false);
                 returnMessage.setBody(fromClassToXml(responseBody));
                 return returnMessage;
             }
-            if (!alreadyExist(CTimage.getAlbumName(),CTimage.getImageName())) {
+            if (!alreadyExist(img.getAlbumName(),img.getImageName())) {
                 dbClient.createConnection();
-                String sql = String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,CTimage.getAlbumName());
-                Object[] values = {"",req_body.getImage().getImageName(), req_body.getImage().getImageSize(),
-                        req_body.getImage().getImageData(), /*req_body.getImage().getThumbnail(), */ CTimage.getUserName(),CTimage.getImageLength(), CTimage.getImageWidth()};
-                boolean res = dbClient.insertNewRecord(sql,values);
+                String insert_image_sql = String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,img.getAlbumName());
+                Object[] values = {"", img.getImageName(), img.getImageSize(), img.getImageData(), img.getTitle(), img.getImageHeight(),
+                        img.getImageWidth(), img.getUserName(), img.getDate(), img.getLongitude(), img.getLatitude(), img.getLatitude(), img.getAlbumName()};
+                boolean res = dbClient.insertNewRecord(insert_image_sql,values);
+                CTThumbnail thumbnail = createThumbnail(img, 100, 100);
                 dbClient.closeConnection();
                 returnMessage.setBody(fromClassToXml(responseBody));
             }
@@ -59,5 +66,26 @@ public class NewPhotoCommandHandler extends CommandHandler {
         return has_image;
     }
 
+    private CTThumbnail createThumbnail(CTImage img, int height, int width){
+        CTThumbnail thumbnail = new CTThumbnail();
+        thumbnail.setThumbnailName(img.getImageName());
+        thumbnail.setThumbnailHeight(height);
+        thumbnail.setThumbnailWidth(width);
+        ByteArrayInputStream bis = new ByteArrayInputStream(img.getImageData());
+        try {
+            BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            bufferedImage.createGraphics().drawImage(ImageIO.read(bis).getScaledInstance(width, height, Image.SCALE_SMOOTH), 0,0, null);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "jpg", baos );
+            baos.flush();
+            byte[] imageInByte = baos.toByteArray();
+            baos.close();
+            thumbnail.setThumbnailData(imageInByte);
+        } catch (IOException e) {
+            logger.warn("failed to create thumbnail image from " + img.getImageName());
+            //thumbnail.setThumbnailData(); todo add default thumbnail photo
+        }
+        return thumbnail;
+    }
 }
 

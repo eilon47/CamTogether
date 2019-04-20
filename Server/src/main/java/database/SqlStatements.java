@@ -11,8 +11,9 @@ public final class SqlStatements {
     public static final String[] INIT_BASIC_TABLES = {
             "CREATE TABLE albums (" +
                     "album_name   text  NOT NULL PRIMARY KEY, " +
-                    "owner    text   NOT NULL, " +
+                    "creator    text   NOT NULL, " +
                     "participants text, " +
+                    "description text," +
                     "creation date, " +
                     "expiration date" +
                     ");",
@@ -43,27 +44,28 @@ public final class SqlStatements {
             "image_size integer, " +
             "image bytea, " +
             "title  text, " +
-            "length integer, " +
+            "height integer, " +
             "width integer," +
             "username  text," +
             "date  date," +
             "longitude  numeric," +
-            "latitude  numeric" +
+            "latitude  numeric, " +
+            "albumName text" +
             ");";
 
     public static final String NEW_ALBUM_THUMBNAIL_CREATION = "CREATE TABLE %s (" +
             "thumb_name text, " +
-            "length integer, " +
+            "height integer, " +
             "width integer, "+
             "thumbnail bytea" +
             ");";
 
     //INSERT
     public static final String INSERT_NEW_THUMBNAIL_TO_ALBUM = "INSERT INTO %s_thumbs VALUES (?, ?, ?, ?);";
-    public static final String INSERT_NEW_ALBUM_TO_ALBUMS_TABLE = "INSERT INTO albums VALUES (?, ?, ?, ?, ?);";
+    public static final String INSERT_NEW_ALBUM_TO_ALBUMS_TABLE = "INSERT INTO albums VALUES (?, ?, ?, ?, ?, ?);";
     public static final String INSERT_NEW_USER_TO_USERS_TABLE = "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?);";
     public static final String INSERT_NEW_RULES_TO_RULES_TABLE = "INSERT INTO rules VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    public static final String INSERT_NEW_IMAGE_TO_ALBUM = "INSERT INTO %s_imgs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    public static final String INSERT_NEW_IMAGE_TO_ALBUM = "INSERT INTO %s_imgs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 
     //SELECT
@@ -71,7 +73,7 @@ public final class SqlStatements {
     public static final String SELECT_IMAGE_FROM_ALBUM = "SELECT * FROM %s_imgs WHERE image_name = ?;";
     public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM rules WHERE album_name = ?;";
     public static final String SELECT_USER_FROM_USERS = "SELECT * FROM users WHERE username = ?;";
-
+    public static final String SELECT_ALBUM_FROM_ALBUMS = "SELECT * FROM albums WHERE album_name = %s;";
     //UPDATE
     public static final String UPDATE_TABLE = "UPDATE %s SET %s = '%s' WHERE %s;";
 

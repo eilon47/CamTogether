@@ -1,7 +1,6 @@
 xmls\NewImageResponseBody.class
 xmls\CTImage.class
 xmls\CTThumbnail.class
-xmls\CTAlbumSettings.class
 xmls\ObjectFactory.class
 xmls\CTAlbum.class
 xmls\GetAlbumRequestBody.class
@@ -18,7 +17,6 @@ xmls\GetAlbumsListRequestBody.class
 xmls\NewAlbumResponseBody.class
 xmls\HeaderResponse.class
 xmls\NewAlbumRequestBody.class
-xmls\Dummy.class
 xmls\Rules.class
 xmls\CommandsEnum.class
 xmls\RequestMessage.class

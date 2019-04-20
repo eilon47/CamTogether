@@ -21,18 +21,18 @@ public class Main {
     public static void main(String args[]) {
         try {
             init_tables();
-            initData();
+           // initData();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return;
         }
-        Server server = new Server("0.0.0.0", 23456);
-        try {
-            server.connect();
-            server.startServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        Server server = new Server("0.0.0.0", 23456);
+//        try {
+//            server.connect();
+//            server.startServer();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
     private static void init_tables()throws SQLException, ClassNotFoundException {
         DBClient client = new DBClient();
@@ -76,7 +76,7 @@ public class Main {
             img.setImageData(imageInByte);
             // img.setAlbumName("testingAlbum");
             img.setUserName(common.IdGen.generate(imgg.toString()));
-            img.setImageLength(imgg.getHeight());
+            img.setImageHeight(imgg.getHeight());
             img.setImageWidth(imgg.getWidth());
             img.setUserName("dandan");
             return img;

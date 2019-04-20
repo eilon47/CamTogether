@@ -63,27 +63,27 @@ public class MessageHandler {
     }
 
     public static void main(String [] a){
-        MessageHandler handler = new MessageHandler();
-        RequestMessage requestMessage = new RequestMessage();
-        HeaderRequest headerRequest = new HeaderRequest();
-        NewAlbumRequestBody requestBody = new NewAlbumRequestBody();
-
-        headerRequest.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
-        headerRequest.setUserId("eilon47");
-        requestBody.setManager("eilon47");
-        requestBody.setAlbumName("eilon_album");
-        requestBody.setRules(new Rules());
-
-        requestMessage.setHeader(headerRequest);
-        String bodyString = handler.fromClassToXml(requestBody);
-        requestMessage.setBody(bodyString);
-        requestMessage.setHeader(headerRequest);
-        String xml = handler.fromClassToXml(requestMessage);
-        try {
-            handler.messageReceived(xml);
-        } catch (Exception e){
-            logger.warn(e);
-        }
+//        MessageHandler handler = new MessageHandler();
+//        RequestMessage requestMessage = new RequestMessage();
+//        HeaderRequest headerRequest = new HeaderRequest();
+//        NewAlbumRequestBody requestBody = new NewAlbumRequestBody();
+//
+//        headerRequest.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
+//        headerRequest.setUserId("eilon47");
+//        requestBody.setManager("eilon47");
+//        requestBody.setAlbumName("eilon_album");
+//        requestBody.setRules(new Rules());
+//
+//        requestMessage.setHeader(headerRequest);
+//        String bodyString = handler.fromClassToXml(requestBody);
+//        requestMessage.setBody(bodyString);
+//        requestMessage.setHeader(headerRequest);
+//        String xml = handler.fromClassToXml(requestMessage);
+//        try {
+//            handler.messageReceived(xml);
+//        } catch (Exception e){
+//            logger.warn(e);
+//        }
     }
 
 }
