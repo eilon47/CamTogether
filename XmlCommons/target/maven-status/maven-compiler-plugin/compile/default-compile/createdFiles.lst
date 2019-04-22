@@ -4,11 +4,13 @@ xmls\CTThumbnail.class
 xmls\ObjectFactory.class
 xmls\CTAlbum.class
 xmls\GetAlbumRequestBody.class
+xmls\NewUserRequestBody.class
 xmls\package-info.class
 xmls\NewImageRequestBody.class
 converters\IConverter.class
 converters\XmlConverter.class
 xmls\GetAlbumsListResponseBody.class
+xmls\NewUserResponseBody.class
 xmls\ResponseMessage.class
 converters\JsonConverter.class
 xmls\AddUserToAlbumRequestBody.class

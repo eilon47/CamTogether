@@ -36,6 +36,7 @@
     <complexType name="User">
         <sequence>
             <element name="UserName" type="string"/>
+            <element name="Password" type="string"/>
             <element name="Description" type="string"/>
             <element name="Birthday" type="date"/>
             <element name="JoinDate" type="date"/>
@@ -136,6 +137,23 @@
         <complexType>
             <sequence>
                 <element name="AlbumName" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <!--Body-->
+    <element name="NewUserRequestBody">
+        <complexType >
+            <sequence>
+                <element name="User" type="xsd:User"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="NewUserResponseBody">
+        <complexType>
+            <sequence>
+                <element name="User" type="string"/>
             </sequence>
         </complexType>
     </element>

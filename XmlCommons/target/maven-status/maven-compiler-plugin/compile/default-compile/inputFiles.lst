@@ -1,5 +1,6 @@
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\GetAlbumRequestBody.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\Rules.java
+C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\NewUserResponseBody.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\package-info.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\ObjectFactory.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\CTAlbum.java
@@ -15,6 +16,7 @@ C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\AddUserToAlbumR
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\CTImage.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\NewAlbumResponseBody.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\NewImageResponseBody.java
+C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\NewUserRequestBody.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\NewAlbumRequestBody.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\NewImageRequestBody.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\RequestMessage.java
