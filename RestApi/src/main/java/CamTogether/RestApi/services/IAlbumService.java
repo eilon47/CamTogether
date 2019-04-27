@@ -1,9 +1,13 @@
 package CamTogether.RestApi.services;
 
 
+import xmls.AlbumsList;
+import xmls.CTAlbum;
+
 public interface IAlbumService {
 
-    String getAlbum(String albumName);
-    String getAlbums();
+    CTAlbum getAlbum(String userName, String albumName);
+    AlbumsList getAlbums(String userName);
+    String postAlbum(String userName, CTAlbum ctAlbum);
 
 }

@@ -1,35 +1,33 @@
 package CamTogether.RestApi.controller;
 
 import CamTogether.RestApi.services.IAlbumService;
+import jdk.nashorn.internal.ir.RuntimeNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+import xmls.AlbumsList;
+import xmls.CTAlbum;
+import xmls.DummyObject;
+
 @RestController
+@RequestMapping("/album")
+@CrossOrigin(origins = "http://localhost:8081")
 public class AlbumController {
 
     @Autowired
     IAlbumService albumService;
 
-
-    @GetMapping("/album")
-    String getAlbum(){
-        return albumService.getAlbums();
+    @GetMapping("/{userName}")
+    AlbumsList getAlbums(@PathVariable String userName){
+        return albumService.getAlbums(userName);
     }
-
-    @GetMapping("/album/{albumName}")
-    String getAlbum(@PathVariable String albumName){
-        return albumService.getAlbum(albumName);
+    @GetMapping("/{userName}/{albumName}")
+    CTAlbum getAlbum(@PathVariable String userName,@PathVariable String albumName) {
+        CTAlbum ct = albumService.getAlbum(userName,albumName);
+        return ct;
     }
-
-
-
-//    @PostMapping("/album/{albuminfo}")
-//    String postAlbum(@PathVariable Album albuminfo) {
-//
-//    }
+    @PostMapping("/{userName}")
+    String postAlbum(@PathVariable String userName, @RequestBody CTAlbum reqBody) {
+        System.out.println(reqBody);
+        return albumService.postAlbum(userName,reqBody);
+    }
 }

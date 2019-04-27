@@ -20,7 +20,7 @@ public class ImageService implements IImageService{
 
     public static CTImage create_CTimage(String path) {
         try {
-            path = "C:\\Users\\green\\Desktop\\camTogether\\CamTogether\\RestApi\\src\\main\\resources\\" + path;
+            path = "C:\\Users\\green\\Desktop\\camTogether\\CamTogether\\RestApi\\src\\main\\resources\\images\\" + path;
             CTImage img = new CTImage();
             File f = new File(path);
             BufferedImage imgg = ImageIO.read(f);

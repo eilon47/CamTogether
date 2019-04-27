@@ -193,7 +193,7 @@ public class DBClient {
             thumbnail.setThumbnailWidth(thumbs_rs.getInt("width"));
             thumbnail.setThumbnailHeight(thumbs_rs.getInt("height"));
             thumbnail.setThumbnailData(thumbs_rs.getBytes("thumbnail"));
-            album.getImages().add(thumbnail);
+            album.getThumbnails().add(thumbnail);
         }
         thumbs_rs.close();
 

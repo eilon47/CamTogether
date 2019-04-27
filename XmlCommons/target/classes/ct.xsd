@@ -77,7 +77,8 @@
 
     <complexType name="CTAlbum">
         <sequence>
-            <element name="Images" type="xsd:CTThumbnail" maxOccurs="unbounded"/>
+            <element name="Images" type="xsd:CTImage" maxOccurs="unbounded"/>
+            <element name="Thumbnails" type="xsd:CTThumbnail" maxOccurs="unbounded"/>
             <element name="Creator" type="string"/>
             <element name="Name" type="string"/>
             <element name="Participants" type="string" maxOccurs="50"/>
@@ -85,6 +86,12 @@
             <element name="Rules" type="xsd:Rules"/>
             <element name="CreationDate" type="date"/>
             <element name="ExpirationDate" type="date"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="AlbumsList">
+        <sequence>
+            <element name="Albums" type="xsd:CTAlbum" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
 
@@ -223,6 +230,14 @@
             <sequence>
                 <element name="AddToAlbum" type="string"/>
                 <element name="UserToAdd" type="xsd:User"/>
+            </sequence>
+        </complexType>
+    </element>
+    <element name="DummyObject">
+        <complexType>
+            <sequence>
+                <element name="Id" type="string"/>
+                <element name="Name" type="string"/>
             </sequence>
         </complexType>
     </element>

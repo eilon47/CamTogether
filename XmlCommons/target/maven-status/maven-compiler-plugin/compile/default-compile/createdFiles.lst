@@ -17,6 +17,7 @@ xmls\AddUserToAlbumRequestBody.class
 xmls\GetAlbumResponseBody.class
 xmls\GetAlbumsListRequestBody.class
 xmls\NewAlbumResponseBody.class
+xmls\DummyObject.class
 xmls\HeaderResponse.class
 xmls\NewAlbumRequestBody.class
 xmls\Rules.class
@@ -25,3 +26,4 @@ xmls\RequestMessage.class
 xmls\HeaderRequest.class
 xmls\User.class
 xmls\AddUserToAlbumResponseBody.class
+xmls\AlbumsList.class

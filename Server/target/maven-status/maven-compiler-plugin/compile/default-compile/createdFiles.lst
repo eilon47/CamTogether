@@ -4,6 +4,7 @@ handlers\MessageHandler.class
 common\ResourcesHandler.class
 database\DBClient.class
 Main.class
+common\ImageUtils.class
 handlers\NewPhotoCommandHandler.class
 common\IdGen.class
 server\Server.class
@@ -14,5 +15,6 @@ handlers\CreateNewAlbumCommandHandler.class
 handlers\GetAlbumHandler.class
 client\Client.class
 common\ConfigHolder.class
+handlers\CreateNewUserHandler.class
 client\CVClient.class
 server\ClientHandler.class
