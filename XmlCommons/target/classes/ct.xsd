@@ -11,6 +11,9 @@
             <enumeration value="ADD_NEW_PHOTO_TO_ALBUM"/>
             <enumeration value="UPDATE_ALBUM_RULES"/>
 
+            <!--User Profile-->
+            <enumeration value="UPDATE_USER_PROFILE"/>
+
             <!--User Requests-->
             <enumeration value="GET_IMAGE"/>
             <enumeration value="GET_ALBUMS_LIST"/>  <!--Get the albums that the user in -->
@@ -89,23 +92,31 @@
         </sequence>
     </complexType>
 
+    <complexType name="CTAlbumPreview">
+        <sequence>
+            <element name="Name" type="string"/>
+            <element name="PreviewImg" type="xsd:CTThumbnail"/>
+            <element name="NumberOfImages" type="int"/>
+        </sequence>
+    </complexType>
+
     <complexType name="AlbumsList">
         <sequence>
-            <element name="Albums" type="xsd:CTAlbum" maxOccurs="unbounded"/>
+            <element name="Albums" type="xsd:CTAlbumPreview" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
 
     <!--Header-->
     <complexType name="HeaderRequest">
         <sequence>
-            <element name="UserId" type="string"/>
+            <element name="Username" type="string"/>
             <element name="Command" type="xsd:CommandsEnum"/>
         </sequence>
     </complexType>
 
     <complexType name="HeaderResponse">
         <sequence>
-            <element name="UserId" type="string"/>
+            <element name="Username" type="string"/>
             <element name="Command" type="xsd:CommandsEnum"/>
             <element name="CommandSuccess" type="boolean"/>
         </sequence>
@@ -168,7 +179,7 @@
     <element name="GetAlbumsListRequestBody">
         <complexType>
             <sequence>
-                <element name="User" type="xsd:User"/>
+                <element name="User" type="string"/>
             </sequence>
         </complexType>
     </element>
@@ -176,7 +187,7 @@
     <element name="GetAlbumsListResponseBody">
         <complexType>
             <sequence>
-                <element name="Albums" type="xsd:CTAlbum" maxOccurs="unbounded" minOccurs="0"/>
+                <element name="Albums" type="xsd:AlbumsList"/>
             </sequence>
         </complexType>
     </element>
@@ -185,7 +196,7 @@
         <complexType>
             <sequence>
                 <element name="AlbumName" type="string" />
-                <element name="User" type="xsd:User"/>
+                <element name="User" type="string"/>
             </sequence>
         </complexType>
     </element>

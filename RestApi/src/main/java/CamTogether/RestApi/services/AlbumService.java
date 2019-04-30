@@ -1,52 +1,68 @@
 package CamTogether.RestApi.services;
-
-
 import org.springframework.stereotype.Service;
-import xmls.AlbumsList;
-import xmls.CTAlbum;
-import xmls.NewAlbumRequestBody;
+import xmls.*;
+
+import javax.xml.bind.JAXBException;
 
 @Service
-public class AlbumService implements IAlbumService{
+public class AlbumService extends AbstractService implements IAlbumService{
 
     @Override
     public AlbumsList getAlbums(String userName) {
-        // here we need to return album list from server
-        AlbumsList al = new AlbumsList();
-        for (int i = 1; i < 8; i++) {
-            al.getAlbums().add(createAlbum(userName, Integer.toString(i)));
+        RequestMessage message = new RequestMessage();
+        HeaderRequest headerRequest = new HeaderRequest();
+        GetAlbumsListRequestBody getAlbumsListRequestBody = new GetAlbumsListRequestBody();
+        getAlbumsListRequestBody.setUser(userName);
+        headerRequest.setCommand(CommandsEnum.GET_ALBUMS_LIST);
+        headerRequest.setUsername(userName);
+        message.setHeader(headerRequest);
+        ResponseMessage responseMessage = messageToServerAndResponse(message, getAlbumsListRequestBody);
+
+        try {
+            GetAlbumsListResponseBody responseBody = xmlConverter.serializeFromString(responseMessage.getBody(), GetAlbumsListResponseBody.class);
+            return responseBody.getAlbums();
+        } catch (JAXBException e) {
+            e.printStackTrace();
+            logger.warn("Could not serialize to Album list object", e);
+            return new AlbumsList();
         }
-        return al;
     }
 
     @Override
     public CTAlbum getAlbum(String userName,String albumName) {
-        // here we need to get the album from server
-        CTAlbum ctAlbum = createAlbum(userName,albumName);
-        return ctAlbum;
+        RequestMessage message = new RequestMessage();
+        HeaderRequest headerRequest = new HeaderRequest();
+        headerRequest.setUsername(userName);
+        headerRequest.setCommand(CommandsEnum.GET_ALBUM);
+        message.setHeader(headerRequest);
+        GetAlbumRequestBody requestBody = new GetAlbumRequestBody();
+        requestBody.setAlbumName(albumName);
+        requestBody.setUser(userName);
+
+        ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
+
+        try {
+            GetAlbumResponseBody responseBody = xmlConverter.serializeFromString(responseMessage.getBody(), GetAlbumResponseBody.class);
+            return responseBody.getAlbum();
+        }catch (JAXBException e){
+            e.printStackTrace();
+            logger.warn("Could not serialize to Album object", e);
+            return new CTAlbum();
+        }
+
     }
 
     @Override
     public String postAlbum(String userName, CTAlbum ctAlbum) {
-        // this request we wanna send to server
-        NewAlbumRequestBody narb = new NewAlbumRequestBody();
-        narb.setAlbum(ctAlbum);
-        // need to return confirmation message from server
-        return "Success!";
-    }
-
-    public CTAlbum createAlbum(String userName, String albumName) {
-        CTAlbum ctAlbum = new CTAlbum();
-        ctAlbum.setCreationDate(null);
-        ctAlbum.setCreator(userName);
-        ctAlbum.setDescription("Dummy Album");
-        ctAlbum.setExpirationDate(null);
-        ctAlbum.setName(albumName);
-        ctAlbum.setRules(null);
-        for (int i = 1; i < 7; i++) {
-            ctAlbum.getImages().add(ImageService.create_CTimage(Integer.toString(i)+ ".jpg"));
-        }
-        return  ctAlbum;
+        RequestMessage message = new RequestMessage();
+        HeaderRequest headerRequest = new HeaderRequest();
+        headerRequest.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
+        headerRequest.setUsername(userName);
+        message.setHeader(headerRequest);
+        NewAlbumRequestBody requestBody= new NewAlbumRequestBody();
+        requestBody.setAlbum(ctAlbum);
+        ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
+        return responseMessage.getHeader().isCommandSuccess() ? "Success!" : "Failed To post album " + ctAlbum.getName();
     }
 
 

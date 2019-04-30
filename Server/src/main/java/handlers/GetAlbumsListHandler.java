@@ -16,15 +16,17 @@ public class GetAlbumsListHandler extends CommandHandler {
         try{
             dbClient.createConnection();
             ResultSet rs = dbClient.selectQuery("album_name, participants, creator", "albums");
+            AlbumsList albumsList = new AlbumsList();
             while(rs.next()){
                 String album = rs.getString("album_name");
                 String participants = rs.getString("participants");
                 String creator = rs.getString("creator");
-                if(participants.contains(request.getHeader().getUserId()) || creator.contains(request.getHeader().getUserId())){
-                    CTAlbum ctAlbum = dbClient.getAlbum(album);
-                    responseBody.getAlbums().add(ctAlbum);
+                if(participants.contains(request.getHeader().getUsername()) || creator.contains(request.getHeader().getUsername())){
+                    CTAlbumPreview ctAlbumPreview = dbClient.getAlbumPreview(album);
+                    albumsList.getAlbums().add(ctAlbumPreview);
                 }
             }
+            responseBody.setAlbums(albumsList);
             dbClient.closeConnection();
             responseMessage.setBody(fromClassToXml(responseBody));
         }catch (Exception e){

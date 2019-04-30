@@ -21,6 +21,7 @@ xmls\DummyObject.class
 xmls\HeaderResponse.class
 xmls\NewAlbumRequestBody.class
 xmls\Rules.class
+xmls\CTAlbumPreview.class
 xmls\CommandsEnum.class
 xmls\RequestMessage.class
 xmls\HeaderRequest.class

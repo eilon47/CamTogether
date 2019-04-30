@@ -18,7 +18,7 @@ public class GetAlbumHandler extends CommandHandler {
         try {
             logger.debug("Creating connection to db");
             dbClient.createConnection();
-            if(!this.isAuthorized(req_body.getAlbumName(), request.getHeader().getUserId())) {
+            if(!this.isAuthorized(req_body.getAlbumName(), request.getHeader().getUsername())) {
                 responseMessage.getHeader().setCommandSuccess(false);
                 responseMessage.setBody(fromClassToXml(responseBody));
                 return responseMessage;

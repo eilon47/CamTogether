@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.postgresql.largeobject.LargeObjectManager;
 import xmls.CTAlbum;
+import xmls.CTAlbumPreview;
 import xmls.CTImage;
 import xmls.CTThumbnail;
 
@@ -173,7 +174,14 @@ public class DBClient {
         return thumbnail;
     }
 
-
+    public CTAlbumPreview getAlbumPreview(String albumName) throws SQLException{
+        CTAlbum album = getAlbum(albumName);
+        CTAlbumPreview preview = new CTAlbumPreview();
+        preview.setName(albumName);
+        preview.setNumberOfImages(album.getImages().size());
+        preview.setPreviewImg(album.getImages().size() == 0? null : album.getThumbnails().get(0));
+        return preview;
+    }
     public CTAlbum getAlbum(String albumName) throws SQLException {
         CTAlbum album = new CTAlbum();
         ResultSet album_req_rs = doSqlStatement(String.format(SqlStatements.SELECT_ALBUM_FROM_ALBUMS, albumName));

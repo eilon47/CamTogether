@@ -15,7 +15,7 @@ public class Client
     protected Socket socket;
     protected DataInputStream dis;
     protected DataOutputStream dos;
-    protected Client(int port, String ip) {
+    public Client(int port, String ip) {
         this.port = port;
         this.ip = ip;
     }

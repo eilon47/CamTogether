@@ -18,7 +18,7 @@ public abstract class CommandHandler {
     protected HeaderResponse createHeaderResponse(HeaderRequest headerRequest){
         HeaderResponse headerResponse = new HeaderResponse();
         headerResponse.setCommand(headerRequest.getCommand());
-        headerResponse.setUserId(headerRequest.getUserId());
+        headerResponse.setUsername(headerRequest.getUsername());
         headerResponse.setCommandSuccess(true);
         return headerResponse;
     }

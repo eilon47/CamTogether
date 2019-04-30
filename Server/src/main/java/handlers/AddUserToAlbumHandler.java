@@ -98,7 +98,7 @@ public class AddUserToAlbumHandler extends CommandHandler {
     public static void main(String[] args) throws JAXBException {
         RequestMessage requestMessage = new RequestMessage();
         HeaderRequest headerRequest = new HeaderRequest();
-        headerRequest.setUserId("username");
+        headerRequest.setUsername("username");
         headerRequest.setCommand(CommandsEnum.ADD_USER_TO_ALBUM);
         AddUserToAlbumRequestBody requestBody = new AddUserToAlbumRequestBody();
         requestBody.setAddToAlbum("album");
