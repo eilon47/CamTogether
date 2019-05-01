@@ -38,17 +38,5 @@ public class GetAlbumHandler extends CommandHandler {
     }
 
 
-    private boolean isAuthorized(String album_name, String user) throws SQLException {
-        logger.debug("connection with db created - executing select query to receive participants list");
-        ResultSet resultSet = dbClient.selectQuery("participants", "albums", "album_name='" + album_name + "'");
-        String participants = null;
-        boolean res = false;
-        if (resultSet.next())
-            participants = resultSet.getString("participants");
-            if(participants!=null)
-                res = participants.contains(user);
-        resultSet.close();
-        dbClient.closeConnection();
-        return res;
-    }
+
 }

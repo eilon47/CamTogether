@@ -13,7 +13,7 @@ public class MessageHandler {
     private AddUserToAlbumHandler addUserToAlbumHandler = new AddUserToAlbumHandler();
     private GetAlbumHandler getAlbumHandler = new GetAlbumHandler();
     private GetAlbumsListHandler getAlbumsListHandler = new GetAlbumsListHandler();
-
+    private GetImageHandler getImageHandler = new GetImageHandler();
     protected static Logger logger = LogManager.getLogger("handlers");
 
     public String messageReceived(String xmlMessage){
@@ -38,6 +38,8 @@ public class MessageHandler {
             case GET_ALBUMS_LIST:
                 res = getAlbumsListHandler.handle(message);
                 break;
+            case GET_IMAGE:
+                res = getImageHandler.handle(message);
             default:
                 break;
         }

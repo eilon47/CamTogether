@@ -4,24 +4,19 @@
     <!-- Enums -->
     <simpleType name="CommandsEnum" final="restriction">
         <restriction base="string">
-
-            <!--Album Commands-->
+            <!--Not done -->
             <enumeration value="ADD_USER_TO_ALBUM"/>
-            <enumeration value="CREATE_NEW_ALBUM"/>
             <enumeration value="ADD_NEW_PHOTO_TO_ALBUM"/>
             <enumeration value="UPDATE_ALBUM_RULES"/>
-
-            <!--User Profile-->
             <enumeration value="UPDATE_USER_PROFILE"/>
-
-            <!--User Requests-->
             <enumeration value="GET_IMAGE"/>
-            <enumeration value="GET_ALBUMS_LIST"/>  <!--Get the albums that the user in -->
-            <enumeration value="GET_ALBUM"/>
-
-            <!--User Authentication-->
             <enumeration value="CREATE_NEW_USER"/>
             <enumeration value="LOGIN_WITH_USER"/>
+            <!--Done-->
+            <enumeration value="GET_ALBUMS_LIST"/>  <!--Get the albums that the user in -->
+            <enumeration value="GET_ALBUM"/>
+            <enumeration value="CREATE_NEW_ALBUM"/>
+
         </restriction>
     </simpleType>
 
@@ -188,6 +183,25 @@
         <complexType>
             <sequence>
                 <element name="Albums" type="xsd:AlbumsList"/>
+            </sequence>
+        </complexType>
+    </element>
+
+
+    <element name="GetImageRequestBody">
+        <complexType>
+            <sequence>
+                <element name="ImageName" type="string"/>
+                <element name="Album" type="string"/>
+                <element name="Username" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="GetImageResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Image" type="xsd:CTImage"/>
             </sequence>
         </complexType>
     </element>

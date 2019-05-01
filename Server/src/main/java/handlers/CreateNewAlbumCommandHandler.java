@@ -65,28 +65,4 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
         return o != null;
     }
 
-    public static void main(String[] args) throws JAXBException {
-        XmlConverter converter = new XmlConverter();
-        String user = "username";
-        String album = "album";
-        RequestMessage requestMessage = new RequestMessage();
-        HeaderRequest headerRequest = new HeaderRequest();
-        NewAlbumRequestBody requestBody = new NewAlbumRequestBody();
-
-        headerRequest.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
-        headerRequest.setUserId(user);
-
-        CTAlbum ctAlbum = new CTAlbum();
-        ctAlbum.setName(album);
-        ctAlbum.setDescription("Des");
-        ctAlbum.setCreator(user);
-        ctAlbum.setRules(new Rules());
-        requestBody.setAlbum(ctAlbum);
-
-        requestMessage.setHeader(headerRequest);
-        requestMessage.setBody(converter.serializeToString(requestBody));
-        CreateNewAlbumCommandHandler createNewAlbumCommandHandler = new CreateNewAlbumCommandHandler();
-        ResponseMessage responseMessage = createNewAlbumCommandHandler.handle(requestMessage);
-        System.out.println(responseMessage);
-    }
 }

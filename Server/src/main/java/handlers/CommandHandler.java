@@ -8,6 +8,8 @@ import converters.IConverter;
 import converters.XmlConverter;
 
 import javax.xml.bind.JAXBException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public abstract class CommandHandler {
     protected static Logger logger = LogManager.getLogger("handlers");
@@ -39,5 +41,19 @@ public abstract class CommandHandler {
             logger.warn("failed creating xml from class " + object.getClass().getName(), ex);
             return null;
         }
+    }
+
+    protected boolean isAuthorized(String album_name, String user) throws SQLException {
+        logger.debug("connection with db created - executing select query to receive participants list");
+        ResultSet resultSet = dbClient.selectQuery("participants", "albums", "album_name='" + album_name + "'");
+        String participants = null;
+        boolean res = false;
+        if (resultSet.next())
+            participants = resultSet.getString("participants");
+        if(participants!=null)
+            res = participants.contains(user);
+        resultSet.close();
+        dbClient.closeConnection();
+        return res;
     }
 }

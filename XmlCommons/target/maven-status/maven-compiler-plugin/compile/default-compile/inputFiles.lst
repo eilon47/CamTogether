@@ -13,6 +13,7 @@ C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\converters\IConverte
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\ResponseMessage.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\User.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\GetAlbumResponseBody.java
+C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\GetImageRequestBody.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\HeaderResponse.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\CommandsEnum.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\AddUserToAlbumRequestBody.java
@@ -28,3 +29,4 @@ C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\GetAlbumsListRe
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\CTThumbnail.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\HeaderRequest.java
 C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\converters\JsonConverter.java
+C:\Users\eilon\Desktop\CamTogether\XmlCommons\src\main\java\xmls\GetImageResponseBody.java

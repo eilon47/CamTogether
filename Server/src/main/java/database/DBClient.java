@@ -174,6 +174,28 @@ public class DBClient {
         return thumbnail;
     }
 
+    public CTImage getImageFromAlbum(String albumName, String imageName) throws SQLException {
+        CTImage image = new CTImage();
+        String query = String.format(SqlStatements.SELECT_IMAGE_FROM_ALBUM, albumName);
+        ResultSet rs = prepareStatementAllStrings(query, new String[] {imageName});
+        while(rs.next()) {
+            image.setImageName(rs.getString("image_name"));
+            image.setImageSize(rs.getInt("Image_size"));
+            image.setImageData(rs.getBytes("image"));
+            image.setTitle(rs.getString("title"));
+            image.setImageHeight(rs.getInt("height"));
+            image.setImageWidth(rs.getInt("width"));
+            image.setUserName(rs.getString("username"));
+            image.setDate(fromDateTODateXml(rs.getDate("date")));
+            image.setLongitude(rs.getFloat("longitude"));
+            image.setLatitude(rs.getFloat("latitude"));
+            image.setAlbumName(albumName);
+        }
+        rs.close();
+        closeConnection();
+        return image;
+    }
+
     public CTAlbumPreview getAlbumPreview(String albumName) throws SQLException{
         CTAlbum album = getAlbum(albumName);
         CTAlbumPreview preview = new CTAlbumPreview();

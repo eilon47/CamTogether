@@ -5,5 +5,5 @@ import xmls.CTImage;
 
 public interface IImageService {
 
-    CTImage getImage(String path);
+    CTImage getImage(String image, String album, String username);
 }
