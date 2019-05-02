@@ -65,5 +65,19 @@ public class AlbumService extends AbstractService implements IAlbumService{
         return responseMessage.getHeader().isCommandSuccess() ? "Success!" : "Failed To post album " + ctAlbum.getName();
     }
 
+    @Override
+    public boolean addUserToAlbum(String user, String userToAdd, String album) {
+        RequestMessage message = new RequestMessage();
+        HeaderRequest headerRequest = new HeaderRequest();
+        headerRequest.setCommand(CommandsEnum.ADD_USER_TO_ALBUM);
+        headerRequest.setUsername(user);
+
+        AddUserToAlbumRequestBody requestBody = new AddUserToAlbumRequestBody();
+        requestBody.setUserToAdd(userToAdd);
+        requestBody.setAddToAlbum(album);
+        ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
+        return responseMessage.getHeader().isCommandSuccess();
+    }
+
 
 }

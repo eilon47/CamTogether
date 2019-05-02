@@ -15,6 +15,23 @@ import java.io.IOException;
 public class ImageService extends AbstractService implements IImageService{
 
     @Override
+    public String postImage(CTImage image) {
+        NewImageRequestBody requestBody = new NewImageRequestBody();
+        requestBody.setAlbum(image.getAlbumName());
+        requestBody.setImage(image);
+
+        HeaderRequest headerRequest = new HeaderRequest();
+        headerRequest.setCommand(CommandsEnum.ADD_NEW_PHOTO_TO_ALBUM);
+        headerRequest.setUsername(image.getUserName());
+
+        RequestMessage requestMessage = new RequestMessage();
+        requestMessage.setHeader(headerRequest);
+
+        ResponseMessage responseMessage = messageToServerAndResponse(requestMessage, requestBody);
+        return responseMessage.getHeader().isCommandSuccess() ? "Success!" : "Fail";
+    }
+
+    @Override
     public CTImage getImage(String image, String album, String username){
         GetImageRequestBody requestBody = new GetImageRequestBody();
         requestBody.setAlbum(album);
@@ -36,6 +53,8 @@ public class ImageService extends AbstractService implements IImageService{
             return null;
         }
     }
+
+
 
 
 

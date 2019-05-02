@@ -18,6 +18,7 @@ public class AlbumController {
 
     @GetMapping("/{userName}")
     AlbumsList getAlbums(@PathVariable String userName){
+
         return albumService.getAlbums(userName);
     }
     @GetMapping("/{userName}/{albumName}")
@@ -30,4 +31,11 @@ public class AlbumController {
         System.out.println(reqBody);
         return albumService.postAlbum(userName,reqBody);
     }
+
+    @PostMapping("/{userName}/{albumName}")
+    boolean addUser(@PathVariable String userName,@PathVariable String albumName, @RequestBody String userToAdd) {
+        return albumService.addUserToAlbum(userName, userToAdd, albumName);
+    }
+
+
 }

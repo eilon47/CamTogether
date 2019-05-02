@@ -9,5 +9,6 @@ public interface IAlbumService {
     CTAlbum getAlbum(String userName, String albumName);
     AlbumsList getAlbums(String userName);
     String postAlbum(String userName, CTAlbum ctAlbum);
+    boolean addUserToAlbum(String user,String userToAdd,  String album);
 
 }
