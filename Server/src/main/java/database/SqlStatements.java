@@ -1,6 +1,11 @@
 package database;
 
 public final class SqlStatements {
+
+    private static final String albumTable = "albums";
+    private static final String rulesTable = "rules";
+    private static final String usersTable = "users";
+
     //GENERAL
     public static final String REMOVE_TABLE= "DROP %s;";
     public static final String UPDATE_TABLE_RECORD = "UPDATE %s SET %s WHERE %s;";
@@ -9,7 +14,7 @@ public final class SqlStatements {
 
     //CREATE
     public static final String[] INIT_BASIC_TABLES = {
-            "CREATE TABLE albums (" +
+            "CREATE TABLE "+ albumTable +" (" +
                     "album_name   text  NOT NULL PRIMARY KEY, " +
                     "creator    text   NOT NULL, " +
                     "participants text, " +
@@ -18,7 +23,7 @@ public final class SqlStatements {
                     "expiration date" +
                     ");",
 
-            "CREATE TABLE rules (" +
+            "CREATE TABLE "+rulesTable+" (" +
                     "album_name  char(64)  NOT NULL   PRIMARY KEY, " +
                     "location   boolean NOT NULL, " +
                     "longitude float(24), " +
@@ -29,7 +34,7 @@ public final class SqlStatements {
                     "end_date   char(20) " +
                     ");",
 
-            "CREATE TABLE users (" +
+            "CREATE TABLE "+ usersTable +" (" +
                     "username    char(64) NOT NULL PRIMARY KEY," +
                     "password  text",
                     "birthday  date," +
@@ -72,13 +77,15 @@ public final class SqlStatements {
     //SELECT
     public static final String SELECT_ALL_THUMBNAILS_FROM_ALBUM = "SELECT * FROM %s_thumbs;";
     public static final String SELECT_IMAGE_FROM_ALBUM = "SELECT * FROM %s_imgs WHERE image_name = ?;";
-    public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM rules WHERE album_name = ?;";
-    public static final String SELECT_USER_FROM_USERS = "SELECT * FROM users WHERE username = ?;";
-    public static final String SELECT_KEY_FROM_USERS = "SELECT %s FROM users WHERE %s = '%s'";
-    public static final String SELECT_ALBUM_FROM_ALBUMS = "SELECT * FROM albums WHERE album_name = %s;";
+    public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM "+rulesTable+" WHERE album_name = ?;";
+    public static final String SELECT_USER_FROM_USERS = "SELECT * FROM "+usersTable+" WHERE username = ?;";
+    public static final String SELECT_KEY_FROM_USERS = "SELECT %s FROM "+usersTable+" WHERE %s = '%s'";
+    public static final String SELECT_ALBUM_FROM_ALBUMS = "SELECT * FROM " +albumTable+ " WHERE album_name = %s;";
     //UPDATE
     public static final String UPDATE_TABLE = "UPDATE %s SET %s = '%s' WHERE %s;";
 
+    public static final String UPDATE_RULES_FOR_ALBUM = "UPDATE "+rulesTable+" SET (location, longitude, latitude, radius, time," +
+            " start_date, end_date) = (?, ?, ?, ?, ?, ?, ?) WHERE album = %s;";
 
     public static final String[] newAlbumCreationSQLs(String album){
         String album_thumbnail = album + "_thumbs";

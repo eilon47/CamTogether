@@ -259,6 +259,24 @@
             </sequence>
         </complexType>
     </element>
+
+
+    <element name="UpdateRulesRequestBody">
+        <complexType>
+            <sequence>
+                <element name="NewRules" type="xsd:Rules"/>
+                <element name="Album" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="UpdateRulesResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Success" type="boolean"/>
+            </sequence>
+        </complexType>
+    </element>
     <element name="DummyObject">
         <complexType>
             <sequence>

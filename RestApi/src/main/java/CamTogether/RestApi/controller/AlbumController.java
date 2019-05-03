@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import xmls.AlbumsList;
 import xmls.CTAlbum;
 import xmls.DummyObject;
+import xmls.Rules;
 
 @RestController
 @RequestMapping("/album")
@@ -37,5 +38,10 @@ public class AlbumController {
         return albumService.addUserToAlbum(userName, userToAdd, albumName);
     }
 
+
+    @PostMapping("/{userName}/{albumName}/rules")
+    boolean updateRules(@PathVariable String userName, @PathVariable String albumName, @RequestBody Rules rules) {
+        return albumService.updateRules(userName, albumName, rules);
+    }
 
 }

@@ -1,12 +1,8 @@
 import database.DBClient;
 import database.SqlStatements;
 import handlers.CreateNewAlbumCommandHandler;
-import handlers.GetAlbumHandler;
-import handlers.MessageHandler;
-import handlers.NewPhotoCommandHandler;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import server.Server;
 import xmls.*;
 
 import javax.imageio.ImageIO;
@@ -55,8 +51,8 @@ public class Main {
         client.createConnection();
         String[] user1 = {"", "user1", "user1", "", "", ""};
         String[] user2 = {"", "user2", "user2", "", "", ""};
-        client.insertNewRecord(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user1);
-        client.insertNewRecord(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user2);
+        client.dynamicQuery(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user1);
+        client.dynamicQuery(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user2);
         client.closeConnection();
     }
 

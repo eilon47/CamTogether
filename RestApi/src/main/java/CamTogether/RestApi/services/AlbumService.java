@@ -79,5 +79,19 @@ public class AlbumService extends AbstractService implements IAlbumService{
         return responseMessage.getHeader().isCommandSuccess();
     }
 
+    @Override
+    public boolean updateRules(String username, String album, Rules rules) {
+        RequestMessage message = new RequestMessage();
+        HeaderRequest headerRequest = new HeaderRequest();
+        headerRequest.setCommand(CommandsEnum.UPDATE_ALBUM_RULES);
+        headerRequest.setUsername(username);
+
+        UpdateRulesRequestBody requestBody = new UpdateRulesRequestBody();
+        requestBody.setNewRules(rules);
+        requestBody.setAlbum(album);
+        ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
+        return responseMessage.getHeader().isCommandSuccess();
+    }
+
 
 }

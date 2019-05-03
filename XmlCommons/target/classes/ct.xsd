@@ -5,12 +5,12 @@
     <simpleType name="CommandsEnum" final="restriction">
         <restriction base="string">
             <!--Not done -->
-            <enumeration value="ADD_USER_TO_ALBUM"/>
             <enumeration value="UPDATE_ALBUM_RULES"/>
             <enumeration value="UPDATE_USER_PROFILE"/>
             <enumeration value="CREATE_NEW_USER"/>
             <enumeration value="LOGIN_WITH_USER"/>
             <!--Done-->
+            <enumeration value="ADD_USER_TO_ALBUM"/>
             <enumeration value="ADD_NEW_PHOTO_TO_ALBUM"/>
             <enumeration value="GET_ALBUMS_LIST"/>  <!--Get the albums that the user in -->
             <enumeration value="GET_ALBUM"/>
@@ -256,6 +256,24 @@
             <sequence>
                 <element name="AddToAlbum" type="string"/>
                 <element name="UserToAdd" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+
+    <element name="UpdateRulesRequestBody">
+        <complexType>
+            <sequence>
+                <element name="NewRules" type="xsd:Rules"/>
+                <element name="Album" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="UpdateRulesResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Success" type="boolean"/>
             </sequence>
         </complexType>
     </element>

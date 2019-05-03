@@ -250,7 +250,7 @@ public class DBClient {
         return ((PreparedStatement)this.statement).executeQuery();
     }
 
-    public boolean insertNewRecord(String sql, Object[] args) throws SQLException{
+    public boolean dynamicQuery(String sql, Object[] args) throws SQLException{
         if (args.length == 0)
             return false;
         statement = this.conn.prepareStatement(sql);

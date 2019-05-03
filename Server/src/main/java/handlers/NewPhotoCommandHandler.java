@@ -39,7 +39,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
                 String insert_image_sql = String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,img.getAlbumName());
                 Object[] values = {"", img.getImageName(), img.getImageSize(), img.getImageData(), img.getTitle(), img.getImageHeight(),
                         img.getImageWidth(), img.getUserName(), img.getDate(), img.getLongitude(), img.getLatitude(), img.getLatitude(), img.getAlbumName()};
-                boolean res = dbClient.insertNewRecord(insert_image_sql,values);
+                boolean res = dbClient.dynamicQuery(insert_image_sql,values);
                 CTThumbnail thumbnail = createThumbnail(img, 100, 100);
                 dbClient.closeConnection();
                 returnMessage.setBody(fromClassToXml(responseBody));
