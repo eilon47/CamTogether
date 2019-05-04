@@ -13,7 +13,7 @@ public class AddUserToAlbumHandler extends CommandHandler {
     public ResponseMessage handle(RequestMessage request) {
         logger.info("Handling Add user request");
         ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setHeader(createHeaderResponse(request.getHeader()));
+        responseMessage.setHeader(createResponseHeader(request.getHeader()));
         AddUserToAlbumRequestBody addUserToAlbumRequestBody = fromXmlToClass(request.getBody(), AddUserToAlbumRequestBody.class);
         try {
             boolean user_exists = checkUserExistsAndUnique(addUserToAlbumRequestBody.getUserToAdd());
@@ -98,7 +98,7 @@ public class AddUserToAlbumHandler extends CommandHandler {
 
     public static void main(String[] args) throws JAXBException {
         RequestMessage requestMessage = new RequestMessage();
-        HeaderRequest headerRequest = new HeaderRequest();
+        RequestHeader headerRequest = new RequestHeader();
         headerRequest.setUsername("username");
         headerRequest.setCommand(CommandsEnum.ADD_USER_TO_ALBUM);
         AddUserToAlbumRequestBody requestBody = new AddUserToAlbumRequestBody();

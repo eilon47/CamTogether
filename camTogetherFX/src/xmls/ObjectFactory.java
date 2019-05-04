@@ -45,11 +45,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link HeaderRequest }
+     * Create an instance of {@link RequestHeader }
      * 
      */
-    public HeaderRequest createHeaderRequest() {
-        return new HeaderRequest();
+    public RequestHeader createRequestHeader() {
+        return new RequestHeader();
     }
 
     /**
@@ -61,11 +61,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link HeaderResponse }
+     * Create an instance of {@link ResponseHeader }
      * 
      */
-    public HeaderResponse createHeaderResponse() {
-        return new HeaderResponse();
+    public ResponseHeader createResponseHeader() {
+        return new ResponseHeader();
     }
 
     /**

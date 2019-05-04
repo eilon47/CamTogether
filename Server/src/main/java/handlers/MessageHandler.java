@@ -16,6 +16,8 @@ public class MessageHandler {
     private GetAlbumsListHandler getAlbumsListHandler = new GetAlbumsListHandler();
     private GetImageHandler getImageHandler = new GetImageHandler();
     private UpdateAlbumRulesHandler updateAlbumRulesHandler = new UpdateAlbumRulesHandler();
+    private CreateNewUserHandler createNewUserHandler = new CreateNewUserHandler();
+    private UpdateUserProfileHandler updateUserProfileHandler = new UpdateUserProfileHandler();
     protected static Logger logger = LogManager.getLogger("handlers");
 
     public String messageReceived(String xmlMessage){
@@ -46,6 +48,12 @@ public class MessageHandler {
             case UPDATE_ALBUM_RULES:
                 res = updateAlbumRulesHandler.handle(message);
                 break;
+            case CREATE_NEW_USER:
+                res = createNewUserHandler.handle(message);
+                break;
+            case UPDATE_USER_PROFILE:
+                res = updateUserProfileHandler.handle(message);
+                break;
             default:
                 break;
         }
@@ -73,7 +81,7 @@ public class MessageHandler {
     public static void main(String [] a){
 //        MessageHandler handler = new MessageHandler();
 //        RequestMessage requestMessage = new RequestMessage();
-//        HeaderRequest headerRequest = new HeaderRequest();
+//        RequestHeader headerRequest = new RequestHeader();
 //        NewAlbumRequestBody requestBody = new NewAlbumRequestBody();
 //
 //        headerRequest.setCommand(CommandsEnum.CREATE_NEW_ALBUM);

@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="Header" type="{xsd}HeaderRequest"/&gt;
+ *         &lt;element name="Header" type="{xsd}RequestHeader"/&gt;
  *         &lt;element name="Body" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlType;
 public class RequestMessage {
 
     @XmlElement(name = "Header", required = true)
-    protected HeaderRequest header;
+    protected RequestHeader header;
     @XmlElement(name = "Body", required = true)
     protected String body;
 
@@ -53,10 +53,10 @@ public class RequestMessage {
      * 
      * @return
      *     possible object is
-     *     {@link HeaderRequest }
+     *     {@link RequestHeader }
      *     
      */
-    public HeaderRequest getHeader() {
+    public RequestHeader getHeader() {
         return header;
     }
 
@@ -65,10 +65,10 @@ public class RequestMessage {
      * 
      * @param value
      *     allowed object is
-     *     {@link HeaderRequest }
+     *     {@link RequestHeader }
      *     
      */
-    public void setHeader(HeaderRequest value) {
+    public void setHeader(RequestHeader value) {
         this.header = value;
     }
 

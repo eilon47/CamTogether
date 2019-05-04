@@ -13,7 +13,7 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
     public ResponseMessage handle(RequestMessage request) {
         logger.info("Handling new album request");
         ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setHeader(createHeaderResponse(request.getHeader()));
+        responseMessage.setHeader(createResponseHeader(request.getHeader()));
         NewAlbumResponseBody responseBody = new NewAlbumResponseBody();
         try {
             NewAlbumRequestBody newAlbumRequest = fromXmlToClass(request.getBody(), NewAlbumRequestBody.class);

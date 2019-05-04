@@ -10,7 +10,7 @@ public class UpdateAlbumRulesHandler extends CommandHandler {
     public ResponseMessage handle(RequestMessage request) {
         ResponseMessage response = new ResponseMessage();
         //create header of message
-        response.setHeader(createHeaderResponse(request.getHeader()));
+        response.setHeader(createResponseHeader(request.getHeader()));
         UpdateRulesRequestBody requestBody = fromXmlToClass(request.getBody(), UpdateRulesRequestBody.class);
 
         String sql = String.format(SqlStatements.UPDATE_RULES_FOR_ALBUM, requestBody.getAlbum());

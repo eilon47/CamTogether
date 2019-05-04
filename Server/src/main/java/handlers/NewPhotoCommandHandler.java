@@ -24,7 +24,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
         logger.info("Handling new photo");
         ResponseMessage returnMessage = new ResponseMessage();
         //create header of message
-        returnMessage.setHeader(createHeaderResponse(request.getHeader()));
+        returnMessage.setHeader(createResponseHeader(request.getHeader()));
         NewImageRequestBody req_body = fromXmlToClass(request.getBody(), NewImageRequestBody.class);
         NewImageResponseBody responseBody = new NewImageResponseBody();;
         responseBody.setAlbum(req_body.getAlbum());

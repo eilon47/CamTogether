@@ -20,7 +20,7 @@ public class ImageService extends AbstractService implements IImageService{
         requestBody.setAlbum(image.getAlbumName());
         requestBody.setImage(image);
 
-        HeaderRequest headerRequest = new HeaderRequest();
+        RequestHeader headerRequest = new RequestHeader();
         headerRequest.setCommand(CommandsEnum.ADD_NEW_PHOTO_TO_ALBUM);
         headerRequest.setUsername(image.getUserName());
 
@@ -38,7 +38,7 @@ public class ImageService extends AbstractService implements IImageService{
         requestBody.setImageName(image);
         requestBody.setUsername(username);
 
-        HeaderRequest header = new HeaderRequest();
+        RequestHeader header = new RequestHeader();
         header.setUsername(username);
         header.setCommand(CommandsEnum.GET_IMAGE);
 

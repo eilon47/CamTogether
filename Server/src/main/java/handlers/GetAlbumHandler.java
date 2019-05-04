@@ -11,7 +11,7 @@ public class GetAlbumHandler extends CommandHandler {
     public ResponseMessage handle(RequestMessage request) {
         logger.info("Handling get album request");
         ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setHeader(createHeaderResponse(request.getHeader()));
+        responseMessage.setHeader(createResponseHeader(request.getHeader()));
         GetAlbumRequestBody req_body = fromXmlToClass(request.getBody(), GetAlbumRequestBody.class);
         GetAlbumResponseBody responseBody = new GetAlbumResponseBody();
         ResultSet resultSet = null;

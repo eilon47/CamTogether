@@ -103,7 +103,7 @@ public class MainMenu implements Initializable {
     @FXML
     private void RefreshList() throws JAXBException, IOException {
         GetAlbumsListRequestBody b_r = new GetAlbumsListRequestBody();
-        HeaderRequest h_r = new HeaderRequest();
+        RequestHeader h_r = new RequestHeader();
         h_r.setUserId(this.userID);
         h_r.setCommand(CommandsEnum.GET_ALBUMS_LIST);
 
@@ -184,7 +184,7 @@ public class MainMenu implements Initializable {
         try {
             CTImage img = create_CTimage(photo);
             NewImageRequestBody b_r = new NewImageRequestBody();
-            HeaderRequest h_r = new HeaderRequest();
+            RequestHeader h_r = new RequestHeader();
             h_r.setUserId(img.getUserID());
             h_r.setCommand(CommandsEnum.ADD_NEW_PHOTO);
 

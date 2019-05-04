@@ -40,7 +40,7 @@ public class AddUser {
         try {
             RequestMessage rm = new RequestMessage();
             //creating header
-            HeaderRequest hr = new HeaderRequest();
+            RequestHeader hr = new RequestHeader();
 
             hr.setUserId(this.userID);
             hr.setCommand(CommandsEnum.ADD_USER_TO_ALBUM);

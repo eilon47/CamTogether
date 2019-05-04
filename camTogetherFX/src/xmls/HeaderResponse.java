@@ -16,12 +16,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for HeaderResponse complex type.
+ * <p>Java class for ResponseHeader complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="HeaderResponse"&gt;
+ * &lt;complexType name="ResponseHeader"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
@@ -37,12 +37,12 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "HeaderResponse", propOrder = {
+@XmlType(name = "ResponseHeader", propOrder = {
     "userId",
     "command",
     "commandSuccess"
 })
-public class HeaderResponse {
+public class ResponseHeader {
 
     @XmlElement(name = "UserId", required = true)
     protected String userId;

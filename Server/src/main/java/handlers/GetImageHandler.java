@@ -11,7 +11,7 @@ public class GetImageHandler extends CommandHandler {
         logger.info("Handling new user request");
         ResponseMessage returnMessage = new ResponseMessage();
         //create header of message
-        returnMessage.setHeader(createHeaderResponse(request.getHeader()));
+        returnMessage.setHeader(createResponseHeader(request.getHeader()));
         GetImageRequestBody requestBody = fromXmlToClass(request.getBody(), GetImageRequestBody.class);
         String album = requestBody.getAlbum();
         String image = requestBody.getImageName();

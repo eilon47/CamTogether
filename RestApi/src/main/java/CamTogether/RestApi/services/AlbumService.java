@@ -10,7 +10,7 @@ public class AlbumService extends AbstractService implements IAlbumService{
     @Override
     public AlbumsList getAlbums(String userName) {
         RequestMessage message = new RequestMessage();
-        HeaderRequest headerRequest = new HeaderRequest();
+        RequestHeader headerRequest = new RequestHeader();
         GetAlbumsListRequestBody getAlbumsListRequestBody = new GetAlbumsListRequestBody();
         getAlbumsListRequestBody.setUser(userName);
         headerRequest.setCommand(CommandsEnum.GET_ALBUMS_LIST);
@@ -31,7 +31,7 @@ public class AlbumService extends AbstractService implements IAlbumService{
     @Override
     public CTAlbum getAlbum(String userName,String albumName) {
         RequestMessage message = new RequestMessage();
-        HeaderRequest headerRequest = new HeaderRequest();
+        RequestHeader headerRequest = new RequestHeader();
         headerRequest.setUsername(userName);
         headerRequest.setCommand(CommandsEnum.GET_ALBUM);
         message.setHeader(headerRequest);
@@ -55,7 +55,7 @@ public class AlbumService extends AbstractService implements IAlbumService{
     @Override
     public String postAlbum(String userName, CTAlbum ctAlbum) {
         RequestMessage message = new RequestMessage();
-        HeaderRequest headerRequest = new HeaderRequest();
+        RequestHeader headerRequest = new RequestHeader();
         headerRequest.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
         headerRequest.setUsername(userName);
         message.setHeader(headerRequest);
@@ -68,7 +68,7 @@ public class AlbumService extends AbstractService implements IAlbumService{
     @Override
     public boolean addUserToAlbum(String user, String userToAdd, String album) {
         RequestMessage message = new RequestMessage();
-        HeaderRequest headerRequest = new HeaderRequest();
+        RequestHeader headerRequest = new RequestHeader();
         headerRequest.setCommand(CommandsEnum.ADD_USER_TO_ALBUM);
         headerRequest.setUsername(user);
 
@@ -82,7 +82,7 @@ public class AlbumService extends AbstractService implements IAlbumService{
     @Override
     public boolean updateRules(String username, String album, Rules rules) {
         RequestMessage message = new RequestMessage();
-        HeaderRequest headerRequest = new HeaderRequest();
+        RequestHeader headerRequest = new RequestHeader();
         headerRequest.setCommand(CommandsEnum.UPDATE_ALBUM_RULES);
         headerRequest.setUsername(username);
 

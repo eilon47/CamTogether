@@ -10,7 +10,7 @@ public class GetAlbumsListHandler extends CommandHandler {
     public ResponseMessage handle(RequestMessage request) {
         logger.info("Handling Add user request");
         ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setHeader(createHeaderResponse(request.getHeader()));
+        responseMessage.setHeader(createResponseHeader(request.getHeader()));
         GetAlbumsListRequestBody requestBody = fromXmlToClass(request.getBody(), GetAlbumsListRequestBody.class);
         GetAlbumsListResponseBody responseBody = new GetAlbumsListResponseBody();
         try{

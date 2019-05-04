@@ -103,27 +103,27 @@
     </complexType>
 
     <!--Header-->
-    <complexType name="HeaderRequest">
+    <complexType name="RequestHeader">
         <sequence>
             <element name="Username" type="string"/>
             <element name="Command" type="xsd:CommandsEnum"/>
         </sequence>
     </complexType>
 
-    <complexType name="HeaderResponse">
+    <complexType name="ResponseHeader">
         <sequence>
             <element name="Username" type="string"/>
             <element name="Command" type="xsd:CommandsEnum"/>
             <element name="CommandSuccess" type="boolean"/>
+            <element name="Reason" type="string"/>
         </sequence>
     </complexType>
-
 
     <!--Request-->
     <element name="RequestMessage">
         <complexType>
             <sequence>
-                <element name="Header" type="xsd:HeaderRequest"/>
+                <element name="Header" type="xsd:RequestHeader"/>
                 <element name="Body" type="string"/>
             </sequence>
         </complexType>
@@ -132,7 +132,7 @@
     <element name="ResponseMessage">
         <complexType>
             <sequence>
-                <element name="Header" type="xsd:HeaderResponse"/>
+                <element name="Header" type="xsd:ResponseHeader"/>
                 <element name="Body" type="string"/>
             </sequence>
         </complexType>
@@ -271,6 +271,23 @@
     </element>
 
     <element name="UpdateRulesResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Success" type="boolean"/>
+            </sequence>
+        </complexType>
+    </element>
+
+
+    <element name="UpdateUserProfileRequestBody">
+        <complexType>
+            <sequence>
+                <element name="User" type="xsd:User"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="UpdateUserProfileResponseBody">
         <complexType>
             <sequence>
                 <element name="Success" type="boolean"/>

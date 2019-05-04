@@ -16,12 +16,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for HeaderRequest complex type.
+ * <p>Java class for RequestHeader complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="HeaderRequest"&gt;
+ * &lt;complexType name="RequestHeader"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
@@ -36,11 +36,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "HeaderRequest", propOrder = {
+@XmlType(name = "RequestHeader", propOrder = {
     "userId",
     "command"
 })
-public class HeaderRequest {
+public class RequestHeader {
 
     @XmlElement(name = "UserId", required = true)
     protected String userId;

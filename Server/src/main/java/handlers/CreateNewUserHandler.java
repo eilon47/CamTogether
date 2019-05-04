@@ -16,7 +16,7 @@ public class CreateNewUserHandler extends CommandHandler {
         logger.info("Handling new user request");
         ResponseMessage returnMessage = new ResponseMessage();
         //create header of message
-        returnMessage.setHeader(createHeaderResponse(request.getHeader()));
+        returnMessage.setHeader(createResponseHeader(request.getHeader()));
         NewUserRequestBody newUserRequestBody = fromXmlToClass(request.getBody(), NewUserRequestBody.class);
         NewUserResponseBody responseBody = new NewUserResponseBody();;
         User user_to_add = newUserRequestBody.getUser();

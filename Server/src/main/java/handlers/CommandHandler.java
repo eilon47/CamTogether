@@ -17,8 +17,8 @@ public abstract class CommandHandler {
     protected static XmlConverter converter = new XmlConverter();
     public abstract ResponseMessage handle(RequestMessage request);
 
-    protected HeaderResponse createHeaderResponse(HeaderRequest headerRequest){
-        HeaderResponse headerResponse = new HeaderResponse();
+    protected ResponseHeader createResponseHeader(RequestHeader headerRequest){
+        ResponseHeader headerResponse = new ResponseHeader();
         headerResponse.setCommand(headerRequest.getCommand());
         headerResponse.setUsername(headerRequest.getUsername());
         headerResponse.setCommandSuccess(true);
