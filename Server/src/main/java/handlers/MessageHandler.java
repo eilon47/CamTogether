@@ -18,6 +18,7 @@ public class MessageHandler {
     private UpdateAlbumRulesHandler updateAlbumRulesHandler = new UpdateAlbumRulesHandler();
     private CreateNewUserHandler createNewUserHandler = new CreateNewUserHandler();
     private UpdateUserProfileHandler updateUserProfileHandler = new UpdateUserProfileHandler();
+    private LoginUserHandler loginUserHandler = new LoginUserHandler();
     protected static Logger logger = LogManager.getLogger("handlers");
 
     public String messageReceived(String xmlMessage){
@@ -53,6 +54,9 @@ public class MessageHandler {
                 break;
             case UPDATE_USER_PROFILE:
                 res = updateUserProfileHandler.handle(message);
+                break;
+            case LOGIN_WITH_USER:
+                res = loginUserHandler.handle(message);
                 break;
             default:
                 break;

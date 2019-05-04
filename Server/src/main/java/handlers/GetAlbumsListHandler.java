@@ -1,5 +1,6 @@
 package handlers;
 
+import database.SqlStatements;
 import xmls.*;
 
 import java.sql.ResultSet;
@@ -8,14 +9,15 @@ import java.sql.ResultSet;
 public class GetAlbumsListHandler extends CommandHandler {
     @Override
     public ResponseMessage handle(RequestMessage request) {
-        logger.info("Handling Add user request");
+        logger.info("Handling get albums list request");
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setHeader(createResponseHeader(request.getHeader()));
         GetAlbumsListRequestBody requestBody = fromXmlToClass(request.getBody(), GetAlbumsListRequestBody.class);
         GetAlbumsListResponseBody responseBody = new GetAlbumsListResponseBody();
         try{
             dbClient.createConnection();
-            ResultSet rs = dbClient.selectQuery("album_name, participants, creator", "albums");
+            String sql = String.format(SqlStatements.SELECT_FROM_ALBUMS,"album_name, participants, creator","");
+            ResultSet rs = dbClient.selectQuery(sql);
             AlbumsList albumsList = new AlbumsList();
             while(rs.next()){
                 String album = rs.getString("album_name");

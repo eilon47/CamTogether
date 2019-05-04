@@ -48,7 +48,7 @@ public class AddUserToAlbumHandler extends CommandHandler {
         dbClient.createConnection();
         logger.debug("Connection to db was created");
         String[] is_user_exist_values = {"", user};
-        ResultSet resultSet = dbClient.prepareStatementAllStrings(SqlStatements.SELECT_USER_FROM_USERS, is_user_exist_values);
+        ResultSet resultSet = dbClient.selectQuery(SqlStatements.SELECT_USER_FROM_USERS, is_user_exist_values);
         boolean has_user = resultSet.next();
         boolean has_more_users = resultSet.next(); //Checks we have only 1 user
         if (has_more_users)
@@ -62,7 +62,8 @@ public class AddUserToAlbumHandler extends CommandHandler {
     public String createNewParticipantsValue(String user, String album_name) throws SQLException, ClassNotFoundException {
         dbClient.createConnection();
         logger.debug("connection with db created - executing select query to receive participants list");
-        ResultSet resultSet = dbClient.selectQuery("participants", "albums", "album_name='" + album_name + "'");
+        String sql = String.format(SqlStatements.SELECT_FROM_ALBUMS, "participants", "WHERE album_name='" + album_name +"'");
+        ResultSet resultSet = dbClient.selectQuery(sql);
         String participants;
         if (resultSet.next())
             participants = resultSet.getString("participants");

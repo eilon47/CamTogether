@@ -294,6 +294,24 @@
             </sequence>
         </complexType>
     </element>
+
+    <element name="LoginRequestBody">
+        <complexType>
+            <sequence>
+                <element name="Username" type="string"/>
+                <element name="Password" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="LoginResponseBody">
+        <complexType>
+            <sequence>
+                <element name="Success" type="boolean"/>
+            </sequence>
+        </complexType>
+    </element>
+
     <element name="DummyObject">
         <complexType>
             <sequence>

@@ -51,8 +51,8 @@ public class Main {
         client.createConnection();
         String[] user1 = {"", "user1", "user1", "", "", ""};
         String[] user2 = {"", "user2", "user2", "", "", ""};
-        client.dynamicQuery(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user1);
-        client.dynamicQuery(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user2);
+        client.insertQuery(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user1);
+        client.insertQuery(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, user2);
         client.closeConnection();
     }
 
@@ -85,7 +85,7 @@ public class Main {
     private static void drop() throws SQLException, ClassNotFoundException {
         DBClient client = new DBClient();
         client.createConnection();
-        client.doSqlStatement("drop table albums, rules, users;");
+        client.insertQuery("drop table albums, rules, users;");
         client.closeConnection();
     }
 

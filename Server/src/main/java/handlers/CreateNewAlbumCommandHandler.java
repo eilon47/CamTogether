@@ -35,7 +35,7 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
             dbClient.createConnection();
             Object[] values_for_album_table = {"", albumName, creator, participants, description,creation, expiration};
             logger.info("inserting new album with values " + Arrays.toString(values_for_album_table));
-            boolean result = dbClient.dynamicQuery(SqlStatements.INSERT_NEW_ALBUM_TO_ALBUMS_TABLE, values_for_album_table);
+            boolean result = dbClient.insertQuery(SqlStatements.INSERT_NEW_ALBUM_TO_ALBUMS_TABLE, values_for_album_table);
             if (result){
                 logger.info("Creating new table for album " + albumName);
                 String [] tables = SqlStatements.newAlbumCreationSQLs(albumName);
@@ -47,7 +47,7 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
                 Object[] rulesArr = {"", albumName, location, rules.getLongitude(), rules.getLatitude(), rules.getRadius(),
                         time, rules.getStartTime(), rules.getEndTime() };
                 logger.info("Adding new rules record for album " + albumName);
-                result = dbClient.dynamicQuery(SqlStatements.INSERT_NEW_RULES_TO_RULES_TABLE, rulesArr);
+                result = dbClient.insertQuery(SqlStatements.INSERT_NEW_RULES_TO_RULES_TABLE, rulesArr);
                 logger.debug("inserting rules for album " + albumName+ "result " + result);
             }
             logger.debug("closing connection with db");

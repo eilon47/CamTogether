@@ -2,7 +2,7 @@ package database;
 
 public final class SqlStatements {
 
-    private static final String albumTable = "albums";
+    private static final String albumsTable = "albums";
     private static final String rulesTable = "rules";
     private static final String usersTable = "users";
 
@@ -14,7 +14,7 @@ public final class SqlStatements {
 
     //CREATE
     public static final String[] INIT_BASIC_TABLES = {
-            "CREATE TABLE "+ albumTable +" (" +
+            "CREATE TABLE "+ albumsTable +" (" +
                     "album_name   text  NOT NULL PRIMARY KEY, " +
                     "creator    text   NOT NULL, " +
                     "participants text, " +
@@ -75,17 +75,21 @@ public final class SqlStatements {
 
 
     //SELECT
+    public static final String SELECT_FROM_ALBUMS = "SELECT %s FROM " + albumsTable + " %s;";
     public static final String SELECT_ALL_THUMBNAILS_FROM_ALBUM = "SELECT * FROM %s_thumbs;";
     public static final String SELECT_IMAGE_FROM_ALBUM = "SELECT * FROM %s_imgs WHERE image_name = ?;";
     public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM "+rulesTable+" WHERE album_name = '%s';";
     public static final String SELECT_USER_FROM_USERS = "SELECT * FROM "+usersTable+" WHERE username = ?;";
     public static final String SELECT_KEY_FROM_USERS = "SELECT %s FROM "+usersTable+" WHERE %s = '%s'";
-    public static final String SELECT_ALBUM_FROM_ALBUMS = "SELECT * FROM " +albumTable+ " WHERE album_name = %s;";
+    public static final String SELECT_ALBUM_FROM_ALBUMS = "SELECT * FROM " + albumsTable + " WHERE album_name = %s;";
     //UPDATE
     public static final String UPDATE_TABLE = "UPDATE %s SET %s = '%s' WHERE %s;";
 
     public static final String UPDATE_RULES_FOR_ALBUM = "UPDATE "+rulesTable+" SET (location, longitude, latitude, radius, time," +
             " start_date, end_date) = (?, ?, ?, ?, ?, ?, ?) WHERE album = %s;";
+
+    public static final String UPDATE_USER_PROFILE = "UPDATE "+usersTable+" SET (username, password, birthday, joined, profile_img," +
+            " email, friends, info) = (?, ?, ?, ?, ?, ?, ?, ?) WHERE username = %s;";
 
     public static final String[] newAlbumCreationSQLs(String album){
         String album_thumbnail = album + "_thumbs";

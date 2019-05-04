@@ -1,6 +1,7 @@
 package handlers;
 
 import database.DBClient;
+import database.SqlStatements;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xmls.*;
@@ -45,7 +46,8 @@ public abstract class CommandHandler {
 
     protected boolean isAuthorized(String album_name, String user) throws SQLException {
         logger.debug("connection with db created - executing select query to receive participants list");
-        ResultSet resultSet = dbClient.selectQuery("participants", "albums", "album_name='" + album_name + "'");
+        String sql = String.format(SqlStatements.SELECT_FROM_ALBUMS, "participants", "WHERE album_name='" + album_name +"'");
+        ResultSet resultSet = dbClient.selectQuery(sql);
         String participants = null;
         boolean res = false;
         if (resultSet.next())

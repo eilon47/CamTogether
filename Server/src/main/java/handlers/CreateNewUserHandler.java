@@ -34,7 +34,7 @@ public class CreateNewUserHandler extends CommandHandler {
             byte[] image = setProfilePicture(user_to_add.getProfileImage());
             Object[] values_to_user_table = {"", user_to_add.getUserName(), user_to_add.getPassword(), user_to_add.getBirthday(), joined,
                              image, user_to_add.getEmail(), "" /*friends*/, user_to_add.getDescription()};
-            boolean res = dbClient.dynamicQuery(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, values_to_user_table);
+            boolean res = dbClient.insertQuery(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, values_to_user_table);
             if (!res)
                 returnMessage.getHeader().setCommandSuccess(false);
             dbClient.closeConnection();
@@ -61,7 +61,7 @@ public class CreateNewUserHandler extends CommandHandler {
         try {
             dbClient.createConnection();
             String sql = String.format(SqlStatements.SELECT_KEY_FROM_USERS, key, key, value);
-            ResultSet resultSet = dbClient.doSqlStatement(sql);
+            ResultSet resultSet = dbClient.selectQuery(sql);
             res = resultSet.next();
         } catch (SQLException e){
             logger.warn(e);

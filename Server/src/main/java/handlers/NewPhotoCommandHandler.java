@@ -49,7 +49,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
                 String insert_image_sql = String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,img.getAlbumName());
                 Object[] values = {"", img.getImageName(), img.getImageSize(), img.getImageData(), img.getTitle(), img.getImageHeight(),
                         img.getImageWidth(), img.getUserName(), img.getDate(), img.getLongitude(), img.getLatitude(), img.getLatitude(), img.getAlbumName()};
-                boolean res = dbClient.dynamicQuery(insert_image_sql,values);
+                boolean res = dbClient.insertQuery(insert_image_sql,values);
                 CTThumbnail thumbnail = createThumbnail(img, 100, 100);
                 dbClient.closeConnection();
                 returnMessage.setBody(fromClassToXml(responseBody));
@@ -64,14 +64,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
 
     private boolean checkRulesForImage(CTImage image) throws SQLException {
         Rules rules = null;
-        try {
-            rules = dbClient.getAlbumRules(image.getAlbumName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            logger.warn("Could not get rules" , e);
-            logger.warn("Approve image anyway");
-            return true;
-        }
+        rules = dbClient.getAlbumRules(image.getAlbumName());
         boolean location = nullityCheck(rules.getRadius()) && nullityCheck(rules.getLatitude()) && nullityCheck(rules.getLongitude());
         boolean time = nullityCheck(rules.getEndTime()) && nullityCheck(rules.getStartTime());
         if(time) {
@@ -108,7 +101,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
         dbClient.createConnection();
         logger.debug("Connection to db was created");
         String[] is_image_exists = {"", image_name};
-        ResultSet resultSet = dbClient.prepareStatementAllStrings(String.format(SqlStatements.SELECT_IMAGE_FROM_ALBUM, album_name)
+        ResultSet resultSet = dbClient.selectQuery(String.format(SqlStatements.SELECT_IMAGE_FROM_ALBUM, album_name)
                 , is_image_exists);
         boolean has_image = resultSet.next(); //Checks we have no photos
         logger.info("Image" + " exists result=" + has_image);

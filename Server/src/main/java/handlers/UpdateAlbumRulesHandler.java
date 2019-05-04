@@ -20,7 +20,7 @@ public class UpdateAlbumRulesHandler extends CommandHandler {
         Object[] values = {location, rules.getLongitude(), rules.getLatitude(), rules.getRadius(), time, rules.getStartTime(), rules.getEndTime()};
         try {
             dbClient.createConnection();
-            boolean res = dbClient.dynamicQuery(sql, values);
+            boolean res = dbClient.updateQuery(sql, values);
             dbClient.closeConnection();
             response.getHeader().setCommandSuccess(res);
             UpdateRulesResponseBody responseBody = new UpdateRulesResponseBody();
