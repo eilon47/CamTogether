@@ -4,10 +4,7 @@ package database;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.postgresql.largeobject.LargeObjectManager;
-import xmls.CTAlbum;
-import xmls.CTAlbumPreview;
-import xmls.CTImage;
-import xmls.CTThumbnail;
+import xmls.*;
 
 import javax.imageio.ImageIO;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -70,6 +67,26 @@ public class DBClient {
 
     public ResultSet selectQuery(String selection, String table)throws SQLException {
         return selectQuery(selection, table, null);
+    }
+
+    public Rules getAlbumRules(String album) throws SQLException, ClassNotFoundException {
+        this.createConnection();
+        Rules rules = null;
+        ResultSet rs = this.doSqlStatement(String.format(SqlStatements.SELECT_RULES_FOR_ALBUM, album));
+        if(rs.next()) {
+            rules = new Rules();
+            boolean location = rs.getBoolean("location");
+            boolean time = rs.getBoolean("time");
+            rules.setRadius(rs.getInt("radius"));
+            rules.setLatitude(rs.getFloat("latitude"));
+            rules.setLongitude(rs.getFloat("longitude"));
+            rules.setStartTime(rs.getString("start_date"));
+            rules.setEndTime(rs.getString("end_date"));
+
+        }
+        rs.close();
+        closeConnection();
+        return rules;
     }
 
     public CTImage selectQueryForImg(String table, String imageName) throws SQLException, IOException{

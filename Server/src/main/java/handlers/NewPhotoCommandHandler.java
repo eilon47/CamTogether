@@ -5,6 +5,7 @@ import database.SqlStatements;
 import xmls.*;
 
 import javax.imageio.ImageIO;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -12,6 +13,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class NewPhotoCommandHandler extends CommandHandler {
     private CVClient cvClient = new CVClient();
@@ -27,6 +31,12 @@ public class NewPhotoCommandHandler extends CommandHandler {
         responseBody.setImage(req_body.getImage().getImageName());
         try {
             CTImage img = req_body.getImage();
+            if(!checkRulesForImage(img)){
+                logger.info("Image " + img.getImageName() + " didn't pass the rules criteria of album " + img.getAlbumName());
+                returnMessage.getHeader().setCommandSuccess(false);
+                returnMessage.setBody(fromClassToXml(responseBody));
+                return returnMessage;
+            }
             boolean cv_res = this.cvClient.queryCvServer(img);
             if(!cv_res){
                 logger.info("CV server returned false - not inserting image to db");
@@ -52,7 +62,48 @@ public class NewPhotoCommandHandler extends CommandHandler {
         return returnMessage;
     }
 
-    public boolean alreadyExist(String album_name, String image_name) throws SQLException, ClassNotFoundException{
+    private boolean checkRulesForImage(CTImage image) throws SQLException {
+        Rules rules = null;
+        try {
+            rules = dbClient.getAlbumRules(image.getAlbumName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            logger.warn("Could not get rules" , e);
+            logger.warn("Approve image anyway");
+            return true;
+        }
+        boolean location = nullityCheck(rules.getRadius()) && nullityCheck(rules.getLatitude()) && nullityCheck(rules.getLongitude());
+        boolean time = nullityCheck(rules.getEndTime()) && nullityCheck(rules.getStartTime());
+        if(time) {
+            SimpleDateFormat dt = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+            try {
+                Date start = dt.parse(rules.getStartTime());
+                Date end = dt.parse(rules.getEndTime());
+                Date imgDate = fromXMLDateToDate(image.getDate());
+                if(imgDate.before(start) || imgDate.after(end))
+                    return false;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if(location){
+            float longitude = image.getLatitude();
+            float latitude = image.getLatitude();
+            double distance = Math.sqrt(Math.pow(longitude - rules.getLongitude(), 2) + Math.pow(latitude - rules.getLatitude(), 2));
+            if(distance > rules.getRadius())
+                return false;
+        }
+        return true;
+    }
+
+    public Date fromXMLDateToDate(XMLGregorianCalendar date) {
+        return new Date( date.toGregorianCalendar().getTimeInMillis());
+    }
+    private boolean nullityCheck(Object o){
+        return o != null;
+    }
+
+    private boolean alreadyExist(String album_name, String image_name) throws SQLException, ClassNotFoundException{
         logger.debug("Checking if image " + image_name + " exists in album " +album_name);
         dbClient.createConnection();
         logger.debug("Connection to db was created");

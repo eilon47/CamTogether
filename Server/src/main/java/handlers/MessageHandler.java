@@ -8,12 +8,14 @@ import javax.xml.bind.JAXBException;
 
 public class MessageHandler {
     private XmlConverter converter = new XmlConverter();
+
     private CreateNewAlbumCommandHandler createNewAlbumCommandHandler = new CreateNewAlbumCommandHandler();
     private NewPhotoCommandHandler newPhotoCommandHandler = new NewPhotoCommandHandler();
     private AddUserToAlbumHandler addUserToAlbumHandler = new AddUserToAlbumHandler();
     private GetAlbumHandler getAlbumHandler = new GetAlbumHandler();
     private GetAlbumsListHandler getAlbumsListHandler = new GetAlbumsListHandler();
     private GetImageHandler getImageHandler = new GetImageHandler();
+    private UpdateAlbumRulesHandler updateAlbumRulesHandler = new UpdateAlbumRulesHandler();
     protected static Logger logger = LogManager.getLogger("handlers");
 
     public String messageReceived(String xmlMessage){
@@ -40,6 +42,10 @@ public class MessageHandler {
                 break;
             case GET_IMAGE:
                 res = getImageHandler.handle(message);
+                break;
+            case UPDATE_ALBUM_RULES:
+                res = updateAlbumRulesHandler.handle(message);
+                break;
             default:
                 break;
         }

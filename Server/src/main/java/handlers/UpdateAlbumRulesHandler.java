@@ -5,7 +5,7 @@ import xmls.*;
 
 import java.sql.SQLException;
 
-public class UpdaeAlbumRulesHandler extends CommandHandler {
+public class UpdateAlbumRulesHandler extends CommandHandler {
     @Override
     public ResponseMessage handle(RequestMessage request) {
         ResponseMessage response = new ResponseMessage();

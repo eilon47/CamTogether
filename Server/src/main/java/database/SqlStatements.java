@@ -77,7 +77,7 @@ public final class SqlStatements {
     //SELECT
     public static final String SELECT_ALL_THUMBNAILS_FROM_ALBUM = "SELECT * FROM %s_thumbs;";
     public static final String SELECT_IMAGE_FROM_ALBUM = "SELECT * FROM %s_imgs WHERE image_name = ?;";
-    public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM "+rulesTable+" WHERE album_name = ?;";
+    public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM "+rulesTable+" WHERE album_name = '%s';";
     public static final String SELECT_USER_FROM_USERS = "SELECT * FROM "+usersTable+" WHERE username = ?;";
     public static final String SELECT_KEY_FROM_USERS = "SELECT %s FROM "+usersTable+" WHERE %s = '%s'";
     public static final String SELECT_ALBUM_FROM_ALBUMS = "SELECT * FROM " +albumTable+ " WHERE album_name = %s;";
