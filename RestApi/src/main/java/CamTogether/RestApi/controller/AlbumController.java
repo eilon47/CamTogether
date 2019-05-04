@@ -11,7 +11,7 @@ import xmls.Rules;
 
 @RestController
 @RequestMapping("/album")
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "*")
 public class AlbumController {
 
     @Autowired

@@ -9,4 +9,10 @@ public class UserService extends AbstractService implements IUserService {
     public String registerNewUser(User user) {
         return "Not Implemented Yet!";
     }
+
+    @Override
+    public String loginUser(String userName, String password) {
+        return "Login with userName = " + userName + "and password = " + password;
+    }
+
 }

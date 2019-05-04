@@ -7,6 +7,7 @@ import xmls.User;
 
 @RestController
 @RequestMapping("/register")
+@CrossOrigin("*")
 public class RegisterController {
 
     @Autowired

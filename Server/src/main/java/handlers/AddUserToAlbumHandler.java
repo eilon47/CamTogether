@@ -15,15 +15,21 @@ public class AddUserToAlbumHandler extends CommandHandler {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setHeader(createHeaderResponse(request.getHeader()));
         AddUserToAlbumRequestBody addUserToAlbumRequestBody = fromXmlToClass(request.getBody(), AddUserToAlbumRequestBody.class);
+        User usrname1 = new User();
+        usrname1.setUserName("username1");
         try {
-            boolean user_exists = checkUserExistsAndUnique(addUserToAlbumRequestBody.getUserToAdd());
+            // boolean user_exists = checkUserExistsAndUnique(addUserToAlbumRequestBody.getUserToAdd());
+            boolean user_exists = checkUserExistsAndUnique(usrname1);
+
             if (!user_exists) {
                 logger.warn("User is not exists, can't add it to album");
                 responseMessage.getHeader().setCommandSuccess(false);
                 responseMessage.setBody("Failed to find user");
                 return responseMessage;
             }
-            String new_participants_val = createNewParticipantsValue(addUserToAlbumRequestBody.getUserToAdd(), addUserToAlbumRequestBody.getAddToAlbum());
+            // String new_participants_val = createNewParticipantsValue(addUserToAlbumRequestBody.getUserToAdd(), addUserToAlbumRequestBody.getAddToAlbum());
+            String new_participants_val = createNewParticipantsValue(usrname1, addUserToAlbumRequestBody.getAddToAlbum());
+
             boolean res = updateNewValue(new_participants_val, addUserToAlbumRequestBody.getAddToAlbum());
             if (!res) {
                 logger.warn("Failed updating user in album's participants");
@@ -32,7 +38,7 @@ public class AddUserToAlbumHandler extends CommandHandler {
                 return responseMessage;
             }
         } catch (ClassNotFoundException | SQLException ex) {
-            logger.error("Failed adding user " + addUserToAlbumRequestBody.getUserToAdd().getUserName() + " to album", ex);
+            logger.error("Failed adding user " + usrname1.getUserName() + " to album", ex);
             responseMessage.getHeader().setCommandSuccess(false);
             responseMessage.setBody("Request failed");
             return responseMessage;
@@ -104,7 +110,7 @@ public class AddUserToAlbumHandler extends CommandHandler {
         requestBody.setAddToAlbum("album");
         User usrname1 = new User();
         usrname1.setUserName("username1");
-        requestBody.setUserToAdd(usrname1);
+        requestBody.setUserToAdd(usrname1.getUserName());
         XmlConverter converter = new XmlConverter();
         AddUserToAlbumHandler handler = new AddUserToAlbumHandler();
         requestMessage.setHeader(headerRequest);
@@ -112,7 +118,7 @@ public class AddUserToAlbumHandler extends CommandHandler {
 
         ResponseMessage responseMessage = handler.handle(requestMessage);
         AddUserToAlbumResponseBody body = converter.serializeFromString(responseMessage.getBody(), AddUserToAlbumResponseBody.class);
-        System.out.println(body.getUserToAdd().getUserName());
+        System.out.println(body.getUserToAdd());
     }
 
 }
