@@ -79,7 +79,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
             try {
                 Date start = dt.parse(rules.getStartTime());
                 Date end = dt.parse(rules.getEndTime());
-                Date imgDate = fromXMLDateToDate(image.getDate());
+                Date imgDate = dt.parse(image.getDate());
                 if(imgDate.before(start) || imgDate.after(end))
                     return false;
             } catch (ParseException e) {

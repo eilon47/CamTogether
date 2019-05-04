@@ -115,12 +115,7 @@ public class DBClient {
                 imageRecord.setUserName(rs.getString("username"));
                 imageRecord.setUserName(rs.getString("user_id"));
                 GregorianCalendar calendar = new GregorianCalendar();
-                calendar.setTime(rs.getDate("date"));
-                try {
-                    imageRecord.setDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar));
-                } catch (DatatypeConfigurationException e) {
-                    imageRecord.setDate(null);
-                }
+                imageRecord.setDate(rs.getString("date"));
                 imageRecord.setLongitude(rs.getFloat("longitude"));
                 imageRecord.setLatitude(rs.getFloat("latitude"));
                 // Close the object
@@ -146,7 +141,7 @@ public class DBClient {
         ((PreparedStatement)this.statement).setInt(5, imageRecord.getImageHeight());
         ((PreparedStatement)this.statement).setInt(6, imageRecord.getImageWidth());
         ((PreparedStatement)this.statement).setString(7, imageRecord.getUserName());
-        ((PreparedStatement)this.statement).setDate(8, new Date(imageRecord.getDate().toGregorianCalendar().getTime().getTime()));
+        ((PreparedStatement)this.statement).setString(8, imageRecord.getDate());
         ((PreparedStatement)this.statement).setFloat(9, imageRecord.getLongitude());
         ((PreparedStatement)this.statement).setFloat(10, imageRecord.getLatitude());
         ((PreparedStatement)this.statement).setString(11, imageRecord.getAlbumName());
@@ -203,7 +198,7 @@ public class DBClient {
             image.setImageHeight(rs.getInt("height"));
             image.setImageWidth(rs.getInt("width"));
             image.setUserName(rs.getString("username"));
-            image.setDate(fromDateTODateXml(rs.getDate("date")));
+            image.setDate(rs.getString("date"));
             image.setLongitude(rs.getFloat("longitude"));
             image.setLatitude(rs.getFloat("latitude"));
             image.setAlbumName(albumName);
@@ -225,8 +220,8 @@ public class DBClient {
         CTAlbum album = new CTAlbum();
         ResultSet album_req_rs = doSqlStatement(String.format(SqlStatements.SELECT_ALBUM_FROM_ALBUMS, albumName));
         album_req_rs.next();
-        album.setCreationDate(fromDateTODateXml(album_req_rs.getDate("creation")));
-        album.setExpirationDate(fromDateTODateXml(album_req_rs.getDate("expiration")));
+        album.setCreationDate(album_req_rs.getString("creation"));
+        album.setExpirationDate(album_req_rs.getString("expiration"));
         album.setDescription(album_req_rs.getString("description"));
         album.setCreator(album_req_rs.getString("creator"));
         album.setName(albumName);

@@ -37,8 +37,8 @@
             <element name="UserName" type="string"/>
             <element name="Password" type="string"/>
             <element name="Description" type="string"/>
-            <element name="Birthday" type="date"/>
-            <element name="JoinDate" type="date"/>
+            <element name="Birthday" type="string"/>
+            <element name="JoinDate" type="string"/>
             <element name="ProfileImage" type="base64Binary"/>
             <element name="Email" type="string"/>
             <element name="Friends" type="xsd:User"/>
@@ -67,7 +67,7 @@
             <!--Rules Data-->
             <element name="Latitude" type="float"/>
             <element name="Longitude" type="float"/>
-            <element name="Date" type="date"/>
+            <element name="Date" type="string"/>
             <!--CT Data-->
             <element name="Title" type="string"/>
             <element name="UserName" type="string"/>
@@ -83,8 +83,8 @@
             <element name="Participants" type="string" maxOccurs="50"/>
             <element name="Description" type="string"/>
             <element name="Rules" type="xsd:Rules"/>
-            <element name="CreationDate" type="date"/>
-            <element name="ExpirationDate" type="date"/>
+            <element name="CreationDate" type="string"/>
+            <element name="ExpirationDate" type="string"/>
         </sequence>
     </complexType>
 

@@ -19,8 +19,8 @@ public final class SqlStatements {
                     "creator    text   NOT NULL, " +
                     "participants text, " +
                     "description text," +
-                    "creation date, " +
-                    "expiration date" +
+                    "creation text, " +
+                    "expiration text" +
                     ");",
 
             "CREATE TABLE "+rulesTable+" (" +
@@ -30,15 +30,15 @@ public final class SqlStatements {
                     "latitude  float(24), " +
                     "radius  integer," +
                     "time   boolean NOT NULL, " +
-                    "start_date   char(20), " +
-                    "end_date   char(20) " +
+                    "start_date   text, " +
+                    "end_date   text " +
                     ");",
 
             "CREATE TABLE "+ usersTable +" (" +
                     "username    char(64) NOT NULL PRIMARY KEY," +
                     "password  text",
-                    "birthday  date," +
-                    "joined date," +
+                    "birthday  text," +
+                    "joined  text," +
                     "profile_img  bytea," +
                     "email text," +
                     "friends text,"+
@@ -53,7 +53,7 @@ public final class SqlStatements {
             "height integer, " +
             "width integer," +
             "username  text," +
-            "date  date," +
+            "date  text," +
             "longitude  numeric," +
             "latitude  numeric, " +
             "albumName text" +
