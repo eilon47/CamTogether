@@ -1,4 +1,5 @@
 package CamTogether.RestApi.services;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import xmls.*;
 
@@ -8,90 +9,88 @@ import javax.xml.bind.JAXBException;
 public class AlbumService extends AbstractService implements IAlbumService{
 
     @Override
-    public AlbumsList getAlbums(String userName) {
+    public ResponseEntity<CTAlbum> getAlbum(RequestHeader header, String albumName) {
         RequestMessage message = new RequestMessage();
-        RequestHeader headerRequest = new RequestHeader();
-        GetAlbumsListRequestBody getAlbumsListRequestBody = new GetAlbumsListRequestBody();
-        getAlbumsListRequestBody.setUser(userName);
-        headerRequest.setCommand(CommandsEnum.GET_ALBUMS_LIST);
-        headerRequest.setUsername(userName);
-        message.setHeader(headerRequest);
-        ResponseMessage responseMessage = messageToServerAndResponse(message, getAlbumsListRequestBody);
-
-        try {
-            GetAlbumsListResponseBody responseBody = xmlConverter.serializeFromString(responseMessage.getBody(), GetAlbumsListResponseBody.class);
-            return responseBody.getAlbums();
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            logger.warn("Could not serialize to Album list object", e);
-            return new AlbumsList();
-        }
-    }
-
-    @Override
-    public CTAlbum getAlbum(String userName,String albumName) {
-        RequestMessage message = new RequestMessage();
-        RequestHeader headerRequest = new RequestHeader();
-        headerRequest.setUsername(userName);
-        headerRequest.setCommand(CommandsEnum.GET_ALBUM);
-        message.setHeader(headerRequest);
+        message.setHeader(header);
         GetAlbumRequestBody requestBody = new GetAlbumRequestBody();
         requestBody.setAlbumName(albumName);
-        requestBody.setUser(userName);
-
+        requestBody.setUser(header.getUsername());
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
-
+        if(!responseMessage.getHeader().isCommandSuccess())
+            return ResponseEntity.badRequest().header(responseMessage.getHeader().getReason()).body(null);
         try {
             GetAlbumResponseBody responseBody = xmlConverter.serializeFromString(responseMessage.getBody(), GetAlbumResponseBody.class);
-            return responseBody.getAlbum();
+            if(responseBody.getAlbum() == null)
+                return ResponseEntity.noContent().header("Album was not found").build();
+            return ResponseEntity.ok( responseBody.getAlbum());
         }catch (JAXBException e){
             e.printStackTrace();
             logger.warn("Could not serialize to Album object", e);
-            return new CTAlbum();
+            return ResponseEntity.noContent().header("Could not parse album").build();
         }
-
     }
 
     @Override
-    public String postAlbum(String userName, CTAlbum ctAlbum) {
+    public ResponseEntity<AlbumsList> getAlbums(RequestHeader header) {
         RequestMessage message = new RequestMessage();
-        RequestHeader headerRequest = new RequestHeader();
-        headerRequest.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
-        headerRequest.setUsername(userName);
-        message.setHeader(headerRequest);
+        GetAlbumsListRequestBody getAlbumsListRequestBody = new GetAlbumsListRequestBody();
+        getAlbumsListRequestBody.setUser(header.getUsername());
+        message.setHeader(header);
+        ResponseMessage responseMessage = messageToServerAndResponse(message, getAlbumsListRequestBody);
+        if(!responseMessage.getHeader().isCommandSuccess()){
+            return ResponseEntity.badRequest().header(responseMessage.getHeader().getReason()).body(null);
+        }
+        try {
+            GetAlbumsListResponseBody responseBody = xmlConverter.serializeFromString(responseMessage.getBody(), GetAlbumsListResponseBody.class);
+            if(responseBody.getAlbums() == null)
+                return ResponseEntity.noContent().header("Could not find albums").build();
+            return ResponseEntity.ok(responseBody.getAlbums());
+        } catch (JAXBException e) {
+            e.printStackTrace();
+            logger.warn("Could not serialize to Album list object", e);
+            return ResponseEntity.badRequest().header("Could not create albums").build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<String> postAlbum(RequestHeader header, CTAlbum ctAlbum) {
+        RequestMessage message = new RequestMessage();
+        message.setHeader(header);
         NewAlbumRequestBody requestBody= new NewAlbumRequestBody();
         requestBody.setAlbum(ctAlbum);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
-        return responseMessage.getHeader().isCommandSuccess() ? "Success!" : "Failed To post album " + ctAlbum.getName();
+        if(responseMessage.getHeader().isCommandSuccess()){
+            return ResponseEntity.ok("Album was added successfully");
+        }
+        return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }
 
     @Override
-    public boolean addUserToAlbum(String user, String userToAdd, String album) {
+    public ResponseEntity<String> addUserToAlbum(RequestHeader header, String userToAdd, String album) {
         RequestMessage message = new RequestMessage();
-        RequestHeader headerRequest = new RequestHeader();
-        headerRequest.setCommand(CommandsEnum.ADD_USER_TO_ALBUM);
-        headerRequest.setUsername(user);
+        message.setHeader(header);
 
         AddUserToAlbumRequestBody requestBody = new AddUserToAlbumRequestBody();
         requestBody.setUserToAdd(userToAdd);
         requestBody.setAddToAlbum(album);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
-        return responseMessage.getHeader().isCommandSuccess();
+        if(responseMessage.getHeader().isCommandSuccess()){
+            return ResponseEntity.ok("User was added successfully");
+        }
+        return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }
 
     @Override
-    public boolean updateRules(String username, String album, Rules rules) {
+    public ResponseEntity<String> updateRules(RequestHeader header, String album, Rules rules) {
         RequestMessage message = new RequestMessage();
-        RequestHeader headerRequest = new RequestHeader();
-        headerRequest.setCommand(CommandsEnum.UPDATE_ALBUM_RULES);
-        headerRequest.setUsername(username);
-
+        message.setHeader(header);
         UpdateRulesRequestBody requestBody = new UpdateRulesRequestBody();
         requestBody.setNewRules(rules);
         requestBody.setAlbum(album);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
-        return responseMessage.getHeader().isCommandSuccess();
+        if(responseMessage.getHeader().isCommandSuccess()){
+            return ResponseEntity.ok("Rules were updated successfully");
+        }
+        return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }
-
-
 }

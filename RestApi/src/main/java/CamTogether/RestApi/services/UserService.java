@@ -1,5 +1,7 @@
 package CamTogether.RestApi.services;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import xmls.CommandsEnum;
 import xmls.*;
@@ -8,20 +10,21 @@ import xmls.*;
 public class UserService extends AbstractService implements IUserService {
 
     @Override
-    public String registerNewUser(RequestHeader header, User user) {
+    public ResponseEntity<String> register(RequestHeader header, User user) {
         NewUserRequestBody requestBody = new NewUserRequestBody();
         requestBody.setUser(user);
         RequestMessage message = new RequestMessage();
         message.setHeader(header);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
         if(responseMessage.getHeader().isCommandSuccess()){
-            return "Success!";
+            return ResponseEntity.ok("Registered");
         }
-        return responseMessage.getHeader().getReason();
+
+        return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }
 
     @Override
-    public String loginUser(RequestHeader header,String userName, String password) {
+    public ResponseEntity<String> login(RequestHeader header,String userName, String password) {
         LoginRequestBody requestBody = new LoginRequestBody();
         requestBody.setUsername(userName);
         requestBody.setPassword(password);
@@ -29,21 +32,21 @@ public class UserService extends AbstractService implements IUserService {
         message.setHeader(header);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
         if (responseMessage.getHeader().isCommandSuccess()){
-            return "Success!";
+            return ResponseEntity.ok("OK");
         }
-        return responseMessage.getHeader().getReason();
+        return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }
 
-    public String updateUserProfile(RequestHeader header,User user){
+    public ResponseEntity<String> updateUser(RequestHeader header,User user){
         UpdateUserProfileRequestBody requestBody = new UpdateUserProfileRequestBody();
         requestBody.setUser(user);
         RequestMessage message = new RequestMessage();
         message.setHeader(header);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
         if (responseMessage.getHeader().isCommandSuccess()){
-            return "Success!";
+            return ResponseEntity.ok("OK");
         }
-        return responseMessage.getHeader().getReason();
+        return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }
 
 }

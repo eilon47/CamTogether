@@ -3,11 +3,10 @@ package CamTogether.RestApi.controller;
 import CamTogether.RestApi.services.IAlbumService;
 import jdk.nashorn.internal.ir.RuntimeNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import xmls.AlbumsList;
-import xmls.CTAlbum;
-import xmls.DummyObject;
-import xmls.Rules;
+import xmls.*;
+import xmls.RequestHeader;
 
 @RestController
 @RequestMapping("/album")
@@ -18,30 +17,41 @@ public class AlbumController {
     IAlbumService albumService;
 
     @GetMapping("/{userName}")
-    AlbumsList getAlbums(@PathVariable String userName){
-
-        return albumService.getAlbums(userName);
+    ResponseEntity<AlbumsList> getAlbums(@PathVariable String userName){
+        xmls.RequestHeader header = new RequestHeader();
+        header.setCommand(CommandsEnum.GET_ALBUMS_LIST);
+        header.setUsername(userName);
+        return albumService.getAlbums(header);
     }
     @GetMapping("/{userName}/{albumName}")
-    CTAlbum getAlbum(@PathVariable String userName,@PathVariable String albumName) {
-        CTAlbum ct = albumService.getAlbum(userName,albumName);
-        return ct;
+    ResponseEntity<CTAlbum> getAlbum(@PathVariable String userName,@PathVariable String albumName) {
+        xmls.RequestHeader header = new RequestHeader();
+        header.setCommand(CommandsEnum.GET_ALBUM);
+        header.setUsername(userName);
+        return albumService.getAlbum(header,albumName);
     }
     @PostMapping("/{userName}")
-    String postAlbum(@PathVariable String userName, @RequestBody CTAlbum reqBody) {
-        System.out.println(reqBody);
-        return albumService.postAlbum(userName,reqBody);
+    ResponseEntity<String> postAlbum(@PathVariable String userName, @RequestBody CTAlbum reqBody) {
+        xmls.RequestHeader header = new RequestHeader();
+        header.setCommand(CommandsEnum.CREATE_NEW_ALBUM);
+        header.setUsername(userName);
+        return albumService.postAlbum(header,reqBody);
     }
 
     @PostMapping("/{userName}/{albumName}")
-    boolean addUser(@PathVariable String userName,@PathVariable String albumName, @RequestBody String userToAdd) {
-        return albumService.addUserToAlbum(userName, userToAdd, albumName);
+    ResponseEntity<String> addUser(@PathVariable String userName,@PathVariable String albumName, @RequestBody String userToAdd) {
+        xmls.RequestHeader header = new RequestHeader();
+        header.setCommand(CommandsEnum.ADD_USER_TO_ALBUM);
+        header.setUsername(userName);
+        return albumService.addUserToAlbum(header, userToAdd, albumName);
     }
 
-
     @PostMapping("/{userName}/{albumName}/rules")
-    boolean updateRules(@PathVariable String userName, @PathVariable String albumName, @RequestBody Rules rules) {
-        return albumService.updateRules(userName, albumName, rules);
+    ResponseEntity<String> updateRules(@PathVariable String userName, @PathVariable String albumName, @RequestBody Rules rules) {
+        xmls.RequestHeader header = new RequestHeader();
+        header.setCommand(CommandsEnum.UPDATE_ALBUM_RULES);
+        header.setUsername(userName);
+        return albumService.updateRules(header, albumName, rules);
     }
 
 }

@@ -1,6 +1,7 @@
 package CamTogether.RestApi.services;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import xmls.*;
 
@@ -14,8 +15,9 @@ import java.io.IOException;
 @Service
 public class ImageService extends AbstractService implements IImageService{
 
+
     @Override
-    public String postImage(CTImage image) {
+    public ResponseEntity<String> post(RequestHeader header, CTImage image) {
         NewImageRequestBody requestBody = new NewImageRequestBody();
         requestBody.setAlbum(image.getAlbumName());
         requestBody.setImage(image);
@@ -28,34 +30,32 @@ public class ImageService extends AbstractService implements IImageService{
         requestMessage.setHeader(headerRequest);
 
         ResponseMessage responseMessage = messageToServerAndResponse(requestMessage, requestBody);
-        return responseMessage.getHeader().isCommandSuccess() ? "Success!" : "Fail";
+        if(!responseMessage.getHeader().isCommandSuccess())
+            return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
+        return ResponseEntity.ok().body("Images was added successfully");
     }
 
     @Override
-    public CTImage getImage(String image, String album, String username){
+    public ResponseEntity<CTImage> get(RequestHeader header, String image, String album) {
         GetImageRequestBody requestBody = new GetImageRequestBody();
         requestBody.setAlbum(album);
         requestBody.setImageName(image);
-        requestBody.setUsername(username);
-
-        RequestHeader header = new RequestHeader();
-        header.setUsername(username);
-        header.setCommand(CommandsEnum.GET_IMAGE);
-
+        requestBody.setUsername(header.getUsername());
         RequestMessage request = new RequestMessage();
         request.setHeader(header);
         ResponseMessage responseMessage = messageToServerAndResponse(request, requestBody);
+        if (!responseMessage.getHeader().isCommandSuccess()) {
+            return ResponseEntity.badRequest().header(responseMessage.getHeader().getReason()).body(null);
+        }
         try {
             GetImageResponseBody responseBody = xmlConverter.serializeFromString(responseMessage.getBody(), GetImageResponseBody.class);
-            return responseBody.getImage();
+            CTImage img = responseBody.getImage();
+            if(img == null || img.getImageData().length == 0)
+                return ResponseEntity.notFound().header("Data was not found").build();
+            return ResponseEntity.ok(img);
         } catch (JAXBException e) {
             logger.warn("Could not parse server response [" + responseMessage.getBody() + "]", e );
-            return null;
+            return ResponseEntity.badRequest().header("Could not get image data").body(null);
         }
     }
-
-
-
-
-
 }
