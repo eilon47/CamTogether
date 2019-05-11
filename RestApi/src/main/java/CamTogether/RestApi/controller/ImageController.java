@@ -14,27 +14,24 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/image")
 public class ImageController {
 
     @Autowired
     IImageService imageService;
 
-    @PostMapping("/")
-    ResponseEntity<String> postImage(@PathVariable String album, @RequestBody CTImage ctImage){
-        xmls.RequestHeader header = new RequestHeader();
-        header.setCommand(CommandsEnum.ADD_NEW_PHOTO_TO_ALBUM);
-        header.setUsername(ctImage.getUserName());
-        return imageService.post(header, ctImage);
+    @CrossOrigin(origins = "*")
+    @PostMapping("/image")
+    ResponseEntity<String> postImage(@RequestBody CTImage ctImage){
+        System.out.println(ctImage);
+        return imageService.post(new RequestHeader(), ctImage);
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/{album}/{imageName}")
-    ResponseEntity<CTImage> getImage(@PathVariable String imageName, @PathVariable String album, @RequestBody String username) {
-        xmls.RequestHeader header = new RequestHeader();
-        header.setCommand(CommandsEnum.GET_IMAGE);
-        header.setUsername(username);
-        return imageService.get(header,imageName, album);
+    @GetMapping("/image/{imageName}")
+    ResponseEntity<CTImage> getImage(@PathVariable String imageName, @RequestBody Map<String, String> info) {
+        String album = info.get("album");
+        String username = info.get("username");
+        return imageService.get(new RequestHeader(),imageName, album);
     }
 
 }
