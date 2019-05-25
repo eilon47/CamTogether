@@ -9,20 +9,21 @@ import xmls.CommandsEnum;
 import xmls.RequestHeader;
 import xmls.User;
 
+import java.util.LinkedHashMap;
+
 @RestController
-@RequestMapping("/user")
 @CrossOrigin(origins = "*")
 
 public class UserController {
     @Autowired
     private IUserService userService;
 
-    @GetMapping("/login")
-    public ResponseEntity<String> login(@PathVariable String username, @RequestBody String password) {
+    @PostMapping("/login/{username}")
+    public ResponseEntity<String> login(@PathVariable String username, @RequestBody Object body) {
         RequestHeader header = new RequestHeader();
         header.setCommand(CommandsEnum.LOGIN_WITH_USER);
         header.setUsername(username);
-        return userService.login(header, username,password);
+        return userService.login(header, username, ((LinkedHashMap<String,String>)body).get("password"));
     }
 
     @PostMapping("/register")

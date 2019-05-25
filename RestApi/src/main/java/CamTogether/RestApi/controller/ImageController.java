@@ -33,5 +33,4 @@ public class ImageController {
         String username = info.get("username");
         return imageService.get(new RequestHeader(),imageName, album);
     }
-
 }
