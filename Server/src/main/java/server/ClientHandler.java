@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -33,24 +34,16 @@ class ClientHandler implements Runnable {
     public void run() {
         logger.info("Client handler start handling...");
         String received;
-        while (true) {
-            try {
-                received = readProcedure();
-                logger.debug("Client handler received message: [\n" +received+"]\n");
-                String response = messageHandler.messageReceived(received);
-                writeProcedure(response);
-                logger.debug("Client handler sent response: [\n" +response+"]\n");
-            } catch (IOException e) {
-                logger.warn("Exception thrown", e);
-                break;
-            }
-        }
         try {
+            received = readProcedure();
+            logger.debug("Client handler received message: [\n" + received + "]\n");
+            String response = messageHandler.messageReceived(received);
+            writeProcedure(response);
+            logger.debug("Client handler sent response: [\n" + response + "]\n");
             // closing resources
             this.dis.close();
             this.dos.close();
             this.s.close();
-
         } catch (IOException e) {
             e.printStackTrace();
             logger.warn("Exception thrown", e);
@@ -70,7 +63,9 @@ class ClientHandler implements Runnable {
     }
 
     private String readProcedure() throws IOException {
+        logger.info("Reading!");
         int len = dis.readInt();
+        logger.info("Read, " + len);
         StringBuilder sb = new StringBuilder();
         for (int i =0; i < len; i++)
             sb.append(dis.readUTF());

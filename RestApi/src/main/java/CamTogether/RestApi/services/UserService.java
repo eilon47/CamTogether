@@ -17,7 +17,7 @@ public class UserService extends AbstractService implements IUserService {
         message.setHeader(header);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
         if(responseMessage.getHeader().isCommandSuccess()){
-            return ResponseEntity.ok("Registered");
+            return ResponseEntity.ok("OKed");
         }
 
         return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
@@ -32,7 +32,7 @@ public class UserService extends AbstractService implements IUserService {
         message.setHeader(header);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
         if (responseMessage.getHeader().isCommandSuccess()){
-            return ResponseEntity.ok("OK");
+            return ResponseEntity.ok("OKed");
         }
         return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }
@@ -44,7 +44,7 @@ public class UserService extends AbstractService implements IUserService {
         message.setHeader(header);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
         if (responseMessage.getHeader().isCommandSuccess()){
-            return ResponseEntity.ok("OK");
+            return ResponseEntity.ok("OKed");
         }
         return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }

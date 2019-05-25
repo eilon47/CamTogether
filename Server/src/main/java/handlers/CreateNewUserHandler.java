@@ -32,6 +32,7 @@ public class CreateNewUserHandler extends CommandHandler {
             dbClient.createConnection();
             Date joined = new Date((new java.util.Date()).getTime());
             byte[] image = setProfilePicture(user_to_add.getProfileImage());
+            user_to_add.setDescription("");
             Object[] values_to_user_table = {"", user_to_add.getUserName(), user_to_add.getPassword(), user_to_add.getBirthday(), joined,
                              image, user_to_add.getEmail(), "" /*friends*/, user_to_add.getDescription()};
             boolean res = dbClient.insertQuery(SqlStatements.INSERT_NEW_USER_TO_USERS_TABLE, values_to_user_table);
@@ -72,13 +73,27 @@ public class CreateNewUserHandler extends CommandHandler {
     }
 
     private byte[] setProfilePicture(byte[] img) {
+        ImageUtils imageUtils = new ImageUtils();
+        byte[] b = new byte[1];
+        if (img == null) {
+            try {
+                return imageUtils.getDefaultProfileImg();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return b;
+            }
+        }
         byte [] image;
         try {
-            ImageUtils imageUtils = new ImageUtils();
             image = imageUtils.createThumbnail(img, 30, 30);
-
         } catch (IOException ex){
-            image = null; // TODO add default image
+            try {
+                image = imageUtils.getDefaultProfileImg() ;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return b;
+            }
+            ; // TODO add default image
         }
         return image;
     }

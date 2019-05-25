@@ -19,7 +19,9 @@ public class GetImageHandler extends CommandHandler {
 
         try {
             if (isAuthorized(album, username)) {
+                dbClient.createConnection();
                 CTImage img = dbClient.getImageFromAlbum(album, image);
+                dbClient.closeConnection();
                 GetImageResponseBody responseBody = new GetImageResponseBody();
                 responseBody.setImage(img);
                 returnMessage.setBody(fromClassToXml(responseBody));
@@ -30,7 +32,7 @@ public class GetImageHandler extends CommandHandler {
                 returnMessage.setBody("User is not authorized in this album");
                 return returnMessage;
             }
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e ) {
             e.printStackTrace();
             returnMessage.getHeader().setCommandSuccess(false);
             returnMessage.setBody("Failed getting image, reason : " + e.getMessage());

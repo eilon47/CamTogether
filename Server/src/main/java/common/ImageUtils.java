@@ -5,7 +5,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class ImageUtils {
 
@@ -19,6 +21,13 @@ public class ImageUtils {
         byte[] imageInByte = baos.toByteArray();
         baos.close();
         return imageInByte;
+    }
+
+
+    public byte[] getDefaultProfileImg() throws IOException{
+        File f = new File(ResourcesHandler.getResourceFilePath("1.jpg"));
+        return createThumbnail(Files.readAllBytes(f.toPath()), 30, 30);
+
     }
 
 }

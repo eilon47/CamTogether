@@ -18,7 +18,7 @@ public abstract class AbstractService {
     protected JsonConverter jsonConverter = new JsonConverter();
 
     protected ResponseMessage messageToServerAndResponse(RequestMessage requestMessage, Object body) {
-        CamTogetherClient client = new CamTogetherClient(18080, "0.0.0.0");
+        CamTogetherClient client = new CamTogetherClient(23456, "0.0.0.0");
         try {
             client.createConnection();
             requestMessage.setBody(xmlConverter.serializeToString(body));

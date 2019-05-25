@@ -16,18 +16,29 @@ import java.sql.SQLException;
 public class Main {
     public static Logger logger = LogManager.getLogger();
     public static void main(String args[]) {
-        try {
-            init_tables();
-            //initData();
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
+//        try {
+//            drop();
+//        } catch (SQLException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+////            init_tables();
+//        } catch (SQLException | ClassNotFoundException e) {
+//            e.printStackTrace();
+//            return;
+//        }
         Server server = new Server("0.0.0.0", 23456);
         try {
             server.connect();
             server.startServer();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            drop();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

@@ -44,16 +44,27 @@ public abstract class CommandHandler {
         }
     }
 
-    protected boolean isAuthorized(String album_name, String user) throws SQLException {
+    protected boolean isAuthorized(String album_name, String user) throws SQLException, ClassNotFoundException {
+        dbClient.createConnection();
         logger.debug("connection with db created - executing select query to receive participants list");
-        String sql = String.format(SqlStatements.SELECT_FROM_ALBUMS, "participants", "WHERE album_name='" + album_name +"'");
+        String sql = String.format(SqlStatements.SELECT_FROM_ALBUMS, "participants, creator", "WHERE album_name= '" + album_name +"'");
         ResultSet resultSet = dbClient.selectQuery(sql);
         String participants = null;
+        String creator = null;
         boolean res = false;
         if (resultSet.next())
             participants = resultSet.getString("participants");
-        if(participants!=null)
-            res = participants.contains(user);
+            creator = resultSet.getString("creator");
+        if(participants!=null) {
+            String[] parti = participants.split(",");
+            for(String s: parti){
+                if (s.equals(user))
+                    res = true;
+            }
+        }
+        if(!res && creator != null){
+            res = creator.equals(user);
+        }
         resultSet.close();
         dbClient.closeConnection();
         return res;

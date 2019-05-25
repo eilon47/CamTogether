@@ -23,8 +23,9 @@ public class LoginUserHandler extends CommandHandler {
             ResultSet rs = dbClient.selectQuery(sql, args);
             if(rs.next()) {
                 String username = rs.getString("username");
+
                 String password = rs.getString("password");
-                if(password.equals(requestBody.getPassword()) && username.equals(requestBody.getUsername())) {
+                if(password.equals(requestBody.getPassword()) && username.trim().equals(requestBody.getUsername())) {
                     logger.info("login to user " + username + " succeeded");
                     responseMessage.getHeader().setCommandSuccess(true);
                 } else {

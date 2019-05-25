@@ -24,7 +24,7 @@ public final class SqlStatements {
                     ");",
 
             "CREATE TABLE "+rulesTable+" (" +
-                    "album_name  char(64)  NOT NULL   PRIMARY KEY, " +
+                    "album_name  text NOT NULL   PRIMARY KEY, " +
                     "location   boolean NOT NULL, " +
                     "longitude float(24), " +
                     "latitude  float(24), " +
@@ -35,7 +35,7 @@ public final class SqlStatements {
                     ");",
 
             "CREATE TABLE "+ usersTable +" (" +
-                    "username    char(64) NOT NULL PRIMARY KEY," +
+                    "username    text NOT NULL PRIMARY KEY," +
                     "password  text," +
                     "birthday  text," +
                     "joined  text," +
@@ -81,7 +81,7 @@ public final class SqlStatements {
     public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM "+rulesTable+" WHERE album_name = '%s';";
     public static final String SELECT_USER_FROM_USERS = "SELECT * FROM "+usersTable+" WHERE username = ?;";
     public static final String SELECT_KEY_FROM_USERS = "SELECT %s FROM "+usersTable+" WHERE %s = '%s'";
-    public static final String SELECT_ALBUM_FROM_ALBUMS = "SELECT * FROM " + albumsTable + " WHERE album_name = %s;";
+    public static final String SELECT_ALBUM_FROM_ALBUMS = "SELECT * FROM " + albumsTable + " WHERE album_name = '%s';";
     //UPDATE
     public static final String UPDATE_TABLE = "UPDATE %s SET %s = '%s' WHERE %s;";
 
