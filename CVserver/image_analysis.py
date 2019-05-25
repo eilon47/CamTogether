@@ -18,20 +18,23 @@ def cv_size(img):
 
 
 def handle(client_sock, address):
-    request = client_sock.recv()
-    print('Received {}'.format(len(request)) + " bytes")
-    res = analysis(request)
+    data = bytearray()
+    num_of_chuncks = client_sock.recv()
+    for i in range(num_of_chuncks):
+        data.extend(bytearray(client_sock.recv()))
+    print('Received {}'.format(len(data)) + " bytes")
+    res = analysis(data)
     client_sock.send(res)
     client_sock.close()
 
 
 def analysis(img):
-    nparr = np.fromstring(img, np.uint8)
+    nparr = np.frombuffer(img, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_LOAD_GDAL)
     is_blur, down_grade = bd.blur_detection(img, cv_size(img), 1000)
     if is_blur:
         return -1
-    locations, num_faces = fr.number_of_faces(img)
+    locations, num_faces = fr.detect(img)
     if num_faces == 1:
         return -1
     return 0

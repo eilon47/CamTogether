@@ -37,6 +37,12 @@ public class Client
         this.dos.write(msg);
     }
 
+    public void sendMessage(int n) throws IOException {
+        logger.debug("Sending : " + n + " as a number");
+        this.dos.writeInt(n);
+
+    }
+
     public int getIntResult() throws IOException {
         int received = this.dis.readInt();
         logger.debug("Received : " + received);

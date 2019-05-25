@@ -1,27 +1,28 @@
-import face_recognition as face_recognition
-from PIL import Image, ImageDraw
-import numpy as np
-
-def number_of_faces(img):
-	model = "hog"
-	locations = face_recognition.face_locations(img,2, model)
-	draw_squares_on_image(img, locations)
-	return locations, len(locations)
-
-
-def draw_squares_on_image(img, locations):
-	im = Image.fromarray(img, 'RGB')
-	draw = ImageDraw.Draw(im)
-	print(locations)
-	for loc in locations:
-		loc = rotate_loc(loc)
-		draw.rectangle(xy=loc, outline="red")
-	del draw
-	return im
-	# write to stdout
+import os
+import cv2
+# cascades = [ #cv2.CascadeClassifier('cascades/haarcascade_frontalcatface.xml'),
+# #              cv2.CascadeClassifier('cascades/haarcascade_frontalcatface_extended.xml'),
+#              cv2.CascadeClassifier('cascades/haarcascade_frontalface_alt.xml'),
+#              #cv2.CascadeClassifier('cascades/haarcascade_frontalface_alt2.xml')
+#              # cv2.CascadeClassifier('cascades\haarcascade_profileface.xml'),
+#              ]
+cas = cv2.CascadeClassifier('cascades/haarcascade_frontalface_alt.xml')
 
 
-def rotate_loc(location):
-	top, right, bottom, left = location
-	return int(right), int(bottom),int(left), int(top)
+def detect(image, scale=1.1, min_neig=5):
+    imgtest1 = image.copy()
+    imgtest = cv2.cvtColor(imgtest1, cv2.COLOR_BGR2GRAY)
+    faces = cas.detectMultiScale(imgtest,scaleFactor=scale, minNeighbors=min_neig)
+    return len(faces)
+
+    # for (x, y, w, h) in faces:
+    #     face_detect = cv2.rectangle(imgtest, (x, y), (x + w, y + h), (255, 0, 255), 2)
+    #     roi_gray = imgtest[y:y + h, x:x + w]
+    #     roi_color = imgtest[y:y + h, x:x + w]
+    #     plt.imshow(face_detect)
+    #     eyes = eye_cascade.detectMultiScale(roi_gray)
+    #     for (ex, ey, ew, eh) in eyes:
+    #         eye_detect = cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (255, 0, 255), 2)
+    #         plt.imshow(eye_detect)
+
 
