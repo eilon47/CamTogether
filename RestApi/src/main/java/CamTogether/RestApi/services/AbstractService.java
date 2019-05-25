@@ -1,6 +1,7 @@
 package CamTogether.RestApi.services;
 
 
+import CamTogether.RestApi.client.CamTogetherClient;
 import client.Client;
 import converters.JsonConverter;
 import converters.XmlConverter;
@@ -17,7 +18,7 @@ public abstract class AbstractService {
     protected JsonConverter jsonConverter = new JsonConverter();
 
     protected ResponseMessage messageToServerAndResponse(RequestMessage requestMessage, Object body) {
-        Client client = new Client(18080, "localhost");
+        CamTogetherClient client = new CamTogetherClient(18080, "0.0.0.0");
         try {
             client.createConnection();
             requestMessage.setBody(xmlConverter.serializeToString(body));

@@ -1,7 +1,6 @@
 package CamTogether.RestApi.controller;
 
 import CamTogether.RestApi.services.IAlbumService;
-import jdk.nashorn.internal.ir.RuntimeNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

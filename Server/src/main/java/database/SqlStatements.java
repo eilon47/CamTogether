@@ -36,7 +36,7 @@ public final class SqlStatements {
 
             "CREATE TABLE "+ usersTable +" (" +
                     "username    char(64) NOT NULL PRIMARY KEY," +
-                    "password  text",
+                    "password  text," +
                     "birthday  text," +
                     "joined  text," +
                     "profile_img  bytea," +

@@ -2,9 +2,9 @@ package handlers;
 
 import common.ImageUtils;
 import database.SqlStatements;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import xmls.*;
 
+import javax.naming.directory.InvalidAttributesException;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -24,7 +24,7 @@ public class CreateNewUserHandler extends CommandHandler {
         try {
             try {
                 checkIfUserCanRegister(user_to_add);
-            } catch (ValueException ex){
+            } catch (InvalidAttributesException ex){
                 returnMessage.getHeader().setCommandSuccess(false);
                 responseBody.setUser(ex.getMessage());
                 return returnMessage;
@@ -49,11 +49,11 @@ public class CreateNewUserHandler extends CommandHandler {
 
     }
 
-    public boolean checkIfUserCanRegister(User user) throws ValueException{
+    public boolean checkIfUserCanRegister(User user) throws InvalidAttributesException{
         if (isUsedAlready("email", user.getEmail()))
-            throw new ValueException("This email is already used!");
+            throw new InvalidAttributesException("This email is already used!");
         if (isUsedAlready("username", user.getUserName()))
-            throw new ValueException("This username is already taken");
+            throw new InvalidAttributesException("This username is already taken");
         return true;
     }
     private boolean isUsedAlready(String key, String value){

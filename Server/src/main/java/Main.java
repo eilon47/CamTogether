@@ -3,6 +3,7 @@ import database.SqlStatements;
 import handlers.CreateNewAlbumCommandHandler;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import server.Server;
 import xmls.*;
 
 import javax.imageio.ImageIO;
@@ -17,23 +18,22 @@ public class Main {
     public static void main(String args[]) {
         try {
             init_tables();
-           // initData();
+            //initData();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return;
         }
-//        Server server = new Server("0.0.0.0", 23456);
-//        try {
-//            server.connect();
-//            server.startServer();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        Server server = new Server("0.0.0.0", 23456);
+        try {
+            server.connect();
+            server.startServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     private static void init_tables()throws SQLException, ClassNotFoundException {
         DBClient client = new DBClient();
         client.createConnection();
-
         for(String table : SqlStatements.INIT_BASIC_TABLES){
            boolean res = client.createTableFromString(table);
         }

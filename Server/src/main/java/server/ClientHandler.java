@@ -35,16 +35,10 @@ class ClientHandler implements Runnable {
         String received;
         while (true) {
             try {
-                // receive the answer from client
-                received = dis.readUTF();
-                if (received.isEmpty())
-                    break;
+                received = readProcedure();
                 logger.debug("Client handler received message: [\n" +received+"]\n");
                 String response = messageHandler.messageReceived(received);
-                String[] splitted = split(response, 2048);
-                dos.writeInt(splitted.length);
-                for(String s: splitted)
-                    dos.writeUTF(s);
+                writeProcedure(response);
                 logger.debug("Client handler sent response: [\n" +response+"]\n");
             } catch (IOException e) {
                 logger.warn("Exception thrown", e);
@@ -73,6 +67,21 @@ class ClientHandler implements Runnable {
         }
         arr[size-1] = str.substring(i*blockSize, len);
         return arr;
+    }
+
+    private String readProcedure() throws IOException {
+        int len = dis.readInt();
+        StringBuilder sb = new StringBuilder();
+        for (int i =0; i < len; i++)
+            sb.append(dis.readUTF());
+        return sb.toString();
+    }
+
+    private void writeProcedure(String messgae)  throws IOException {
+        String[] splitted = split(messgae, 2048);
+        dos.writeInt(splitted.length);
+        for(String s: splitted)
+            dos.writeUTF(s);
     }
 
 }
