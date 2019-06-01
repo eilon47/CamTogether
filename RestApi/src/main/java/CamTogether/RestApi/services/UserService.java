@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import xmls.CommandsEnum;
 import xmls.*;
 
+import javax.jws.soap.SOAPBinding;
+import javax.xml.bind.JAXBException;
+
 @Service
 public class UserService extends AbstractService implements IUserService {
 
@@ -47,6 +50,25 @@ public class UserService extends AbstractService implements IUserService {
             return ResponseEntity.ok("OKed");
         }
         return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
+    }
+
+    public ResponseEntity<User> getUserDetails(RequestHeader header,String username) {
+        GetUserDetailsRequestBody requestBody = new GetUserDetailsRequestBody();
+        requestBody.setUsername(username);
+        RequestMessage message = new RequestMessage();
+        message.setHeader(header);
+        ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
+        if (responseMessage.getHeader().isCommandSuccess()){
+            try {
+                GetUserDetailsResponseBody responseBody = xmlConverter.serializeFromString(responseMessage.getBody(), GetUserDetailsResponseBody.class);
+                User user = responseBody.getUser();
+                return ResponseEntity.ok(user);
+            } catch (JAXBException e) {
+                e.printStackTrace();
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }

@@ -71,13 +71,13 @@ public final class SqlStatements {
     public static final String INSERT_NEW_ALBUM_TO_ALBUMS_TABLE = "INSERT INTO albums VALUES (?, ?, ?, ?, ?, ?);";
     public static final String INSERT_NEW_USER_TO_USERS_TABLE = "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
     public static final String INSERT_NEW_RULES_TO_RULES_TABLE = "INSERT INTO rules VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-    public static final String INSERT_NEW_IMAGE_TO_ALBUM = "INSERT INTO %s_imgs VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    public static final String INSERT_NEW_IMAGE_TO_ALBUM = "INSERT INTO %s_img VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 
     //SELECT
     public static final String SELECT_FROM_ALBUMS = "SELECT %s FROM " + albumsTable + " %s;";
     public static final String SELECT_ALL_THUMBNAILS_FROM_ALBUM = "SELECT * FROM %s_thumbs;";
-    public static final String SELECT_IMAGE_FROM_ALBUM = "SELECT * FROM %s_imgs WHERE image_name = ?;";
+    public static final String SELECT_IMAGE_FROM_ALBUM = "SELECT * FROM %s_img WHERE image_name = ?;";
     public static final String SELECT_RULES_FOR_ALBUM = "SELECT * FROM "+rulesTable+" WHERE album_name = '%s';";
     public static final String SELECT_USER_FROM_USERS = "SELECT * FROM "+usersTable+" WHERE username = ?;";
     public static final String SELECT_KEY_FROM_USERS = "SELECT %s FROM "+usersTable+" WHERE %s = '%s'";

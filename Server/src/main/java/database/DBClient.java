@@ -48,8 +48,9 @@ public class DBClient {
          return this.statement.execute(sql);
     }
 
-    public Rules getAlbumRules(String album) throws SQLException {
+    public Rules getAlbumRules(String album) throws SQLException, ClassNotFoundException {
         Rules rules = null;
+        this.createConnection();
         ResultSet rs = selectQuery(String.format(SqlStatements.SELECT_RULES_FOR_ALBUM, album));
         if(rs.next()) {
             rules = new Rules();
@@ -63,6 +64,7 @@ public class DBClient {
 
         }
         rs.close();
+        this.closeConnection();
         return rules;
     }
 

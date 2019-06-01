@@ -11,4 +11,5 @@ public interface IUserService {
     ResponseEntity<String> login(RequestHeader header, String userName, String password);
 
     ResponseEntity<String> updateUser(RequestHeader header,User user);
+    ResponseEntity<User> getUserDetails(RequestHeader header, String username);
 }

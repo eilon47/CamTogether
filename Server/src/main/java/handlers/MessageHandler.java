@@ -19,6 +19,7 @@ public class MessageHandler {
     private CreateNewUserHandler createNewUserHandler = new CreateNewUserHandler();
     private UpdateUserProfileHandler updateUserProfileHandler = new UpdateUserProfileHandler();
     private LoginUserHandler loginUserHandler = new LoginUserHandler();
+    private GetUserDetailsHandler getUserDetailsHandler = new GetUserDetailsHandler();
     protected static Logger logger = LogManager.getLogger("handlers");
 
     public String messageReceived(String xmlMessage){
@@ -58,6 +59,8 @@ public class MessageHandler {
             case LOGIN_WITH_USER:
                 res = loginUserHandler.handle(message);
                 break;
+            case GET_USER_DETAILS:
+                res = getUserDetailsHandler.handle(message);
             default:
                 break;
         }

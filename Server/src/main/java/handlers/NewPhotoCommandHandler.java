@@ -48,7 +48,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
                 dbClient.createConnection();
                 String insert_image_sql = String.format(SqlStatements.INSERT_NEW_IMAGE_TO_ALBUM,img.getAlbumName());
                 Object[] values = {"", img.getImageName(), img.getImageSize(), img.getImageData(), img.getTitle(), img.getImageHeight(),
-                        img.getImageWidth(), img.getUserName(), img.getDate(), img.getLongitude(), img.getLatitude(), img.getLatitude(), img.getAlbumName()};
+                        img.getImageWidth(), img.getUserName(), img.getDate(), img.getLongitude(), img.getLatitude(), img.getAlbumName()};
                 boolean res = dbClient.insertQuery(insert_image_sql,values);
                 CTThumbnail thumbnail = createThumbnail(img, 100, 100);
                 dbClient.closeConnection();
@@ -62,30 +62,37 @@ public class NewPhotoCommandHandler extends CommandHandler {
         return returnMessage;
     }
 
-    private boolean checkRulesForImage(CTImage image) throws SQLException {
+    private boolean checkRulesForImage(CTImage image) throws SQLException, ClassNotFoundException {
         Rules rules = null;
         rules = dbClient.getAlbumRules(image.getAlbumName());
+        if(rules == null)
+            return true;
         boolean location = nullityCheck(rules.getRadius()) && nullityCheck(rules.getLatitude()) && nullityCheck(rules.getLongitude());
         boolean time = nullityCheck(rules.getEndTime()) && nullityCheck(rules.getStartTime());
-        if(time) {
-            SimpleDateFormat dt = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
-            try {
-                Date start = dt.parse(rules.getStartTime());
-                Date end = dt.parse(rules.getEndTime());
-                Date imgDate = dt.parse(image.getDate());
-                if(imgDate.before(start) || imgDate.after(end))
-                    return false;
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        if(location){
-            float longitude = image.getLatitude();
-            float latitude = image.getLatitude();
-            double distance = Math.sqrt(Math.pow(longitude - rules.getLongitude(), 2) + Math.pow(latitude - rules.getLatitude(), 2));
-            if(distance > rules.getRadius())
-                return false;
-        }
+//        if(time) {
+//            SimpleDateFormat dt = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+//            try {
+//                Date start = dt.parse(rules.getStartTime());
+//                Date end = dt.parse(rules.getEndTime());
+//                Date imgDate = dt.parse(image.getDate());
+//                if(imgDate.before(start) || imgDate.after(end))
+//                    return false;
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        if(location){
+//            float longitude = image.getLatitude();
+//            float latitude = image.getLatitude();
+//            if (latitude ==0 && longitude == 0)
+//            {
+//                logger.warn("Could not get longitue and latitude from image");
+//                return true;
+//            }
+//            double distance = Math.sqrt(Math.pow(longitude - rules.getLongitude(), 2) + Math.pow(latitude - rules.getLatitude(), 2));
+//            if(distance > rules.getRadius())
+//                return false;
+//        }
         return true;
     }
 

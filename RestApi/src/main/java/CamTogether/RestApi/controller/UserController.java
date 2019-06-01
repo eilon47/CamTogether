@@ -34,12 +34,19 @@ public class UserController {
         return userService.register(header, user);
     }
 
-    @PostMapping("/{userName}")
-    public ResponseEntity<String> update(@PathVariable String user, @RequestBody User userDetails) {
+    @PostMapping("/update/{userName}")
+    public ResponseEntity<String> update(@PathVariable String userName, @RequestBody User userDetails) {
         RequestHeader header = new RequestHeader();
         header.setCommand(CommandsEnum.UPDATE_USER_PROFILE);
-        header.setUsername(user);
+        header.setUsername(userName);
         return userService.updateUser(header, userDetails);
     }
 
+    @GetMapping("/user/{username}")
+    public ResponseEntity<User> getUserDetails(@PathVariable String username){
+        RequestHeader header = new RequestHeader();
+        header.setCommand(CommandsEnum.GET_USER_DETAILS);
+        header.setUsername(username);
+        return userService.getUserDetails(header, username);
+    }
 }

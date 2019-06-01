@@ -16,7 +16,7 @@
             <enumeration value="GET_ALBUM"/>
             <enumeration value="CREATE_NEW_ALBUM"/>
             <enumeration value="GET_IMAGE"/>
-
+            <enumeration value="GET_USER_DETAILS"/>
 
         </restriction>
     </simpleType>
@@ -308,6 +308,22 @@
         <complexType>
             <sequence>
                 <element name="Success" type="boolean"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="GetUserDetailsRequestBody">
+        <complexType>
+            <sequence>
+                <element name="Username" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="GetUserDetailsResponseBody">
+        <complexType>
+            <sequence>
+                <element name="User" type="xsd:User"/>
             </sequence>
         </complexType>
     </element>

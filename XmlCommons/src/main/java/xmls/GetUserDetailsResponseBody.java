@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="Success" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
+ *         &lt;element name="User" type="{xsd}User"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -36,28 +36,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "success"
+    "user"
 })
-@XmlRootElement(name = "UpdateUserProfileResponseBody")
-public class UpdateUserProfileResponseBody {
+@XmlRootElement(name = "GetUserDetailsResponseBody")
+public class GetUserDetailsResponseBody {
 
-    @XmlElement(name = "Success")
-    protected boolean success;
+    @XmlElement(name = "User", required = true)
+    protected User user;
 
     /**
-     * Gets the value of the success property.
+     * Gets the value of the user property.
      * 
+     * @return
+     *     possible object is
+     *     {@link User }
+     *     
      */
-    public boolean isSuccess() {
-        return success;
+    public User getUser() {
+        return user;
     }
 
     /**
-     * Sets the value of the success property.
+     * Sets the value of the user property.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link User }
+     *     
      */
-    public void setSuccess(boolean value) {
-        this.success = value;
+    public void setUser(User value) {
+        this.user = value;
     }
 
 }
