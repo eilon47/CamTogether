@@ -1,27 +1,32 @@
 package CamTogether.RestApi.controller;
 
-import CamTogether.RestApi.services.IAlbumService;
 import CamTogether.RestApi.services.IImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import xmls.CTImage;
-import xmls.CommandsEnum;
 import xmls.RequestHeader;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
 public class ImageController {
 
+    static class ImageMessage {
+        public CTImage info;
+    }
+
     @Autowired
     IImageService imageService;
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/image")
+    @PostMapping(value = "/image", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     ResponseEntity<String> postImage(@RequestBody CTImage ctImage){
+        if(ctImage!= null)
+            System.out.println("OKED");
+            //return ResponseEntity.ok().build();
+        //return ResponseEntity.badRequest().build();
         System.out.println(ctImage);
         return imageService.post(new RequestHeader(), ctImage);
     }

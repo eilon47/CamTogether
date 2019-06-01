@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import xmls.*;
 import xmls.RequestHeader;
 
+import java.util.LinkedHashMap;
+
 @RestController
 @RequestMapping("/album")
 @CrossOrigin(origins = "*")
@@ -37,12 +39,13 @@ public class AlbumController {
         return albumService.postAlbum(header,reqBody);
     }
 
+    @CrossOrigin("*")
     @PostMapping("/{userName}/{albumName}")
-    ResponseEntity<String> addUser(@PathVariable String userName,@PathVariable String albumName, @RequestBody String userToAdd) {
+    ResponseEntity<String> addUser(@PathVariable String userName,@PathVariable String albumName, @RequestBody Object userToAdd) {
         xmls.RequestHeader header = new RequestHeader();
         header.setCommand(CommandsEnum.ADD_USER_TO_ALBUM);
         header.setUsername(userName);
-        return albumService.addUserToAlbum(header, userToAdd, albumName);
+        return albumService.addUserToAlbum(header, ((LinkedHashMap<String, String>)userToAdd).get("userToAdd"), albumName);
     }
 
     @PostMapping("/{userName}/{albumName}/rules")
@@ -52,5 +55,6 @@ public class AlbumController {
         header.setUsername(userName);
         return albumService.updateRules(header, albumName, rules);
     }
+
 
 }
