@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,6 +52,9 @@ public class NewPhotoCommandHandler extends CommandHandler {
                         img.getImageWidth(), img.getUserName(), img.getDate(), img.getLongitude(), img.getLatitude(), img.getAlbumName()};
                 boolean res = dbClient.insertQuery(insert_image_sql,values);
                 CTThumbnail thumbnail = createThumbnail(img, 100, 100);
+                String insert_thumb_sql = String.format(SqlStatements.INSERT_NEW_THUMBNAIL_TO_ALBUM, img.getAlbumName());
+                Object[] values2 = {"", thumbnail.getThumbnailName(), thumbnail.getThumbnailHeight(), thumbnail.getThumbnailWidth(),thumbnail.getThumbnailData()};
+                res = dbClient.insertQuery(insert_thumb_sql, values2);
                 dbClient.closeConnection();
                 returnMessage.setBody(fromClassToXml(responseBody));
             }
@@ -137,6 +141,33 @@ public class NewPhotoCommandHandler extends CommandHandler {
             //thumbnail.setThumbnailData(); todo add default thumbnail photo
         }
         return thumbnail;
+    }
+
+    public static CTImage create_CTimage(String s) {
+        try {
+            File f = new File(s);
+            CTImage img = new CTImage();
+            BufferedImage imgg = ImageIO.read(f);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write( imgg, "jpg", baos );
+            baos.flush();
+            byte[] imageInByte = baos.toByteArray();
+
+            img.setImageSize(imgg.getWidth()*imgg.getHeight());
+            img.setImageName(f.getName());
+            img.setImageData(imageInByte);
+            img.setAlbumName("sda");
+            img.setUserName("dsadsa");
+            return img;
+
+        }catch (IOException e) {
+            return null;
+        }
+    }
+    public static void main(String [] args) {
+        CTImage ct = create_CTimage("");
+
     }
 }
 
