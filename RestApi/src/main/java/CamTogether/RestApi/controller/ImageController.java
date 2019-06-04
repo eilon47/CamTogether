@@ -13,7 +13,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,13 +47,41 @@ public class ImageController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/image/{imageName}")
-    ResponseEntity<CTImage> getImage(@PathVariable String imageName, @RequestBody Map<String, String> info) {
-        String album = info.get("album");
-        String username = info.get("username");
-        return imageService.get(new RequestHeader(),imageName, album);
+    @PostMapping("/image/imgDetails")
+    ResponseEntity<CTImage> getImage(@RequestBody Map<String, String> info) throws IOException {
+        String album = info.get("albumName");
+        String username = info.get("userName");
+        String imageName = info.get("imageName");
+        CTImage img = createCTImage();
+        return ResponseEntity.ok(img);
+        // return imageService.get(new RequestHeader(),imageName, album);
     }
 
+
+    private CTImage createCTImage() throws IOException {
+        //Read the JSON file
+        CTImage img = new CTImage();
+        File f = new File("C:\\Users\\green\\Desktop\\camTogether\\CamTogether\\RestApi\\src\\main\\resources\\images\\8.jpg");
+        BufferedImage imgg = ImageIO.read(f);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write( imgg, "jpg", baos );
+        baos.flush();
+        byte[] imageInByte = baos.toByteArray();
+        img.setImageData(imageInByte);
+        //Iterate over this map
+        img.setAlbumName("albumName");
+        img.setLatitude(0);
+        img.setLongitude(0);
+        img.setUserName("userName");
+        img.setTitle("title");
+        img.setImageWidth(0);
+        img.setImageHeight(0);
+        img.setImageSize(0);
+        img.setDate(null);
+        img.setImageName("imageName");
+        return img;
+    }
 
     private CTImage fromJsonString(String j) {
         //Read the JSON file
