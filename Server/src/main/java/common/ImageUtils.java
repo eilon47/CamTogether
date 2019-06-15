@@ -11,9 +11,12 @@ import java.nio.file.Files;
 
 public class ImageUtils {
 
+    public static int PROFILE_IMG_SIZE = 150;
+    public static int THUMBNAIL_IMG_SIZE = 150;
+
     public byte[] createThumbnail(byte[] img, int height, int width) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(img);
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         bufferedImage.createGraphics().drawImage(ImageIO.read(bis).getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "jpg", baos);
@@ -26,8 +29,14 @@ public class ImageUtils {
 
     public byte[] getDefaultProfileImg() throws IOException{
         File f = new File(ResourcesHandler.getResourceFilePath("1.jpg"));
-        return createThumbnail(Files.readAllBytes(f.toPath()), 30, 30);
+        return createThumbnail(Files.readAllBytes(f.toPath()), PROFILE_IMG_SIZE, PROFILE_IMG_SIZE);
 
     }
+
+    public byte[] getDefaultAlbumImage() throws IOException {
+        File f = new File(ResourcesHandler.getResourceFilePath("default.png"));
+        return createThumbnail(Files.readAllBytes(f.toPath()), THUMBNAIL_IMG_SIZE, THUMBNAIL_IMG_SIZE);
+    }
+
 
 }

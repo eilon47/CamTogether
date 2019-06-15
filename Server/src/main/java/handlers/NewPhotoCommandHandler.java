@@ -1,6 +1,7 @@
 package handlers;
 
 import client.CVClient;
+import common.ImageUtils;
 import database.SqlStatements;
 import xmls.*;
 
@@ -14,8 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class NewPhotoCommandHandler extends CommandHandler {
@@ -51,7 +50,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
                 Object[] values = {"", img.getImageName(), img.getImageSize(), img.getImageData(), img.getTitle(), img.getImageHeight(),
                         img.getImageWidth(), img.getUserName(), img.getDate(), img.getLongitude(), img.getLatitude(), img.getAlbumName()};
                 boolean res = dbClient.insertQuery(insert_image_sql,values);
-                CTThumbnail thumbnail = createThumbnail(img, 100, 100);
+                CTThumbnail thumbnail = createThumbnail(img, ImageUtils.THUMBNAIL_IMG_SIZE, ImageUtils.THUMBNAIL_IMG_SIZE);
                 String insert_thumb_sql = String.format(SqlStatements.INSERT_NEW_THUMBNAIL_TO_ALBUM, img.getAlbumName());
                 Object[] values2 = {"", thumbnail.getThumbnailName(), thumbnail.getThumbnailHeight(), thumbnail.getThumbnailWidth(),thumbnail.getThumbnailData()};
                 res = dbClient.insertQuery(insert_thumb_sql, values2);
@@ -126,21 +125,18 @@ public class NewPhotoCommandHandler extends CommandHandler {
         thumbnail.setThumbnailName(img.getImageName());
         thumbnail.setThumbnailHeight(height);
         thumbnail.setThumbnailWidth(width);
-        ByteArrayInputStream bis = new ByteArrayInputStream(img.getImageData());
         try {
-            BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            bufferedImage.createGraphics().drawImage(ImageIO.read(bis).getScaledInstance(width, height, Image.SCALE_SMOOTH), 0,0, null);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "jpg", baos );
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            thumbnail.setThumbnailData(imageInByte);
-        } catch (IOException e) {
-            logger.warn("failed to create thumbnail image from " + img.getImageName());
-            //thumbnail.setThumbnailData(); todo add default thumbnail photo
+            thumbnail.setThumbnailData(getThumbBytes(img.getImageData(), width, height));
+        } catch (IOException e){
+            //TODO Create default thumbnail
         }
+//        ByteArrayInputStream bis = new ByteArrayInputStream(img.getImageData());
         return thumbnail;
+    }
+
+    private byte[] getThumbBytes(byte[] image, int tThumbWidth, int tThumbHeight) throws IOException {
+        ImageUtils imageUtils = new ImageUtils();
+        return imageUtils.createThumbnail(image, tThumbHeight, tThumbWidth);
     }
 
     public static CTImage create_CTimage(String s) {
@@ -166,7 +162,8 @@ public class NewPhotoCommandHandler extends CommandHandler {
         }
     }
     public static void main(String [] args) {
-        CTImage ct = create_CTimage("");
+//        CTImage ct = create_CTimage("C:\\Users\\eilon\\Desktop\\אילון\\cellphone\\WA\\20180419_130103.jpg");
+//        CTThumbnail thumbnail =  createThumbnail(ct, 100, 100);
 
     }
 }

@@ -85,7 +85,7 @@ public class CreateNewUserHandler extends CommandHandler {
         }
         byte [] image;
         try {
-            image = imageUtils.createThumbnail(img, 30, 30);
+            image = imageUtils.createThumbnail(img, ImageUtils.PROFILE_IMG_SIZE, ImageUtils.PROFILE_IMG_SIZE);
         } catch (IOException ex){
             try {
                 image = imageUtils.getDefaultProfileImg() ;
@@ -93,7 +93,6 @@ public class CreateNewUserHandler extends CommandHandler {
                 e.printStackTrace();
                 return b;
             }
-            ; // TODO add default image
         }
         return image;
     }

@@ -6,6 +6,8 @@ import xmls.*;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 public class GetUserDetailsHandler extends CommandHandler {
     @Override
@@ -26,8 +28,11 @@ public class GetUserDetailsHandler extends CommandHandler {
                 user.setEmail(rs.getString("email"));
                 user.setProfileImage(rs.getBytes("profile_img"));
                 user.setBirthday(rs.getString("birthday"));
+                String friends = rs.getString("friends");
+                if (!friends.trim().isEmpty()) {
+                    user.getFriends().addAll( Arrays.asList(friends.split(",")));
+                }
                 user.setUserName(username);
-                user.setFriends(null);
                 rs.close();
                 GetUserDetailsResponseBody responseBody = new GetUserDetailsResponseBody();
                 responseBody.setUser(user);

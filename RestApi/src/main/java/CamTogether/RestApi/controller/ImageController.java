@@ -8,6 +8,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xmls.CTImage;
+import xmls.CommandsEnum;
 import xmls.RequestHeader;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -43,7 +44,10 @@ public class ImageController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return imageService.post(new RequestHeader(), ctImage);
+        RequestHeader header = new RequestHeader();
+        header.setCommand(CommandsEnum.ADD_NEW_PHOTO_TO_ALBUM);
+        header.setUsername(ctImage.getUserName());
+        return imageService.post(header, ctImage);
     }
 
     @CrossOrigin(origins = "*")
@@ -52,9 +56,11 @@ public class ImageController {
         String album = info.get("albumName");
         String username = info.get("userName");
         String imageName = info.get("imageName");
-        CTImage img = createCTImage();
-        return ResponseEntity.ok(img);
-        // return imageService.get(new RequestHeader(),imageName, album);
+        //CTImage img = createCTImage();
+        RequestHeader header = new RequestHeader();
+        header.setCommand(CommandsEnum.GET_IMAGE);
+        header.setUsername(username);
+        return imageService.get(header,imageName, album);
     }
 
 

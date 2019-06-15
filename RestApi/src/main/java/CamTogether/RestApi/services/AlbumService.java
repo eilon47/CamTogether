@@ -60,7 +60,7 @@ public class AlbumService extends AbstractService implements IAlbumService{
         requestBody.setAlbum(ctAlbum);
         ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
         if(responseMessage.getHeader().isCommandSuccess()){
-            return ResponseEntity.ok("Album was added successfully");
+            return ResponseEntity.ok("OKed");
         }
         return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }

@@ -17,6 +17,7 @@
             <enumeration value="CREATE_NEW_ALBUM"/>
             <enumeration value="GET_IMAGE"/>
             <enumeration value="GET_USER_DETAILS"/>
+            <enumeration value="ADD_FRIEND"/>
 
         </restriction>
     </simpleType>
@@ -41,7 +42,7 @@
             <element name="JoinDate" type="string"/>
             <element name="ProfileImage" type="base64Binary"/>
             <element name="Email" type="string"/>
-            <element name="Friends" type="xsd:User"/>
+            <element name="Friends" type="string" maxOccurs="unbounded"/>
         </sequence>
     </complexType>
 
@@ -91,7 +92,7 @@
     <complexType name="CTAlbumPreview">
         <sequence>
             <element name="Name" type="string"/>
-            <element name="PreviewImg" type="xsd:CTThumbnail"/>
+            <element name="PreviewImg" type="base64Binary"/>
             <element name="NumberOfImages" type="int"/>
         </sequence>
     </complexType>
@@ -321,6 +322,22 @@
     </element>
 
     <element name="GetUserDetailsResponseBody">
+        <complexType>
+            <sequence>
+                <element name="User" type="xsd:User"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="AddOrGetFriendRequestBody">
+        <complexType>
+            <sequence>
+                <element name="Username" type="string"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="AddOrGetFriendResponseBody">
         <complexType>
             <sequence>
                 <element name="User" type="xsd:User"/>

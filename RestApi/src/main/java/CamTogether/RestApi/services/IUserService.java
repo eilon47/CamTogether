@@ -9,7 +9,7 @@ public interface IUserService {
     ResponseEntity<String> register(RequestHeader header, User user);
 
     ResponseEntity<String> login(RequestHeader header, String userName, String password);
-
+    ResponseEntity<String> addFriend(RequestHeader header, String friend);
     ResponseEntity<String> updateUser(RequestHeader header,User user);
     ResponseEntity<User> getUserDetails(RequestHeader header, String username);
 }

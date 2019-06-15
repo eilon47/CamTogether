@@ -86,10 +86,10 @@ public final class SqlStatements {
     public static final String UPDATE_TABLE = "UPDATE %s SET %s = '%s' WHERE %s;";
 
     public static final String UPDATE_RULES_FOR_ALBUM = "UPDATE "+rulesTable+" SET (location, longitude, latitude, radius, time," +
-            " start_date, end_date) = (?, ?, ?, ?, ?, ?, ?) WHERE album = %s;";
+            " start_date, end_date) = (?, ?, ?, ?, ?, ?, ?) WHERE album = '%s';";
 
     public static final String UPDATE_USER_PROFILE = "UPDATE "+usersTable+" SET (username, password, birthday, joined, profile_img," +
-            " email, friends, info) = (?, ?, ?, ?, ?, ?, ?, ?) WHERE username = %s;";
+            " email, friends, info) = (?, ?, ?, ?, ?, ?, ?, ?) WHERE username = '%s';";
 
     public static final String[] newAlbumCreationSQLs(String album){
         String album_thumbnail = album + "_thumbs";

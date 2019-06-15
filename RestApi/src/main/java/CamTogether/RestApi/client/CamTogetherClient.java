@@ -41,7 +41,6 @@ public class CamTogetherClient {
     }
 
     public void sendIntMessage(int msg) throws IOException {
-        System.out.println(msg);
         this.dos.writeInt(msg);
     }
 

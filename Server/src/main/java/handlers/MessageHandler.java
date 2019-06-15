@@ -20,6 +20,7 @@ public class MessageHandler {
     private UpdateUserProfileHandler updateUserProfileHandler = new UpdateUserProfileHandler();
     private LoginUserHandler loginUserHandler = new LoginUserHandler();
     private GetUserDetailsHandler getUserDetailsHandler = new GetUserDetailsHandler();
+    private AddOrGetFriendHandler addOrGetFriendHandler = new AddOrGetFriendHandler();
     protected static Logger logger = LogManager.getLogger("handlers");
 
     public String messageReceived(String xmlMessage){
@@ -61,6 +62,10 @@ public class MessageHandler {
                 break;
             case GET_USER_DETAILS:
                 res = getUserDetailsHandler.handle(message);
+                break;
+            case ADD_FRIEND:
+                res = addOrGetFriendHandler.handle(message);
+                break;
             default:
                 break;
         }

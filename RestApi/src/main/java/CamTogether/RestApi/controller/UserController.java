@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 
 @RestController
 @CrossOrigin(origins = "*")
-
 public class UserController {
     @Autowired
     private IUserService userService;
@@ -48,5 +47,14 @@ public class UserController {
         header.setCommand(CommandsEnum.GET_USER_DETAILS);
         header.setUsername(username);
         return userService.getUserDetails(header, username);
+    }
+
+    @GetMapping("/update/friends/{username}/{friend}")
+    public ResponseEntity<String> addFriend(@PathVariable String  username, @PathVariable String friend) {
+        RequestHeader header = new RequestHeader();
+        header.setCommand(CommandsEnum.ADD_FRIEND);
+        header.setUsername(username);
+        return userService.addFriend(header, friend);
+
     }
 }

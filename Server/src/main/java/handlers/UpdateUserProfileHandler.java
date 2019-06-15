@@ -19,14 +19,25 @@ public class UpdateUserProfileHandler extends CommandHandler {
         response.setHeader(createResponseHeader(request.getHeader()));
         UpdateUserProfileRequestBody requestBody = fromXmlToClass(request.getBody(), UpdateUserProfileRequestBody.class);
         User user = requestBody.getUser();
-        user.setProfileImage(updateImage(user.getProfileImage()));
-        String sql = String.format(SqlStatements.UPDATE_USER_PROFILE, user.getUserName());
-        Object[] values = {user.getUserName(), user.getPassword(), user.getBirthday(), user.getJoinDate(),
-                user.getProfileImage(), user.getEmail(), user.getFriends(), user.getDescription()};
+        User old;
         try {
-            dbClient.createConnection();
-            boolean success = dbClient.updateQuery(sql, values);
-            dbClient.closeConnection();
+            old = dbClient.getUser(user.getUserName());
+            if(emptyOrNull(user.getPassword()))
+                user.setPassword(old.getPassword());
+            if (emptyOrNull(user.getJoinDate()))
+                user.setJoinDate(old.getJoinDate());
+            if (emptyOrNull(user.getBirthday()))
+                user.setBirthday(old.getBirthday());
+            if (emptyOrNull(user.getEmail()))
+                user.setEmail(old.getEmail());
+        }
+        catch (Exception e) {
+            logger.warn(e);
+        }
+        user.setProfileImage(updateImage(user.getProfileImage()));
+        try {
+
+            boolean success = dbClient.updateUser(user);
             response.getHeader().setCommandSuccess(success);
             return response;
         } catch (SQLException | ClassNotFoundException e) {
@@ -41,11 +52,15 @@ public class UpdateUserProfileHandler extends CommandHandler {
         byte [] image;
         try {
             ImageUtils imageUtils = new ImageUtils();
-            image = imageUtils.createThumbnail(img, 30, 30);
+            image = imageUtils.createThumbnail(img, ImageUtils.PROFILE_IMG_SIZE, ImageUtils.PROFILE_IMG_SIZE);
 
         } catch (IOException ex){
             image = null; // TODO add default image
         }
         return image;
+    }
+
+    private boolean emptyOrNull(String n){
+        return n == null || n.isEmpty();
     }
 }

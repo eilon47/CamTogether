@@ -1,9 +1,12 @@
 package handlers;
 
+import common.ImageUtils;
 import database.SqlStatements;
 import xmls.*;
 
+import java.io.IOException;
 import java.sql.ResultSet;
+import java.util.Arrays;
 
 
 public class GetAlbumsListHandler extends CommandHandler {
@@ -38,4 +41,5 @@ public class GetAlbumsListHandler extends CommandHandler {
         }
         return responseMessage;
     }
+
 }

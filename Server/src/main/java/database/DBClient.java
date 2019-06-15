@@ -1,18 +1,15 @@
 package database;
 
 
+import common.ImageUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.postgresql.largeobject.LargeObjectManager;
 import xmls.*;
 
-import javax.imageio.ImageIO;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
@@ -125,7 +122,7 @@ public class DBClient {
     public CTImage getImageFromAlbum(String albumName, String imageName) throws SQLException {
         CTImage image = new CTImage();
         String query = String.format(SqlStatements.SELECT_IMAGE_FROM_ALBUM, albumName);
-        ResultSet rs = selectQuery(query, new String[] {imageName});
+        ResultSet rs = selectQuery(query, new String[] {"", imageName});
         while(rs.next()) {
             image.setImageName(rs.getString("image_name"));
             image.setImageSize(rs.getInt("Image_size"));
@@ -144,14 +141,24 @@ public class DBClient {
         return image;
     }
     public CTAlbumPreview getAlbumPreview(String albumName) throws SQLException{
-        CTAlbum album = getAlbum(albumName);
+        CTAlbum album = getAlbumWithoutImages(albumName);
+        //TODO Maybe to improve to query instead of getting the whole album
         CTAlbumPreview preview = new CTAlbumPreview();
         preview.setName(albumName);
-        preview.setNumberOfImages(album.getImages().size());
-        preview.setPreviewImg(album.getImages().size() == 0? null : album.getThumbnails().get(0));
+        preview.setNumberOfImages(album.getThumbnails().size());
+        if(album.getThumbnails().size() > 0) {
+            preview.setPreviewImg(album.getThumbnails().get(0).getThumbnailData());
+        } else {
+            ImageUtils imgU = new ImageUtils();
+            try {
+                preview.setPreviewImg(imgU.getDefaultAlbumImage());
+            } catch (IOException e) {
+                logger.warn(e);
+            }
+        }
         return preview;
     }
-    public CTAlbum getAlbum(String albumName) throws SQLException {
+    public CTAlbum getAlbumWithoutImages(String albumName) throws SQLException {
         CTAlbum album = new CTAlbum();
         ResultSet album_req_rs = selectQuery(String.format(SqlStatements.SELECT_ALBUM_FROM_ALBUMS, albumName));
         album_req_rs.next();
@@ -307,26 +314,49 @@ public class DBClient {
         return new Date( date.toGregorianCalendar().getTimeInMillis());
     }
     private CTThumbnail createThumbnail(CTImage image ) throws IOException {
+        ImageUtils imageUtils = new ImageUtils();
         CTThumbnail thumbnail = new CTThumbnail();
-        InputStream in = new ByteArrayInputStream(image.getImageData());
-        BufferedImage buf_img = ImageIO.read(in);
-        Image thumb = buf_img.getScaledInstance(100, 100, BufferedImage.SCALE_SMOOTH);
-        BufferedImage buf_thumb = new BufferedImage(thumb.getWidth(null), thumb.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D bgr = buf_thumb.createGraphics();
-        bgr.drawImage(thumb, 0, 0,null);
-        bgr.dispose();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(buf_thumb, "jpg", baos );
-        baos.flush();
-        thumbnail.setThumbnailData(baos.toByteArray());
-        baos.close();
-        thumbnail.setThumbnailHeight(100);
-        thumbnail.setThumbnailWidth(100);
+        thumbnail.setThumbnailData(imageUtils.createThumbnail(image.getImageData(), ImageUtils.THUMBNAIL_IMG_SIZE, ImageUtils.THUMBNAIL_IMG_SIZE));
+        thumbnail.setThumbnailHeight(ImageUtils.THUMBNAIL_IMG_SIZE);
+        thumbnail.setThumbnailWidth(ImageUtils.THUMBNAIL_IMG_SIZE);
         thumbnail.setThumbnailName(image.getImageName());
         return thumbnail;
     }
 
+    public boolean updateUser(User user) throws SQLException, ClassNotFoundException {
+        String sql = String.format(SqlStatements.UPDATE_USER_PROFILE, user.getUserName());
+        Object[] values = {"",user.getUserName(), user.getPassword(), user.getBirthday(), user.getJoinDate(),
+                user.getProfileImage(), user.getEmail(), String.join(",",user.getFriends()), user.getDescription()};
+        createConnection();
+        boolean success = updateQuery(sql, values);
+        closeConnection();
+        return success;
+    }
+
+    public User getUser(String username) throws SQLException, ClassNotFoundException {
+        createConnection();
+        String[] o = {"", username};
+        ResultSet rs = selectQuery(SqlStatements.SELECT_USER_FROM_USERS, o);
+        if(rs.next()) {
+            User old = new User();
+            old.setUserName(username);
+            old.setBirthday(rs.getString("birthday"));
+            old.setPassword(rs.getString("password"));
+            old.setProfileImage(rs.getBytes("profile_img"));
+            old.setEmail(rs.getString("email"));
+            old.setJoinDate(rs.getString("joined"));
+            old.setDescription(rs.getString("info"));
+            String friends = rs.getString("friends");
+            if(!friends.trim().isEmpty())
+                old.getFriends().addAll(Arrays.asList(friends.split(",")));
+            rs.close();
+            closeConnection();
+            return old;
+        }
+        rs.close();
+        closeConnection();
+        return null;
+    }
 }
 
 

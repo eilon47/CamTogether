@@ -40,6 +40,19 @@ public class UserService extends AbstractService implements IUserService {
         return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
     }
 
+    @Override
+    public ResponseEntity<String> addFriend(RequestHeader header, String friend) {
+        AddOrGetFriendRequestBody requestBody = new AddOrGetFriendRequestBody();
+        requestBody.setUsername(friend);
+        RequestMessage message = new RequestMessage();
+        message.setHeader(header);
+        ResponseMessage responseMessage = messageToServerAndResponse(message, requestBody);
+        if(responseMessage.getHeader().isCommandSuccess()){
+            return ResponseEntity.ok("OKed");
+        }
+        return ResponseEntity.badRequest().body(responseMessage.getHeader().getReason());
+    }
+
     public ResponseEntity<String> updateUser(RequestHeader header,User user){
         UpdateUserProfileRequestBody requestBody = new UpdateUserProfileRequestBody();
         requestBody.setUser(user);
@@ -70,5 +83,6 @@ public class UserService extends AbstractService implements IUserService {
         }
         return ResponseEntity.badRequest().build();
     }
+
 
 }

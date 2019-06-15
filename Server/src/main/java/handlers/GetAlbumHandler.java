@@ -1,9 +1,8 @@
 package handlers;
 
 
-import database.SqlStatements;
 import xmls.*;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
 
 public class GetAlbumHandler extends CommandHandler {
@@ -22,7 +21,7 @@ public class GetAlbumHandler extends CommandHandler {
                 return responseMessage;
             }
             dbClient.createConnection();
-            CTAlbum album = dbClient.getAlbum(req_body.getAlbumName());
+            CTAlbum album = dbClient.getAlbumWithoutImages(req_body.getAlbumName());
             responseBody.setAlbum(album);
             responseMessage.setBody(fromClassToXml(responseBody));
             logger.debug("closing connection with db");
