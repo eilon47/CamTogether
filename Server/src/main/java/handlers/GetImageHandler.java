@@ -13,6 +13,7 @@ public class GetImageHandler extends CommandHandler {
         //create header of message
         returnMessage.setHeader(createResponseHeader(request.getHeader()));
         GetImageRequestBody requestBody = fromXmlToClass(request.getBody(), GetImageRequestBody.class);
+        requestBody.setAlbum(requestBody.getAlbum().replace(" ", "_"));
         String album = requestBody.getAlbum();
         String image = requestBody.getImageName();
         String username = requestBody.getUsername();
@@ -23,6 +24,7 @@ public class GetImageHandler extends CommandHandler {
                 CTImage img = dbClient.getImageFromAlbum(album, image);
                 dbClient.closeConnection();
                 GetImageResponseBody responseBody = new GetImageResponseBody();
+                img.setAlbumName(img.getAlbumName().replace("_", " "));
                 responseBody.setImage(img);
                 returnMessage.setBody(fromClassToXml(responseBody));
                 return returnMessage;

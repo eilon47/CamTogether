@@ -20,7 +20,7 @@ public class CreateNewAlbumCommandHandler extends CommandHandler{
             CTAlbum album = newAlbumRequest.getAlbum();
             Calendar calendar = Calendar.getInstance();
 
-            String albumName = album.getName();
+            String albumName = album.getName().replace(" ", "_");
             String creator = album.getCreator();
             String participants = "";
             String description = album.getDescription();

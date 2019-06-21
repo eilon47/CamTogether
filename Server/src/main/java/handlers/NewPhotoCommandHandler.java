@@ -26,7 +26,11 @@ public class NewPhotoCommandHandler extends CommandHandler {
         //create header of message
         returnMessage.setHeader(createResponseHeader(request.getHeader()));
         NewImageRequestBody req_body = fromXmlToClass(request.getBody(), NewImageRequestBody.class);
-        NewImageResponseBody responseBody = new NewImageResponseBody();;
+        req_body.setAlbum(req_body.getAlbum().replace(" ", "_"));
+        CTImage ct = req_body.getImage();
+        ct.setAlbumName(ct.getAlbumName().replace(" ","_"));
+        req_body.setImage(ct);
+        NewImageResponseBody responseBody = new NewImageResponseBody();
         responseBody.setAlbum(req_body.getAlbum());
         responseBody.setImage(req_body.getImage().getImageName());
         try {

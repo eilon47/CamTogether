@@ -15,6 +15,7 @@ public class AddUserToAlbumHandler extends CommandHandler {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setHeader(createResponseHeader(request.getHeader()));
         AddUserToAlbumRequestBody addUserToAlbumRequestBody = fromXmlToClass(request.getBody(), AddUserToAlbumRequestBody.class);
+        addUserToAlbumRequestBody.setAddToAlbum(addUserToAlbumRequestBody.getAddToAlbum().replace(" ","_"));
         try {
             boolean user_exists = checkUserExistsAndUnique(addUserToAlbumRequestBody.getUserToAdd());
 

@@ -12,6 +12,7 @@ public class GetAlbumHandler extends CommandHandler {
         ResponseMessage responseMessage = new ResponseMessage();
         responseMessage.setHeader(createResponseHeader(request.getHeader()));
         GetAlbumRequestBody req_body = fromXmlToClass(request.getBody(), GetAlbumRequestBody.class);
+        req_body.setAlbumName(req_body.getAlbumName().replace(" ", "_"));
         GetAlbumResponseBody responseBody = new GetAlbumResponseBody();
         try {
             logger.debug("Creating connection to db");
@@ -22,6 +23,7 @@ public class GetAlbumHandler extends CommandHandler {
             }
             dbClient.createConnection();
             CTAlbum album = dbClient.getAlbumWithoutImages(req_body.getAlbumName());
+            album.setName(album.getName().replace("_", " "));
             responseBody.setAlbum(album);
             responseMessage.setBody(fromClassToXml(responseBody));
             logger.debug("closing connection with db");

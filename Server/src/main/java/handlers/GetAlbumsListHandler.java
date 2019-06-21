@@ -23,11 +23,12 @@ public class GetAlbumsListHandler extends CommandHandler {
             ResultSet rs = dbClient.selectQuery(sql);
             AlbumsList albumsList = new AlbumsList();
             while(rs.next()){
-                String album = rs.getString("album_name");
+                String album = (rs.getString("album_name"));
                 String participants = rs.getString("participants");
                 String creator = rs.getString("creator");
                 if(participants.contains(request.getHeader().getUsername()) || creator.contains(request.getHeader().getUsername())){
                     CTAlbumPreview ctAlbumPreview = dbClient.getAlbumPreview(album);
+                    ctAlbumPreview.setName(ctAlbumPreview.getName().replace("_", " "));
                     albumsList.getAlbums().add(ctAlbumPreview);
                 }
             }

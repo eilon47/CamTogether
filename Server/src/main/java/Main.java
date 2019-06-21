@@ -17,10 +17,10 @@ public class Main {
     public static Logger logger = LogManager.getLogger();
     public static void main(String args[]) {
 //        try {
-//           // drop();
+//           drop();
 //        } catch (SQLException | ClassNotFoundException e) {
 //            e.printStackTrace();
-////        }
+//       }
 //        try {
 //            init_tables();
 //        } catch (SQLException | ClassNotFoundException e) {
