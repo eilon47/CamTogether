@@ -41,7 +41,7 @@ public class NewPhotoCommandHandler extends CommandHandler {
                 returnMessage.setBody(fromClassToXml(responseBody));
                 return returnMessage;
             }
-            boolean cv_res = this.cvClient.queryCvServer(img);
+            boolean cv_res = this.cvClient.queryCvServer(img, "All");
             if(!cv_res){
                 logger.info("CV server returned false - not inserting image to db");
                 returnMessage.getHeader().setCommandSuccess(false);

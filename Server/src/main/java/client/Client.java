@@ -30,16 +30,20 @@ public class Client
     public void sendMessage(String msg) throws IOException{
         logger.debug("Sending : " + msg);
         this.dos.writeUTF(msg);
+        this.dos.flush();
+
     }
 
     public void sendMessage(byte[] msg) throws IOException{
         logger.debug("Sending : " + msg.length + " bytes");
         this.dos.write(msg);
+        this.dos.flush();
     }
 
     public void sendMessage(int n) throws IOException {
         logger.debug("Sending : " + n + " as a number");
         this.dos.writeInt(n);
+        this.dos.flush();
 
     }
 
