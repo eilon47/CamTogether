@@ -17,10 +17,10 @@ import java.util.GregorianCalendar;
 public class DBClient {
     private Connection conn;
     private Statement statement;
-    private static final String username = "postgres";
+    private static final String username = "picturex";
     private static final String password = "1234";
     private static final String JDBC_DRIVER = "org.postgresql.Driver";
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/camTogether";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/basedb";
     private static Logger logger = LogManager.getLogger("database");
 
     //####################### Connections ################################
