@@ -7,7 +7,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.http.ResponseEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xmls.CTImage;
 
 import javax.imageio.ImageIO;
@@ -16,37 +17,52 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
-public class CVClient extends Client {
-
+public class CVClient {
+    protected static Logger logger = LogManager.getLogger("client");
     private String BLURRED = "400";
     private String SELFIE = "500";
-    private  String OK = "0";
+    private String OK = "0";
+    private String uri;
+    private String host;
+    private String port;
+    private String api;
 
     public CVClient() {
-        super(19090, "0.0.0.0");
+        this.api = "analyze";
+        this.port = "19090";
+        this.host = "0.0.0.0";
+        this.uri = "http://" + host + ":" + port + "/" + api;
+    }
+
+    public CVClient(String host, int port){
+        this.port = Integer.toString(port);
+        this.host = host;
+        this.api = "analyze";
+        this.uri = "http://" + this.host + ":" + this.port + "/" + this.api;
+    }
+
+    public CVClient(String host, int port, String api){
+        this.port = Integer.toString(port);
+        this.host = host;
+        this.api  = api;
+        this.uri = "http://" + this.host + ":" + this.port + "/" + this.api;
     }
 
 
-    private String doPost(CTImage img, String command) {
+    private boolean doPost(CTImage img, String command) {
         HashMap<String, String> map = new LinkedHashMap<>();
         map.put("command", command);
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         try {
             Gson gson = new Gson();
-
-            byte[] img_by = new byte[img.getImageData().length];
-            for(int i=0; i< img.getImageData().length; i++)
-                img_by[i] = (byte) (img.getImageData()[i] & 0xFF);
-            map.put("img_bytes", new String(img_by));
-            img.setImageData(null);
             String json_img = gson.toJson(img);
             map.put("img", json_img);
             String json = gson.toJson(map);
-            URI uri = URI.create("http://0.0.0.0:19090/analyze");
+            URI uri = URI.create(this.uri);
             HttpPost request = new HttpPost(uri);
             StringEntity params = new StringEntity(json);
             request.addHeader("content-type", "application/json");
@@ -54,41 +70,29 @@ public class CVClient extends Client {
             HttpResponse response = httpClient.execute(request);
             byte[] res = new byte[2048];
             response.getEntity().getContent().read(res);
-            System.out.println(new String(res));
-            return new String(res);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            String result = new String(res);
+            if (!result.equals(OK)) {
+                String reason;
+                if(result.equals(BLURRED))
+                    reason = "Image was blur";
+                else if (result.equals(SELFIE))
+                    reason = "Image was selfie";
+                else
+                    reason = "Unknown reason";
+                logger.warn("Image was not passed the criterion Reason = [" + reason + "]");
+                return false;
+            }
+            return new String(res).equals(OK);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn(e);
         }
-        return null;
+        return true;
     }
     public boolean queryCvServer(CTImage image, String command){
         if(command == null)
             return true;
 
-        String res = doPost(image, command);
-        return true;
-//        String byteRes = "";
-//        try {
-//            this.createConnection();
-//            logger.info("querying cv server for image " + image.getImageName());
-//            this.sendMessage(command);
-//            byte[] data = image.getImageData();
-//            sendImage(data);
-//            int res = readResult();
-//            sendMessage(res);
-//            String reason = readReason();
-//            if(res != 0)
-//                logger.warn("Received " + Integer.toString(res) + " Reason: " + reason);
-//            logger.debug("answer for image " + image.getImageName() + " is " + byteRes);
-//            this.closeConnection();
-//        }catch (IOException ex){
-//            logger.warn("failed to query cv server, returning default answer", ex);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        return byteRes.equals(OK);
+        return doPost(image, command);
     }
 
     private static CTImage createCTImage(String path) throws IOException {

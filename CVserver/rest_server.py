@@ -31,13 +31,14 @@ def analyze():
     cmd = data["command"]
     img = data["img"]
     ctimg = json.loads(img)
-    data_img = ctimg["imageData"]
-    data_img = map(str, data_img)
-    data_img = "".join(data_img)
-    name = ctimg["name"]
-    ext = path.splitext(name)[1]
-    saveImg(data_img, name, ext)
-    res, reason = handle(cmd, name)
+    # data_img = ctimg["imageData"]
+    # data_img = map(str, data_img)
+    # data_img = "".join(data_img)
+    # name = ctimg["name"]
+    # ext = path.splitext(name)[-1]
+    # ext = ".jpg" if ext.strip() == "" else ext.strip()
+    # saveImg(data_img, name, ext)
+    res, reason = handle(cmd, ctimg)
     return json.dumps({"rc":res, "reason":reason})
 
 

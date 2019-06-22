@@ -43,8 +43,8 @@ def analysis(command, img):
     return 0
 
 
-def handle(command, img):
-    img_data = img["imageData"]
+def handle(command, ctimg):
+    img_data = ctimg["imageData"]
     img_data = list(img_data)
     res = analysis(command, img_data)
     print("Done!")
