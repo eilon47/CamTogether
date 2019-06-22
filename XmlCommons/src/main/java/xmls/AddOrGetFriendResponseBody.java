@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="User" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="User" type="{xsd}User"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -38,21 +38,21 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "user"
 })
-@XmlRootElement(name = "NewUserResponseBody")
-public class NewUserResponseBody {
+@XmlRootElement(name = "AddOrGetFriendResponseBody")
+public class AddOrGetFriendResponseBody {
 
     @XmlElement(name = "User", required = true)
-    protected String user;
+    protected User user;
 
     /**
      * Gets the value of the user property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link User }
      *     
      */
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
@@ -61,10 +61,10 @@ public class NewUserResponseBody {
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link User }
      *     
      */
-    public void setUser(String value) {
+    public void setUser(User value) {
         this.user = value;
     }
 

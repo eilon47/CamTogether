@@ -1,15 +1,24 @@
 package client;
 
+import com.google.gson.Gson;
+import converters.JsonConverter;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.http.ResponseEntity;
 import xmls.CTImage;
 
 import javax.imageio.ImageIO;
+import javax.xml.bind.JAXBException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.*;
 
 public class CVClient extends Client {
 
@@ -21,65 +30,65 @@ public class CVClient extends Client {
         super(19090, "0.0.0.0");
     }
 
+
+    private String doPost(CTImage img, String command) {
+        HashMap<String, String> map = new LinkedHashMap<>();
+        map.put("command", command);
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        try {
+            Gson gson = new Gson();
+
+            byte[] img_by = new byte[img.getImageData().length];
+            for(int i=0; i< img.getImageData().length; i++)
+                img_by[i] = (byte) (img.getImageData()[i] & 0xFF);
+            map.put("img_bytes", new String(img_by));
+            img.setImageData(null);
+            String json_img = gson.toJson(img);
+            map.put("img", json_img);
+            String json = gson.toJson(map);
+            URI uri = URI.create("http://0.0.0.0:19090/analyze");
+            HttpPost request = new HttpPost(uri);
+            StringEntity params = new StringEntity(json);
+            request.addHeader("content-type", "application/json");
+            request.setEntity(params);
+            HttpResponse response = httpClient.execute(request);
+            byte[] res = new byte[2048];
+            response.getEntity().getContent().read(res);
+            System.out.println(new String(res));
+            return new String(res);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public boolean queryCvServer(CTImage image, String command){
         if(command == null)
             return true;
-        String byteRes = "";
-        try {
-            this.createConnection();
-            logger.info("querying cv server for image " + image.getImageName());
-            this.sendMessage(command);
-            byte[] data = image.getImageData();
-            sendImage(data);
-            int res = readResult();
-            sendMessage(res);
-            String reason = readReason();
-            if(res != 0)
-                logger.warn("Received " + Integer.toString(res) + " Reason: " + reason);
-            logger.debug("answer for image " + image.getImageName() + " is " + byteRes);
-            this.closeConnection();
-        }catch (IOException ex){
-            logger.warn("failed to query cv server, returning default answer", ex);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return byteRes.equals(OK);
-    }
 
-    private String readReason() throws IOException {
-        byte[] reason = new byte[2048];
-        int read = this.dis.read(reason);
-        return new String(reason);
-    }
-
-    private int readResult() throws IOException {
-        byte[] res = new byte[24];
-        int read = this.dis.read(res);
-        System.out.println("Read result " + new String(res));
-        return Integer.valueOf((new String(res)).trim());
-    }
-
-    private void sendImage(byte[] img) throws IOException, InterruptedException {
-        List<byte[]> splitted = split(img, 2048);
-        String size = Integer.toString(splitted.size());
-        this.sendMessage(size);
-        Thread.sleep(1000);
-        for (byte[] aSplitted : splitted) {
-            this.sendMessage(aSplitted);
-        }
-        System.out.println("Image sent");
-    }
-
-    private List<byte[]> split(byte[] str, int blockSize){
-        int len = str.length;
-        int size = len/blockSize + 1;
-        List<byte[]> arr = new ArrayList<>();
-        int i = 0;
-        for(i=0; i < size-1; i++){
-            arr.add(Arrays.copyOfRange(str, i*blockSize, i*blockSize+blockSize));
-        }
-        arr.add(Arrays.copyOfRange(str, i*blockSize, len));
-        return arr;
+        String res = doPost(image, command);
+        return true;
+//        String byteRes = "";
+//        try {
+//            this.createConnection();
+//            logger.info("querying cv server for image " + image.getImageName());
+//            this.sendMessage(command);
+//            byte[] data = image.getImageData();
+//            sendImage(data);
+//            int res = readResult();
+//            sendMessage(res);
+//            String reason = readReason();
+//            if(res != 0)
+//                logger.warn("Received " + Integer.toString(res) + " Reason: " + reason);
+//            logger.debug("answer for image " + image.getImageName() + " is " + byteRes);
+//            this.closeConnection();
+//        }catch (IOException ex){
+//            logger.warn("failed to query cv server, returning default answer", ex);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        return byteRes.equals(OK);
     }
 
     private static CTImage createCTImage(String path) throws IOException {
@@ -107,11 +116,22 @@ public class CVClient extends Client {
         return img;
     }
 
+
+
     public static void main(String[] args) {
         String blurred = "C:\\Users\\eilon\\Desktop\\CamTogether\\Server\\src\\main\\resources\\blur.jpg";
         String selfie = "C:\\Users\\eilon\\Desktop\\CamTogether\\Server\\src\\main\\resources\\test_image.jpg";
         String manyfaces = "C:\\Users\\eilon\\Desktop\\CamTogether\\Server\\src\\main\\resources\\faces.jpg";
         CVClient client = new CVClient();
+        CTImage image = new CTImage();
+        JsonConverter c = new JsonConverter();
+        String r = null;
+        try {
+            r = c.serializeToString(image);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+        System.out.println(r);
         try {
             CTImage fail = createCTImage(blurred);
             CTImage fail2 = createCTImage(selfie);
