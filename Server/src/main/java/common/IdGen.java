@@ -34,7 +34,7 @@ public class IdGen {
     }
 
     public static void main(String[] args){
-        String e = "eilon47";
+        String e = "eilon";
         String id = IdGen.generate(e);
         String id2 = IdGen.generate(e, id);
         System.out.println(id + "\n" + id2);
